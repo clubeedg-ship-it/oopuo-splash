@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160" width="600" height="160">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@700');
+    </style>
+  </defs>
+  <rect width="600" height="160" fill="#070709"/>
+  <text x="300" y="105" 
+        font-family="'Instrument Sans', system-ui, sans-serif" 
+        font-weight="700" 
+        font-size="80" 
+        letter-spacing="-0.03em"
+        fill="#EAEDF3" 
+        text-anchor="middle">OOPUO</text>
+  <rect x="246" y="118" width="108" height="2" fill="#2D8A7E" rx="1"/>
+</svg>
