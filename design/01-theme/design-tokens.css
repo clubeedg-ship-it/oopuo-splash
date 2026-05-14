@@ -1,0 +1,95 @@
+/* OOPUO Design Tokens — "Quiet Authority" v3: Light Primary */
+
+:root {
+  /* ——— Light Context (default) ——— */
+  --bg-primary: #F0F2F6;
+  --bg-elevated: #FFFFFF;
+  --bg-surface: #E6E8EF;
+  --bg-hover: #DCDFE8;
+
+  /* ——— Text (light context) ——— */
+  --text-primary: #1A1C24;
+  --text-secondary: #5A5E72;
+  --text-muted: #8A8FA8;
+
+  /* ——— Accent: Deep Teal ——— */
+  --accent-primary: #1E7A6E;
+  --accent-hover: #24917F;
+  --accent-muted: #1A5C54;
+  --accent-glow: rgba(30, 122, 110, 0.10);
+
+  /* ——— Warm Highlight (rare) ——— */
+  --highlight-warm: #C4814A;
+  --highlight-warm-hover: #D4945E;
+
+  /* ——— Borders (light context) ——— */
+  --border-subtle: #D8DBE5;
+  --border-visible: #C4C8D6;
+  --border-accent: rgba(30, 122, 110, 0.25);
+
+  /* ——— Typography ——— */
+  --font-display: 'Instrument Sans', system-ui, sans-serif;
+  --font-body: 'Satoshi', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* ——— Font Sizes ——— */
+  --text-hero: 4rem;
+  --text-h2: 2.5rem;
+  --text-h3: 1.5rem;
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-caption: 0.875rem;
+
+  /* ——— Spacing ——— */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-section: 8rem;
+
+  /* ——— Layout ——— */
+  --max-width: 1200px;
+  --content-padding: 1.5rem;
+
+  /* ——— Transitions ——— */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 600ms;
+
+  /* ——— Border Radius ——— */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+}
+
+/* ——— Dark Section Context ——— */
+[data-theme="dark"] {
+  --bg-primary: #070709;
+  --bg-elevated: #0E0F13;
+  --bg-surface: #151720;
+  --bg-hover: #1C1E2A;
+  --text-primary: #EAEDF3;
+  --text-secondary: #8A8FA8;
+  --text-muted: #505469;
+  --accent-primary: #2D8A7E;
+  --accent-hover: #36A094;
+  --accent-glow: rgba(45, 138, 126, 0.12);
+  --border-subtle: #1E2030;
+  --border-visible: #2A2D42;
+  --border-accent: rgba(45, 138, 126, 0.3);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --text-hero: 2.75rem;
+    --text-h2: 2rem;
+    --text-h3: 1.25rem;
+    --space-section: 5rem;
+    --content-padding: 1rem;
+  }
+}
