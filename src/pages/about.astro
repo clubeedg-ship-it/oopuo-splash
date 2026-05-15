@@ -2,12 +2,44 @@
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import SectionLabel from '../components/SectionLabel.astro';
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Otavio Alves',
+  jobTitle: 'Founder & Principal Consultant',
+  worksFor: {
+    '@type': 'Organization',
+    name: 'OOPUO',
+    url: 'https://oopuo.com',
+  },
+  url: 'https://oopuo.com/about',
+};
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'OOPUO',
+  url: 'https://oopuo.com',
+  description:
+    'Engineering-first AI consultancy based in Amsterdam. AI automation, websites, and EU AI Act compliance for European businesses.',
+  founder: {
+    '@type': 'Person',
+    name: 'Otavio Alves',
+  },
+  areaServed: 'EU',
+  email: 'hello@oopuo.com',
+};
 ---
 
 <Layout
   title="About OOPUO — Engineering-First AI Consultancy"
   description="Founded by Otavio Alves. Deep technical knowledge in AI systems, local and cloud infrastructure, and practical delivery for European businesses."
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationJsonLd)} />
+  </Fragment>
   <!-- HERO (light) -->
   <section class="bg-bg-primary py-24 md:py-32">
     <div class="max-w-[var(--max-width-site)] mx-auto px-6">
@@ -25,14 +57,12 @@ import SectionLabel from '../components/SectionLabel.astro';
   <section class="bg-bg-elevated py-section">
     <div class="max-w-[var(--max-width-site)] mx-auto px-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
-        <!-- Left: Typographic Avatar -->
         <div class="flex justify-center md:justify-start">
           <div class="w-48 h-48 md:w-64 md:h-64 rounded-[16px] bg-bg-surface border border-border-subtle flex items-center justify-center">
             <span class="font-display font-bold text-[4rem] md:text-[5rem] text-accent">OA</span>
           </div>
         </div>
 
-        <!-- Right: Bio -->
         <div>
           <h2 class="font-display font-semibold text-h2 mb-1">Otavio Alves</h2>
           <p class="font-mono text-caption text-text-muted mb-6">Founder & Principal Consultant</p>

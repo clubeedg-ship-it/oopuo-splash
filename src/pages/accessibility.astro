@@ -1,0 +1,117 @@
+---
+// DRAFT ACCESSIBILITY STATEMENT — requires review before publication.
+import Layout from '../layouts/Layout.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+---
+
+<Layout
+  title="Accessibility Statement — OOPUO"
+  description="OOPUO's commitment to web accessibility and WCAG 2.1 AA conformance."
+>
+  <section class="bg-bg-primary py-24 md:py-32">
+    <div class="max-w-[var(--max-width-site)] mx-auto px-6">
+      <SectionLabel class="mb-4 block">Accessibility</SectionLabel>
+      <h1 class="font-display font-bold text-hero max-w-4xl mb-4">Accessibility Statement</h1>
+      <p class="font-mono text-caption text-text-muted mb-12">
+        Last reviewed: May 2026 &middot;
+        <span class="text-highlight-warm">DRAFT — This document requires review before publication.</span>
+      </p>
+
+      <div class="max-w-[720px] space-y-12 text-text-secondary text-body-lg leading-relaxed">
+
+        <!-- Commitment -->
+        <div>
+          <h2 class="font-display font-semibold text-h3 text-text-primary mb-4">Our commitment</h2>
+          <p>
+            OOPUO is committed to making oopuo.com accessible to everyone, including people with disabilities. We aim to conform to the <strong>Web Content Accessibility Guidelines (WCAG) 2.1 Level AA</strong> as published by the World Wide Web Consortium (W3C).
+          </p>
+          <p class="mt-4">
+            This statement applies to the website at <strong>oopuo.com</strong>.
+          </p>
+        </div>
+
+        <!-- Conformance status -->
+        <div>
+          <h2 class="font-display font-semibold text-h3 text-text-primary mb-4">Conformance status</h2>
+          <p>
+            <strong>Partially conformant.</strong> This site partially conforms to WCAG 2.1 Level AA. The content listed under "Known limitations" below does not yet fully conform. We are actively working to address these gaps.
+          </p>
+          <p class="mt-4 text-caption text-text-muted">
+            "Partially conformant" means that some parts of the content do not fully conform to the accessibility standard.
+          </p>
+        </div>
+
+        <!-- Technical specifications -->
+        <div>
+          <h2 class="font-display font-semibold text-h3 text-text-primary mb-4">Technical specifications</h2>
+          <p>The site relies on the following technologies for conformance:</p>
+          <ul class="mt-4 space-y-2 list-none pl-0">
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span>HTML5</span></li>
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span>CSS3 (Tailwind CSS v4)</span></li>
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span>ARIA (Accessible Rich Internet Applications) attributes where applicable</span></li>
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span>Vanilla JavaScript (no accessibility-hostile frameworks)</span></li>
+          </ul>
+        </div>
+
+        <!-- What we've done -->
+        <div>
+          <h2 class="font-display font-semibold text-h3 text-text-primary mb-4">Accessibility features implemented</h2>
+          <ul class="space-y-3 list-none pl-0">
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span>Semantic HTML landmarks (<code class="font-mono text-caption bg-bg-surface px-1.5 py-0.5 rounded">&lt;header&gt;</code>, <code class="font-mono text-caption bg-bg-surface px-1.5 py-0.5 rounded">&lt;main&gt;</code>, <code class="font-mono text-caption bg-bg-surface px-1.5 py-0.5 rounded">&lt;footer&gt;</code>, <code class="font-mono text-caption bg-bg-surface px-1.5 py-0.5 rounded">&lt;nav&gt;</code>)</span></li>
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span>Logical heading hierarchy on all pages (h1 &rarr; h2 &rarr; h3)</span></li>
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span>Descriptive <code class="font-mono text-caption bg-bg-surface px-1.5 py-0.5 rounded">alt</code> text on all meaningful images; decorative images marked with empty alt</span></li>
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span>Colour contrast ratios meet or exceed 4.5:1 for normal text (WCAG 1.4.3)</span></li>
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span>Focus indicators visible on all interactive elements</span></li>
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span>Keyboard navigable — all interactive elements reachable without a mouse</span></li>
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span>Respects <code class="font-mono text-caption bg-bg-surface px-1.5 py-0.5 rounded">prefers-reduced-motion</code> — all animations are disabled when the user has set this OS preference</span></li>
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span>Cookie consent dialog uses <code class="font-mono text-caption bg-bg-surface px-1.5 py-0.5 rounded">role="dialog"</code> and <code class="font-mono text-caption bg-bg-surface px-1.5 py-0.5 rounded">aria-label</code></span></li>
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span>Text resizes up to 200% without loss of content or functionality</span></li>
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span><code class="font-mono text-caption bg-bg-surface px-1.5 py-0.5 rounded">lang="en"</code> attribute set on the <code class="font-mono text-caption bg-bg-surface px-1.5 py-0.5 rounded">&lt;html&gt;</code> element</span></li>
+          </ul>
+        </div>
+
+        <!-- Known limitations -->
+        <div>
+          <h2 class="font-display font-semibold text-h3 text-text-primary mb-4">Known limitations</h2>
+          <ul class="space-y-3 list-none pl-0">
+            <li class="flex gap-3">
+              <span class="text-highlight-warm mt-1 shrink-0">&loz;</span>
+              <span><strong>HubSpot forms:</strong> Third-party embedded forms. Accessibility depends on HubSpot's implementation, which is outside our direct control. We will configure form labels and instructions as far as the HubSpot embed API allows.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="text-highlight-warm mt-1 shrink-0">&loz;</span>
+              <span><strong>Calendly embed:</strong> Third-party scheduling widget. Calendly maintains its own accessibility documentation. We embed it in a labelled <code class="font-mono text-caption bg-bg-surface px-1.5 py-0.5 rounded">&lt;iframe&gt;</code> with a descriptive title.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="text-highlight-warm mt-1 shrink-0">&loz;</span>
+              <span><strong>Formal audit not yet completed:</strong> A formal WCAG 2.1 AA audit by an independent accessibility specialist has not yet been conducted. We plan to commission one before [AUDIT_TARGET_DATE].</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Feedback -->
+        <div>
+          <h2 class="font-display font-semibold text-h3 text-text-primary mb-4">Feedback and contact</h2>
+          <p>
+            We welcome feedback on the accessibility of this site. If you experience any barriers or have suggestions for improvement, please contact us:
+          </p>
+          <ul class="mt-4 space-y-2 list-none pl-0">
+            <li class="flex gap-3"><span class="text-accent mt-1 shrink-0">&loz;</span><span>Email: <a href="mailto:hello@oopuo.com" class="text-accent hover:text-accent-hover underline underline-offset-2">hello@oopuo.com</a> (subject: Accessibility)</span></li>
+          </ul>
+          <p class="mt-4">We aim to respond to accessibility feedback within <strong>5 business days</strong>.</p>
+        </div>
+
+        <!-- Enforcement -->
+        <div>
+          <h2 class="font-display font-semibold text-h3 text-text-primary mb-4">Enforcement</h2>
+          <p>
+            If you are not satisfied with our response to your accessibility concern, you may contact the Dutch Digital Government agency or file a complaint via the
+            <a href="https://www.digitaleoverheid.nl" class="text-accent hover:text-accent-hover underline underline-offset-2" target="_blank" rel="noopener noreferrer">Digitale Overheid</a>.
+            The EU Web Accessibility Directive (Directive 2016/2102) primarily applies to public-sector bodies; private sites like ours are encouraged to conform voluntarily.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</Layout>

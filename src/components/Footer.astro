@@ -5,7 +5,6 @@ import logoLight from '../assets/logo-light.svg';
 <footer data-theme="dark" class="bg-bg-dark py-16 md:py-20">
   <div class="max-w-[var(--max-width-site)] mx-auto px-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
-      <!-- Left Column -->
       <div>
         <div class="flex items-center gap-2 mb-4">
           <img src={logoLight.src} alt="OOPUO logo" class="h-7" />
@@ -16,9 +15,7 @@ import logoLight from '../assets/logo-light.svg';
         </p>
       </div>
 
-      <!-- Right Column -->
       <div class="grid grid-cols-2 gap-8">
-        <!-- Nav Links -->
         <div>
           <h4 class="font-mono text-caption uppercase tracking-[0.08em] text-text-on-dark-muted mb-4">Navigation</h4>
           <nav class="flex flex-col gap-3">
@@ -30,7 +27,6 @@ import logoLight from '../assets/logo-light.svg';
           </nav>
         </div>
 
-        <!-- Contact -->
         <div>
           <h4 class="font-mono text-caption uppercase tracking-[0.08em] text-text-on-dark-muted mb-4">Contact</h4>
           <div class="flex flex-col gap-3">
@@ -42,11 +38,23 @@ import logoLight from '../assets/logo-light.svg';
       </div>
     </div>
 
-    <!-- Bottom -->
     <div class="mt-12 pt-8 border-t border-border-dark">
-      <p class="text-text-on-dark-muted text-caption">
-        &copy; 2025 OOPUO. All rights reserved. Amsterdam, Netherlands.
-      </p>
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <p class="text-text-on-dark-muted text-caption">
+          &copy; 2025 OOPUO. All rights reserved. Amsterdam, Netherlands.
+        </p>
+        <nav aria-label="Legal" class="flex flex-wrap gap-x-5 gap-y-2">
+          <a href="/privacy" class="text-text-on-dark-muted hover:text-text-on-dark-secondary text-caption transition-colors duration-150">Privacy Policy</a>
+          <a href="/terms" class="text-text-on-dark-muted hover:text-text-on-dark-secondary text-caption transition-colors duration-150">Terms of Service</a>
+          <button
+            onclick="window.oopuoOpenCookieSettings && window.oopuoOpenCookieSettings()"
+            class="text-text-on-dark-muted hover:text-text-on-dark-secondary text-caption transition-colors duration-150 bg-transparent border-none cursor-pointer p-0"
+          >
+            Manage Cookies
+          </button>
+          <a href="/accessibility" class="text-text-on-dark-muted hover:text-text-on-dark-secondary text-caption transition-colors duration-150">Accessibility</a>
+        </nav>
+      </div>
     </div>
   </div>
 </footer>

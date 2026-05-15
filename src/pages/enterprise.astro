@@ -3,12 +3,63 @@ import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import SectionLabel from '../components/SectionLabel.astro';
 import StatBlock from '../components/StatBlock.astro';
+
+const serviceJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'EU AI Act Compliance & AI Governance',
+  provider: {
+    '@type': 'Organization',
+    name: 'OOPUO',
+    url: 'https://oopuo.com',
+  },
+  description:
+    'Compliance audits, risk assessments, agent observability, and technical documentation for EU AI Act compliance.',
+  areaServed: 'EU',
+  serviceType: 'AI Governance Consulting',
+  url: 'https://oopuo.com/enterprise',
+};
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is the EU AI Act?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The EU AI Act is the world\'s first comprehensive law regulating artificial intelligence, formally adopted in 2024 and entering into force on 1 August 2024. It creates a framework of obligations based on the risk level of AI systems.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What are the fines for non-compliance with the EU AI Act?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Fines can reach up to €35 million or 7% of global annual turnover for the most serious violations involving prohibited AI practices.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'When do EU AI Act obligations apply?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Prohibitions on unacceptable AI practices apply from February 2025. High-risk system requirements come into force in August 2026.',
+      },
+    },
+  ],
+};
 ---
 
 <Layout
   title="EU AI Act Compliance & AI Governance — OOPUO"
   description="Compliance audits, risk assessments, agent observability, and technical documentation. Avoid fines up to €35M with proper AI governance."
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(serviceJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+  </Fragment>
   <!-- HERO (dark) -->
   <section data-theme="dark" class="bg-bg-dark py-24 md:py-32">
     <div class="max-w-[var(--max-width-site)] mx-auto px-6">
@@ -56,7 +107,6 @@ import StatBlock from '../components/StatBlock.astro';
       <SectionLabel class="mb-8 block">How we help</SectionLabel>
 
       <div class="space-y-6">
-        <!-- Service 1 -->
         <div class="bg-bg-elevated border border-border-subtle shadow-card rounded-[10px] p-8">
           <h3 class="font-display font-semibold text-h3 mb-4">Compliance Audit & Gap Analysis</h3>
           <p class="text-text-secondary text-body-lg leading-relaxed mb-4">
@@ -67,7 +117,6 @@ import StatBlock from '../components/StatBlock.astro';
           </p>
         </div>
 
-        <!-- Service 2 -->
         <div class="bg-bg-elevated border border-border-subtle shadow-card rounded-[10px] p-8">
           <h3 class="font-display font-semibold text-h3 mb-4">Risk Assessment & Mitigation</h3>
           <p class="text-text-secondary text-body-lg leading-relaxed mb-4">
@@ -78,7 +127,6 @@ import StatBlock from '../components/StatBlock.astro';
           </p>
         </div>
 
-        <!-- Service 3 -->
         <div class="bg-bg-elevated border border-border-subtle shadow-card rounded-[10px] p-8">
           <h3 class="font-display font-semibold text-h3 mb-4">Agent Observability & Tracing</h3>
           <p class="text-text-secondary text-body-lg leading-relaxed mb-4">
@@ -89,7 +137,6 @@ import StatBlock from '../components/StatBlock.astro';
           </p>
         </div>
 
-        <!-- Service 4 -->
         <div class="bg-bg-elevated border border-border-subtle shadow-card rounded-[10px] p-8">
           <h3 class="font-display font-semibold text-h3 mb-4">Technical Documentation & Reporting</h3>
           <p class="text-text-secondary text-body-lg leading-relaxed mb-4">

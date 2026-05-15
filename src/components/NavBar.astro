@@ -7,13 +7,11 @@ import logoDark from '../assets/logo-dark.svg';
   class="fixed top-0 left-0 right-0 z-50 bg-bg-elevated h-16 transition-all duration-150"
 >
   <div class="max-w-[var(--max-width-site)] mx-auto px-6 h-full flex items-center justify-between">
-    <!-- Logo + Wordmark -->
     <a href="/" class="flex items-center gap-2">
       <img src={logoDark.src} alt="OOPUO logo" class="h-7" />
       <span class="font-display font-bold text-xl text-text-primary">OOPUO</span>
     </a>
 
-    <!-- Desktop Nav -->
     <div class="hidden md:flex items-center gap-8">
       <a href="/enterprise" class="text-text-secondary hover:text-text-primary transition-colors duration-150 font-body text-base">Enterprise</a>
       <a href="/about" class="text-text-secondary hover:text-text-primary transition-colors duration-150 font-body text-base">About</a>
@@ -26,7 +24,6 @@ import logoDark from '../assets/logo-dark.svg';
       </a>
     </div>
 
-    <!-- Mobile Hamburger -->
     <button
       id="mobile-menu-btn"
       class="md:hidden flex flex-col gap-1.5 p-2"
@@ -39,7 +36,6 @@ import logoDark from '../assets/logo-dark.svg';
     </button>
   </div>
 
-  <!-- Mobile Panel -->
   <div
     id="mobile-panel"
     class="fixed top-16 right-0 bottom-0 w-72 bg-bg-elevated border-l border-border-subtle transform translate-x-full transition-transform duration-300 ease-out md:hidden z-50"
@@ -58,11 +54,9 @@ import logoDark from '../assets/logo-dark.svg';
   </div>
 </nav>
 
-<!-- Spacer for fixed nav -->
 <div class="h-16"></div>
 
 <script>
-  // Scroll state
   const navbar = document.getElementById('navbar');
   let scrolled = false;
 
@@ -85,7 +79,6 @@ import logoDark from '../assets/logo-dark.svg';
   window.addEventListener('scroll', updateNavbar, { passive: true });
   updateNavbar();
 
-  // Mobile menu toggle
   const menuBtn = document.getElementById('mobile-menu-btn');
   const panel = document.getElementById('mobile-panel');
   let menuOpen = false;

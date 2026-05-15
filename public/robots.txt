@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://oopuo.com/sitemap.xml

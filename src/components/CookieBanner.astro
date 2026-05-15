@@ -1,0 +1,261 @@
+<div
+  id="cookie-banner"
+  role="dialog"
+  aria-modal="false"
+  aria-label="Cookie consent"
+  aria-live="polite"
+  class="fixed bottom-0 left-0 right-0 z-50 hidden"
+>
+  <div class="bg-bg-elevated border-t border-border-visible shadow-card max-w-[var(--max-width-site)] mx-auto px-6 py-6 md:py-8">
+    <div id="cookie-simple" class="flex flex-col md:flex-row md:items-center gap-6">
+      <div class="flex-1">
+        <p class="font-display font-semibold text-text-primary mb-1">We use cookies</p>
+        <p class="text-text-secondary text-caption leading-relaxed">
+          We use strictly necessary cookies to make the site work. We want to enable optional cookies (HubSpot, Calendly) for lead capture and scheduling.
+          <a href="/privacy" class="text-accent underline underline-offset-2 hover:text-accent-hover">Privacy Policy</a> &middot;
+          <button id="cookie-manage-btn" class="text-accent underline underline-offset-2 hover:text-accent-hover cursor-pointer bg-transparent border-none p-0 text-caption">Manage preferences</button>
+        </p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-3 shrink-0">
+        <button
+          id="cookie-reject-all"
+          class="px-5 py-2.5 rounded-[var(--radius-sm)] border border-border-visible text-text-secondary text-caption font-medium hover:bg-bg-surface transition-colors duration-150 cursor-pointer"
+        >
+          Necessary only
+        </button>
+        <button
+          id="cookie-accept-all"
+          class="px-5 py-2.5 rounded-[var(--radius-sm)] bg-accent text-white text-caption font-medium hover:bg-accent-hover transition-colors duration-150 cursor-pointer"
+        >
+          Accept all
+        </button>
+      </div>
+    </div>
+
+    <div id="cookie-manage" class="hidden">
+      <p class="font-display font-semibold text-text-primary mb-4">Manage cookie preferences</p>
+      <div class="space-y-4 mb-6">
+
+        <div class="flex items-start gap-4 p-4 bg-bg-surface rounded-[var(--radius-sm)] border border-border-subtle">
+          <div class="flex-1">
+            <p class="font-medium text-text-primary text-caption">Strictly Necessary</p>
+            <p class="text-text-muted text-caption mt-0.5">Required for the website to function. Cannot be disabled.</p>
+          </div>
+          <span class="text-caption text-text-muted font-mono mt-0.5">Always on</span>
+        </div>
+
+        <div class="flex items-start gap-4 p-4 bg-bg-surface rounded-[var(--radius-sm)] border border-border-subtle">
+          <div class="flex-1">
+            <p class="font-medium text-text-primary text-caption">Functional</p>
+            <p class="text-text-muted text-caption mt-0.5">Enables enhanced features such as Calendly scheduling embeds. Data may be processed by Calendly, Inc.</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer mt-0.5">
+            <input type="checkbox" id="cat-functional" class="sr-only peer" />
+            <div class="w-10 h-5 bg-border-visible rounded-full peer peer-checked:bg-accent transition-colors duration-150 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+            <span class="sr-only">Enable functional cookies</span>
+          </label>
+        </div>
+
+        <div class="flex items-start gap-4 p-4 bg-bg-surface rounded-[var(--radius-sm)] border border-border-subtle">
+          <div class="flex-1">
+            <p class="font-medium text-text-primary text-caption">Analytics</p>
+            <p class="text-text-muted text-caption mt-0.5">Helps us understand how visitors use the site (e.g., Plausible Analytics or Google Analytics if enabled). No data is currently collected.</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer mt-0.5">
+            <input type="checkbox" id="cat-analytics" class="sr-only peer" />
+            <div class="w-10 h-5 bg-border-visible rounded-full peer peer-checked:bg-accent transition-colors duration-150 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+            <span class="sr-only">Enable analytics cookies</span>
+          </label>
+        </div>
+
+        <div class="flex items-start gap-4 p-4 bg-bg-surface rounded-[var(--radius-sm)] border border-border-subtle">
+          <div class="flex-1">
+            <p class="font-medium text-text-primary text-caption">Marketing</p>
+            <p class="text-text-muted text-caption mt-0.5">Enables personalised advertising and lead tracking via HubSpot. Data may be transferred to the United States under Standard Contractual Clauses.</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer mt-0.5">
+            <input type="checkbox" id="cat-marketing" class="sr-only peer" />
+            <div class="w-10 h-5 bg-border-visible rounded-full peer peer-checked:bg-accent transition-colors duration-150 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+            <span class="sr-only">Enable marketing cookies</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button
+          id="cookie-save-prefs"
+          class="px-5 py-2.5 rounded-[var(--radius-sm)] bg-accent text-white text-caption font-medium hover:bg-accent-hover transition-colors duration-150 cursor-pointer"
+        >
+          Save preferences
+        </button>
+        <button
+          id="cookie-accept-all-2"
+          class="px-5 py-2.5 rounded-[var(--radius-sm)] border border-border-visible text-text-secondary text-caption font-medium hover:bg-bg-surface transition-colors duration-150 cursor-pointer"
+        >
+          Accept all
+        </button>
+        <button
+          id="cookie-back-btn"
+          class="px-5 py-2.5 text-text-muted text-caption hover:text-text-secondary transition-colors duration-150 cursor-pointer bg-transparent border-none"
+        >
+          Back
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+(function () {
+  var CONSENT_KEY = 'oopuo_cookie_consent';
+  var CONSENT_VERSION = '1.0.0';
+
+  function getStoredConsent() {
+    try {
+      var raw = localStorage.getItem(CONSENT_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      if (parsed.version !== CONSENT_VERSION) return null;
+      return parsed;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveConsent(categories) {
+    var record = {
+      version: CONSENT_VERSION,
+      timestamp: new Date().toISOString(),
+      categories: categories,
+    };
+    try {
+      localStorage.setItem(CONSENT_KEY, JSON.stringify(record));
+      var logKey = 'oopuo_consent_log';
+      var log = JSON.parse(localStorage.getItem(logKey) || '[]');
+      log.push(record);
+      localStorage.setItem(logKey, JSON.stringify(log.slice(-20)));
+    } catch (e) {}
+    applyConsent(categories);
+    hideBanner();
+  }
+
+  function applyConsent(categories) {
+    window.dispatchEvent(new CustomEvent('oopuo:consent', { detail: { categories: categories } }));
+    if (categories.functional) loadCalendly();
+    if (categories.analytics) loadAnalytics();
+    if (categories.marketing) loadHubspot();
+  }
+
+  function loadCalendly() {
+    if (document.querySelector('script[data-consent="calendly"]')) return;
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://assets.calendly.com/assets/external/widget.css';
+    document.head.appendChild(link);
+    var s = document.createElement('script');
+    s.src = 'https://assets.calendly.com/assets/external/widget.js';
+    s.dataset.consent = 'calendly';
+    document.head.appendChild(s);
+  }
+
+  function loadAnalytics() {}
+
+  function loadHubspot() {
+    if (document.querySelector('script[data-consent="hubspot"]')) return;
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.id = 'hs-script-loader';
+    s.async = true;
+    s.defer = true;
+    s.src = '//js.hs-scripts.com/HUBSPOT_PORTAL_ID.js';
+    s.dataset.consent = 'marketing';
+    document.head.appendChild(s);
+  }
+
+  function showBanner() {
+    var banner = document.getElementById('cookie-banner');
+    if (banner) banner.classList.remove('hidden');
+  }
+
+  function hideBanner() {
+    var banner = document.getElementById('cookie-banner');
+    if (banner) banner.classList.add('hidden');
+  }
+
+  function showManage() {
+    var el = document.getElementById('cookie-simple');
+    if (el) el.classList.add('hidden');
+    el = document.getElementById('cookie-manage');
+    if (el) el.classList.remove('hidden');
+  }
+
+  function showSimple() {
+    var el = document.getElementById('cookie-manage');
+    if (el) el.classList.add('hidden');
+    el = document.getElementById('cookie-simple');
+    if (el) el.classList.remove('hidden');
+  }
+
+  window.oopuoOpenCookieSettings = function () {
+    showSimple();
+    showBanner();
+  };
+
+  var stored = getStoredConsent();
+  if (stored) {
+    applyConsent(stored.categories);
+  } else {
+    showBanner();
+  }
+
+  function syncToggles(categories) {
+    var fn = document.getElementById('cat-functional');
+    var an = document.getElementById('cat-analytics');
+    var mk = document.getElementById('cat-marketing');
+    if (fn) fn.checked = !!(categories && categories.functional);
+    if (an) an.checked = !!(categories && categories.analytics);
+    if (mk) mk.checked = !!(categories && categories.marketing);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var el;
+    el = document.getElementById('cookie-accept-all');
+    if (el) el.addEventListener('click', function () {
+      saveConsent({ necessary: true, functional: true, analytics: true, marketing: true });
+    });
+
+    el = document.getElementById('cookie-accept-all-2');
+    if (el) el.addEventListener('click', function () {
+      saveConsent({ necessary: true, functional: true, analytics: true, marketing: true });
+    });
+
+    el = document.getElementById('cookie-reject-all');
+    if (el) el.addEventListener('click', function () {
+      saveConsent({ necessary: true, functional: false, analytics: false, marketing: false });
+    });
+
+    el = document.getElementById('cookie-manage-btn');
+    if (el) el.addEventListener('click', function () {
+      var s = getStoredConsent();
+      syncToggles(s ? s.categories : null);
+      showManage();
+    });
+
+    el = document.getElementById('cookie-back-btn');
+    if (el) el.addEventListener('click', showSimple);
+
+    el = document.getElementById('cookie-save-prefs');
+    if (el) el.addEventListener('click', function () {
+      var fn = document.getElementById('cat-functional');
+      var an = document.getElementById('cat-analytics');
+      var mk = document.getElementById('cat-marketing');
+      saveConsent({
+        necessary: true,
+        functional: !!(fn && fn.checked),
+        analytics: !!(an && an.checked),
+        marketing: !!(mk && mk.checked),
+      });
+    });
+  });
+})();
+</script>

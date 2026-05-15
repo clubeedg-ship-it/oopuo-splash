@@ -4,12 +4,52 @@ import Button from '../components/Button.astro';
 import SectionLabel from '../components/SectionLabel.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import StatBlock from '../components/StatBlock.astro';
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'OOPUO',
+  url: 'https://oopuo.com',
+  logo: 'https://oopuo.com/favicon.svg',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: 'hello@oopuo.com',
+    contactType: 'customer service',
+  },
+  founder: {
+    '@type': 'Person',
+    name: 'Otavio Alves',
+  },
+  areaServed: 'EU',
+  description:
+    'Engineering-first AI consultancy building automation, websites, and EU AI Act compliance for European businesses.',
+};
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'OOPUO',
+  url: 'https://oopuo.com',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://oopuo.com/blog?q={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
 ---
 
 <Layout
   title="OOPUO — AI Automation & Digital Systems for Growing Businesses"
   description="We build AI-powered websites, automation, and customer support that save growing European businesses time and money. Engineering-first, no slide decks."
+  ogTitle="OOPUO — We Build Your AI Systems. You Focus on Growing."
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
+  </Fragment>
   <!-- HERO (dark) -->
   <section data-theme="dark" class="bg-bg-dark min-h-screen flex items-center">
     <div class="max-w-[var(--max-width-site)] mx-auto px-6 py-24 md:py-32">

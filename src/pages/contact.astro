@@ -2,12 +2,29 @@
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import SectionLabel from '../components/SectionLabel.astro';
+
+const contactPageJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: 'Get in Touch — OOPUO',
+  url: 'https://oopuo.com/contact',
+  description: 'Book a free 30-minute consultation about AI automation or EU AI Act compliance.',
+  mainEntity: {
+    '@type': 'Organization',
+    name: 'OOPUO',
+    email: 'hello@oopuo.com',
+    url: 'https://oopuo.com',
+  },
+};
 ---
 
 <Layout
   title="Get in Touch — OOPUO"
   description="Book a free 30-minute consultation about AI automation or EU AI Act compliance. No sales pitch, just clarity."
 >
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(contactPageJsonLd)} />
+  </Fragment>
   <!-- HEADER (light) -->
   <section class="bg-bg-primary py-24 md:py-32">
     <div class="max-w-[var(--max-width-site)] mx-auto px-6">
@@ -24,7 +41,6 @@ import SectionLabel from '../components/SectionLabel.astro';
   <!-- TABBED CONTACT (light) -->
   <section class="bg-bg-elevated py-section">
     <div class="max-w-[720px] mx-auto px-6">
-      <!-- Tab buttons -->
       <div class="flex border-b border-border-subtle mb-8" role="tablist">
         <button
           id="tab-message"
@@ -55,7 +71,6 @@ import SectionLabel from '../components/SectionLabel.astro';
         </button>
       </div>
 
-      <!-- Panel: Send a Message -->
       <div id="panel-message" role="tabpanel" aria-labelledby="tab-message" class="tab-panel">
         <form class="space-y-6" action="#" method="POST">
           <div>
@@ -116,7 +131,6 @@ import SectionLabel from '../components/SectionLabel.astro';
         </form>
       </div>
 
-      <!-- Panel: Book a Call -->
       <div id="panel-call" role="tabpanel" aria-labelledby="tab-call" class="tab-panel hidden">
         <div class="bg-bg-primary border border-border-subtle rounded-[10px] p-8 min-h-[400px] flex items-center justify-center text-center">
           <div>
@@ -126,7 +140,6 @@ import SectionLabel from '../components/SectionLabel.astro';
         </div>
       </div>
 
-      <!-- Panel: WhatsApp -->
       <div id="panel-whatsapp" role="tabpanel" aria-labelledby="tab-whatsapp" class="tab-panel hidden">
         <form id="whatsapp-form" class="space-y-6">
           <div>
@@ -163,7 +176,6 @@ import SectionLabel from '../components/SectionLabel.astro';
             ></textarea>
           </div>
 
-          <!-- Live preview -->
           <div class="bg-bg-surface border border-border-subtle rounded-[10px] p-6">
             <p class="font-mono text-caption text-text-muted mb-2">Message preview:</p>
             <p id="wa-preview" class="text-text-secondary text-body-lg leading-relaxed">
@@ -183,7 +195,6 @@ import SectionLabel from '../components/SectionLabel.astro';
         </form>
       </div>
 
-      <!-- Direct email -->
       <div class="mt-12 pt-8 border-t border-border-subtle text-center">
         <p class="text-text-muted">
           Or reach me directly: <a href="mailto:hello@oopuo.com" class="text-accent hover:text-accent-hover transition-colors duration-150">hello@oopuo.com</a>
@@ -194,24 +205,20 @@ import SectionLabel from '../components/SectionLabel.astro';
 </Layout>
 
 <script>
-  // Tab switching
   const tabs = document.querySelectorAll('.tab-btn');
   const panels = document.querySelectorAll('.tab-panel');
 
   tabs.forEach((tab) => {
     tab.addEventListener('click', () => {
-      // Reset all tabs
       tabs.forEach((t) => {
         t.setAttribute('aria-selected', 'false');
         t.classList.remove('text-text-primary', 'border-accent');
         t.classList.add('text-text-muted', 'border-transparent');
       });
-      // Activate clicked tab
       tab.setAttribute('aria-selected', 'true');
       tab.classList.remove('text-text-muted', 'border-transparent');
       tab.classList.add('text-text-primary', 'border-accent');
 
-      // Show corresponding panel
       const panelId = tab.getAttribute('aria-controls');
       panels.forEach((p) => {
         if (p.id === panelId) {
@@ -223,7 +230,6 @@ import SectionLabel from '../components/SectionLabel.astro';
     });
   });
 
-  // WhatsApp preview
   const waName = document.getElementById('wa-name') as HTMLInputElement;
   const waInterest = document.getElementById('wa-interest') as HTMLSelectElement;
   const waMessage = document.getElementById('wa-message') as HTMLTextAreaElement;
