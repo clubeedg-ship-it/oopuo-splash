@@ -1,0 +1,35 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BlogPostCard from '../../components/BlogPostCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+---
+
+<Layout
+  title="OOPUO Blog — AI Automation & Compliance Insights"
+  description="Practical guides on AI automation, EU AI Act compliance, and building reliable AI systems for European businesses."
+>
+  <section class="bg-bg-primary py-24 md:py-32">
+    <div class="max-w-[var(--max-width-site)] mx-auto px-6">
+      <h1 class="font-display font-bold text-hero mb-6">OOPUO Blog</h1>
+      <p class="text-text-secondary text-body-lg max-w-[720px] mb-16 leading-relaxed">
+        Practical guides on AI automation, EU AI Act compliance, and building reliable AI systems for European businesses.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((post) => (
+          <BlogPostCard
+            title={post.data.title}
+            description={post.data.description}
+            category={post.data.category}
+            date={new Date(post.data.date)}
+            slug={post.data.slug}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
