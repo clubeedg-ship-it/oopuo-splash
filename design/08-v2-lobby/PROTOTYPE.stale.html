@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OOPUO — Lobby Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F0F2F6;
+    --bg-elev: #FFFFFF;
+    --bg-surface: #E6E8EF;
+    --ink: #1A1C24;
+    --ink-mute: #5A5E72;
+    --ink-faint: #8A8FA8;
+    --line: rgba(26, 28, 36, 0.08);
+    --line-strong: rgba(26, 28, 36, 0.15);
+    --teal: #1E7A6E;
+    --teal-glow: rgba(30, 122, 110, 0.18);
+    --warm: #C4814A;
+    --display: "Instrument Sans", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    --gutter-left: 180px;
+    --hud-top: 72px;
+    --hud-bot: 72px;
+    --col0-left: 56px;
+    --col0-left-shifted: 24px;
+    --col1-left: 78px;
+  }
+  [data-theme="dark"] {
+    --bg: #070709;
+    --bg-elev: #0E0F13;
+    --bg-surface: #151720;
+    --ink: #EAEDF3;
+    --ink-mute: #8A8FA8;
+    --ink-faint: #505469;
+    --line: rgba(234, 237, 243, 0.07);
+    --line-strong: rgba(234, 237, 243, 0.14);
+    --teal: #2D8A7E;
+    --teal-glow: rgba(45, 138, 126, 0.25);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    height: 100%; width: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--display);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .stage { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+  .room, .sub-room {
+    position: absolute; inset: 0;
+    padding: var(--hud-top) 48px var(--hud-bot) var(--gutter-left);
+    display: grid;
+    place-items: center start;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px) scale(0.995);
+    transition:
+      opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      background 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    background: var(--bg);
+  }
+  .room.active, .sub-room.active { opacity: 1; pointer-events: auto; transform: none; }
+  .room-inner { width: 100%; max-width: 1040px; position: relative; }
+  .sub-room { z-index: 5; }
+  .room::before, .sub-room::before {
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size: 96px 96px;
+    opacity: 0;
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 90%);
+  }
+  body[data-room="1"] .room[data-room="1"]::before { opacity: 0.35; }
+  body[data-room="2"] .room[data-room="2"]::before { opacity: 0.55; }
+  body[data-room="3"] .room[data-room="3"]::before { opacity: 0.85; }
+  body[data-room="4"] .room[data-room="4"]::before { opacity: 1; }
+  .sub-room.active::before { opacity: 0.9; }
+
+  /* HUD */
+  .hud {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 30;
+    padding: 24px 32px 24px var(--gutter-left);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .hud > * { pointer-events: auto; }
+  .hud .tl { grid-row: 1; grid-column: 1; }
+  .hud .tr { grid-row: 1; grid-column: 2; justify-self: end; text-align: right; }
+  .hud .br { grid-row: 3; grid-column: 2; justify-self: end; text-align: right; }
+  .hud .brand {
+    color: var(--ink); font-family: var(--display); font-weight: 700;
+    font-size: 15px; letter-spacing: -0.01em; text-transform: none;
+  }
+  .hud .brand::before {
+    content: ""; display: inline-block;
+    width: 7px; height: 7px; background: var(--teal);
+    margin-right: 10px; vertical-align: middle; margin-bottom: 2px;
+    transform: rotate(45deg);
+  }
+  .hud .counter .current { color: var(--ink); }
+  .hud .counter .total { color: var(--ink-faint); }
+  .hud .next em { font-style: normal; color: var(--ink); }
+
+  /* Section title — top center */
+  .section-title {
+    position: fixed;
+    top: 28px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 31;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    pointer-events: none;
+  }
+  .section-title .tick { width: 28px; height: 1px; background: var(--teal); box-shadow: 0 0 6px var(--teal-glow); }
+  .section-title .name {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .section-title .name::before {
+    content: attr(data-num);
+    color: var(--ink-faint);
+    margin-right: 14px;
+    font-weight: 400;
+  }
+
+  /* —— COL 0 main rail —— */
+  .nav-rail {
+    position: fixed;
+    left: var(--col0-left);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; align-items: center;
+    gap: 32px;
+    z-index: 25;
+    padding: 12px 0;
+    transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  body.col1-open .nav-rail { left: var(--col0-left-shifted); }
+  .nav-rail::after {
+    content: "";
+    position: absolute; left: 50%; top: 50%;
+    width: 240px; height: 240px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, var(--teal-glow) 0%, transparent 65%);
+    filter: blur(10px);
+    z-index: -2; pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+  body.col1-open .nav-rail::after { opacity: 0.35; }
+  .nav-rail::before {
+    content: "";
+    position: absolute; left: 50%; top: 0; bottom: 0;
+    width: 1px; transform: translateX(-0.5px);
+    background: linear-gradient(to bottom, transparent 0%, var(--teal-glow) 30%, var(--teal) 50%, var(--teal-glow) 70%, transparent 100%);
+    z-index: -1; pointer-events: none;
+  }
+
+  /* —— COL 1 rail (parallel vertical column) —— */
+  .col1-rail {
+    position: fixed;
+    left: var(--col1-left);
+    top: 50%;
+    transform: translate(-12px, -50%);
+    opacity: 0;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 32px;
+    z-index: 25;
+    padding: 12px 0;
+    pointer-events: none;
+    transition:
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.5s 0.05s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  body.col1-open .col1-rail {
+    transform: translateY(-50%);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .col1-rail::after {
+    content: "";
+    position: absolute; left: 50%; top: 50%;
+    width: 220px; height: 220px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, var(--teal-glow) 0%, transparent 65%);
+    filter: blur(10px);
+    z-index: -2; pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  body.col1-open .col1-rail::after { opacity: 1; }
+  .col1-rail::before {
+    content: "";
+    position: absolute; left: 50%; top: 0; bottom: 0;
+    width: 1px; transform: translateX(-0.5px);
+    background: linear-gradient(to bottom, transparent 0%, var(--teal-glow) 30%, var(--teal) 50%, var(--teal-glow) 70%, transparent 100%);
+    z-index: -1; pointer-events: none;
+  }
+
+  /* —— Nodes (shared style across both rails) —— */
+  .nav-node, .col1-node {
+    position: relative;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--ink-faint);
+    border: none; padding: 0;
+    cursor: pointer;
+    transition:
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      background 0.4s ease, box-shadow 0.5s ease;
+  }
+  .nav-node[data-dist="0"], .col1-node[data-dist="0"] {
+    background: var(--teal);
+    transform: scale(2);
+    filter: blur(0);
+    opacity: 1;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.4),
+      0 0 10px var(--teal),
+      0 0 28px var(--teal-glow),
+      0 0 60px var(--teal-glow);
+  }
+  .nav-node[data-dist="1"], .col1-node[data-dist="1"] { filter: blur(1.2px); opacity: 0.55; transform: scale(1.15); background: var(--ink-mute); }
+  .nav-node[data-dist="2"], .col1-node[data-dist="2"] { filter: blur(2.8px); opacity: 0.3; transform: scale(0.9); }
+  .nav-node[data-dist="3"], .col1-node[data-dist="3"] { filter: blur(4.5px); opacity: 0.15; transform: scale(0.75); }
+  .nav-node:hover, .col1-node:hover { background: var(--ink); }
+
+  /* Parent-active state on COL 0 when COL 1 is open */
+  .nav-node[data-state="parent"] {
+    background: var(--teal);
+    transform: scale(1.5);
+    filter: blur(0);
+    opacity: 0.9;
+    box-shadow: 0 0 6px var(--teal-glow), 0 0 18px var(--teal-glow);
+  }
+
+  /* Glow stick — only on deepest active ball */
+  .nav-node::after, .col1-node::after {
+    content: "";
+    position: absolute;
+    left: 100%; top: 50%;
+    margin-left: 6px;
+    transform: translateY(-50%);
+    height: 1.5px; border-radius: 1px;
+    background: var(--teal);
+    transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+    width: 0;
+    pointer-events: none;
+  }
+  /* When COL 1 closed: COL 0 active ball gets the stick */
+  body:not(.col1-open) .nav-node[data-dist="0"]::after {
+    width: 16px;
+    box-shadow: 0 0 6px var(--teal), 0 0 14px var(--teal-glow), 0 0 28px var(--teal-glow);
+  }
+  body:not(.col1-open) .nav-node[data-dist="1"]::after { width: 22px; box-shadow: 0 0 5px var(--teal-glow), 0 0 12px var(--teal-glow); }
+  body:not(.col1-open) .nav-node[data-dist="2"]::after { width: 12px; box-shadow: 0 0 4px var(--teal-glow); }
+  body:not(.col1-open) .nav-node[data-dist="3"]::after { width: 6px; box-shadow: 0 0 3px var(--teal-glow); }
+  /* When COL 1 open: COL 1 active ball gets the stick; COL 0 sticks suppressed */
+  body.col1-open .nav-node::after { width: 0 !important; box-shadow: none !important; }
+  body.col1-open .col1-node[data-dist="0"]::after {
+    width: 16px;
+    box-shadow: 0 0 6px var(--teal), 0 0 14px var(--teal-glow), 0 0 28px var(--teal-glow);
+  }
+  body.col1-open .col1-node[data-dist="1"]::after { width: 22px; box-shadow: 0 0 5px var(--teal-glow), 0 0 12px var(--teal-glow); }
+  body.col1-open .col1-node[data-dist="2"]::after { width: 12px; box-shadow: 0 0 4px var(--teal-glow); }
+  body.col1-open .col1-node[data-dist="3"]::after { width: 6px; box-shadow: 0 0 3px var(--teal-glow); }
+
+  /* —— Typography —— */
+  .label {
+    display: inline-block;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 28px;
+  }
+  .label::before { content: ""; display: inline-block; width: 28px; height: 1px; background: var(--teal); vertical-align: middle; margin-right: 14px; margin-bottom: 3px; }
+  h1 { font-family: var(--display); font-weight: 700; font-size: clamp(2.5rem, 5.6vw, 5rem); line-height: 1.02; letter-spacing: -0.035em; margin: 0 0 28px 0; max-width: 16ch; color: var(--ink); }
+  h2 { font-family: var(--display); font-weight: 700; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.05; letter-spacing: -0.025em; margin: 0 0 24px 0; max-width: 18ch; color: var(--ink); }
+  p.lead { font-size: clamp(1rem, 1.3vw, 1.2rem); line-height: 1.6; color: var(--ink-mute); max-width: 56ch; margin: 0 0 28px 0; }
+  p.lead strong { color: var(--ink); font-weight: 500; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border-radius: 4px; font-family: var(--display); font-weight: 500; font-size: 0.95rem; text-decoration: none; transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease; cursor: pointer; border: 1px solid transparent; white-space: nowrap; }
+  .btn-primary { background: var(--teal); color: white; }
+  .btn-primary:hover { background: #24917F; transform: translateY(-1px); }
+  .btn-ghost { color: var(--ink); border-color: var(--line-strong); background: transparent; }
+  .btn-ghost:hover { border-color: var(--ink-mute); }
+  .btn-warm { background: var(--warm); color: white; box-shadow: 0 8px 24px -10px rgba(196, 129, 74, 0.45); }
+  .btn-warm:hover { background: #D4945E; transform: translateY(-1px); }
+  .btn .arrow { transition: transform 0.2s ease; }
+  .btn:hover .arrow { transform: translateX(3px); }
+
+  /* Modules grid */
+  .modules { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line-strong); border: 1px solid var(--line-strong); margin-top: 16px; }
+  .module { background: var(--bg-elev); padding: 26px 26px 28px; position: relative; cursor: pointer; transition: background 0.2s ease; }
+  .module:hover { background: var(--bg); }
+  .module-tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
+  .module-title { font-family: var(--display); font-weight: 600; font-size: 1.2rem; margin: 0 0 8px 0; color: var(--ink); letter-spacing: -0.01em; }
+  .module-desc { font-size: 0.92rem; line-height: 1.55; color: var(--ink-mute); margin: 0; }
+  .module .corner { position: absolute; top: 12px; right: 14px; font-family: var(--mono); font-size: 10px; color: var(--ink-faint); letter-spacing: 0.12em; }
+  .module .more { position: absolute; bottom: 18px; right: 22px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal); opacity: 0; transform: translateX(-6px); transition: opacity 0.2s ease, transform 0.2s ease; }
+  .module:hover .more { opacity: 1; transform: translateX(0); }
+
+  /* Stats */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line-strong); border: 1px solid var(--line-strong); margin-top: 36px; }
+  .stat { background: var(--bg-elev); padding: 28px 26px; }
+  .stat-val { font-family: var(--mono); font-size: clamp(1.75rem, 3vw, 2.5rem); color: var(--ink); letter-spacing: -0.02em; line-height: 1; margin-bottom: 10px; }
+  .stat-label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-mute); }
+
+  /* Sub-page widgets */
+  .examples-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line-strong); border: 1px solid var(--line-strong); margin-top: 8px; }
+  .example { background: var(--bg-elev); padding: 22px 24px 24px; }
+  .example-client { font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal); margin-bottom: 8px; }
+  .example-title { font-family: var(--display); font-weight: 600; font-size: 1.05rem; color: var(--ink); margin-bottom: 6px; }
+  .example-outcome { font-size: 0.88rem; color: var(--ink-mute); line-height: 1.55; margin: 0; }
+  .example-outcome strong { color: var(--ink); font-weight: 500; }
+
+  .process-list { list-style: none; padding: 0; margin: 8px 0 0 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .process-list li { padding-left: 36px; position: relative; }
+  .process-list li::before { content: attr(data-step); position: absolute; left: 0; top: 2px; font-family: var(--mono); font-size: 11px; color: var(--teal); letter-spacing: 0.16em; }
+  .process-list h4 { font-family: var(--display); font-weight: 600; font-size: 1.05rem; color: var(--ink); margin: 0 0 6px 0; }
+  .process-list p { font-size: 0.9rem; color: var(--ink-mute); line-height: 1.55; margin: 0; }
+
+  .price-tiers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line-strong); border: 1px solid var(--line-strong); margin-top: 8px; }
+  .tier { background: var(--bg-elev); padding: 28px 26px; }
+  .tier-name { font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
+  .tier-price { font-family: var(--mono); font-size: 1.6rem; color: var(--ink); margin-bottom: 4px; }
+  .tier-note { font-size: 0.85rem; color: var(--ink-mute); margin-bottom: 18px; }
+  .tier ul { list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: var(--ink-mute); line-height: 1.7; }
+  .tier ul li::before { content: "◇"; color: var(--teal); margin-right: 8px; }
+
+  /* Back link */
+  .back-link { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; margin-bottom: 24px; transition: color 0.15s ease; cursor: pointer; }
+  .back-link:hover { color: var(--ink); }
+
+  /* Scroll hint */
+  .scroll-hint {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--ink-faint);
+    z-index: 25;
+    animation: pulse 2.4s infinite;
+    transition: opacity 0.3s ease;
+  }
+  body[data-room="4"] .scroll-hint, body.col1-open .scroll-hint { opacity: 0; }
+  @keyframes pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.9; } }
+
+  @media (max-width: 900px) {
+    :root { --gutter-left: 120px; --col0-left: 28px; --col0-left-shifted: 14px; --col1-left: 56px; }
+    .nav-rail, .col1-rail { gap: 24px; }
+    .examples-grid, .price-tiers, .modules, .process-list, .stats { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    :root { --gutter-left: 32px; --hud-top: 60px; --hud-bot: 60px; }
+    .nav-rail, .col1-rail { display: none; }
+    .room, .sub-room { padding-left: 32px; padding-right: 32px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body data-room="1">
+
+<div class="section-title" aria-hidden="true">
+  <span class="tick"></span>
+  <span class="name" id="section-name" data-num="01">ARRIVAL</span>
+</div>
+
+<div class="hud">
+  <div class="tl"><span class="brand">OOPUO</span></div>
+  <div class="tr counter"><span class="current">01</span> <span class="total">/ 04</span></div>
+  <div class="br next">NEXT <em id="next-label">— THE GAP</em> ↓</div>
+</div>
+
+<nav class="nav-rail" aria-label="Main sections">
+  <button class="nav-node" data-go="1" data-dist="0" aria-label="Arrival"></button>
+  <button class="nav-node" data-go="2" data-dist="1" aria-label="The Gap"></button>
+  <button class="nav-node" data-go="3" data-dist="2" aria-label="Modules"></button>
+  <button class="nav-node" data-go="4" data-dist="3" aria-label="Invitation"></button>
+</nav>
+
+<nav class="col1-rail" aria-label="Module sub-pages">
+  <button class="col1-node" data-sub="1" aria-label="Overview"></button>
+  <button class="col1-node" data-sub="2" aria-label="Examples"></button>
+  <button class="col1-node" data-sub="3" aria-label="Process"></button>
+  <button class="col1-node" data-sub="4" aria-label="Pricing"></button>
+</nav>
+
+<div class="scroll-hint">SCROLL · DRAG · ↓</div>
+
+<div class="stage">
+
+  <section class="room active" data-room="1" data-theme="dark">
+    <div class="room-inner">
+      <span class="label">An engineering studio · Amsterdam</span>
+      <h1>We build your AI systems. You focus on growing.</h1>
+      <p class="lead">AI-powered websites, automation, and customer support for European businesses that want to move faster — <strong>without hiring a tech department.</strong></p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="#" data-go="3">See what we build <span class="arrow">→</span></a>
+        <a class="btn btn-ghost" href="#" data-go="4">Book a free call <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="room" data-room="2">
+    <div class="room-inner">
+      <h2>You're growing. Your tools aren't.</h2>
+      <p class="lead">Answering the same customer question for the third time today. A website that was "temporary" two years ago. Spreadsheets copied between systems because no one had time to connect them.</p>
+      <p class="lead">You don't need a digital transformation. You need <strong>the three or four automations that give you your week back.</strong></p>
+    </div>
+  </section>
+
+  <section class="room" data-room="3">
+    <div class="room-inner">
+      <h2>Four modules. Installed.</h2>
+      <div class="modules">
+        <div class="module" data-mod="1" tabindex="0">
+          <span class="corner">M.01</span>
+          <div class="module-tag">Websites</div>
+          <div class="module-title">Custom sites & landing pages</div>
+          <p class="module-desc">Modern, fast, conversion-focused. Sub-second loads, no WordPress bloat.</p>
+          <span class="more">Explore →</span>
+        </div>
+        <div class="module" data-mod="2" tabindex="0">
+          <span class="corner">M.02</span>
+          <div class="module-tag">AI Support</div>
+          <div class="module-title">24/7 customer assistant</div>
+          <p class="module-desc">Trained on your product, your tone. Escalates when it matters.</p>
+          <span class="more">Explore →</span>
+        </div>
+        <div class="module" data-mod="3" tabindex="0">
+          <span class="corner">M.03</span>
+          <div class="module-tag">Automation</div>
+          <div class="module-title">Internal process agents</div>
+          <p class="module-desc">Data entry, reports, invoices, lead routing — handled in the background.</p>
+          <span class="more">Explore →</span>
+        </div>
+        <div class="module" data-mod="4" tabindex="0">
+          <span class="corner">M.04</span>
+          <div class="module-tag">Integrations</div>
+          <div class="module-title">Platform connectors</div>
+          <p class="module-desc">Your CRM, invoicing, inventory — talking to each other.</p>
+          <span class="more">Explore →</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="room" data-room="4" data-theme="dark">
+    <div class="room-inner">
+      <h2>Ready to get your time back?</h2>
+      <p class="lead">A 30-minute call is all it takes to find out which automations will save you the most.</p>
+      <div class="stats">
+        <div class="stat"><div class="stat-val">20+</div><div class="stat-label">hrs / week saved</div></div>
+        <div class="stat"><div class="stat-val">&lt;2 wks</div><div class="stat-label">typical deploy</div></div>
+        <div class="stat"><div class="stat-val">€0</div><div class="stat-label">on WP licenses</div></div>
+      </div>
+      <div class="btn-row" style="margin-top:44px">
+        <a class="btn btn-warm" href="#">Book a free call <span class="arrow">→</span></a>
+        <a class="btn btn-ghost" href="#">Send a message <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- M.01 Websites — full 4 sub-pages -->
+  <section class="sub-room" data-mod="1" data-sub="1">
+    <div class="room-inner">
+      <a class="back-link" data-back>← Modules</a>
+      <h2>Custom websites & landing pages.</h2>
+      <p class="lead">Modern, fast, conversion-focused. Built on frameworks that load in under a second and rank on Google without ongoing SEO retainers. No WordPress bloat.</p>
+      <p class="lead"><strong>What's inside:</strong> design system tailored to your brand, copy collaboration, analytics setup, A/B testing scaffolding, performance monitoring after launch.</p>
+      <div class="btn-row"><a class="btn btn-primary" href="#">Start a project <span class="arrow">→</span></a></div>
+    </div>
+  </section>
+  <section class="sub-room" data-mod="1" data-sub="2">
+    <div class="room-inner">
+      <a class="back-link" data-back>← Modules</a>
+      <h2>Examples of sites we've shipped.</h2>
+      <div class="examples-grid">
+        <div class="example">
+          <div class="example-client">B2B SaaS · Amsterdam</div>
+          <div class="example-title">Conversion-focused landing relaunch</div>
+          <p class="example-outcome"><strong>2.3× signup rate</strong> within 6 weeks. Loaded in 480ms.</p>
+        </div>
+        <div class="example">
+          <div class="example-client">Logistics · Rotterdam</div>
+          <div class="example-title">Multilingual marketing site (EN/NL/DE)</div>
+          <p class="example-outcome">Replaced WordPress, cut hosting bill <strong>70%</strong>. Organic +40% in 3 months.</p>
+        </div>
+        <div class="example">
+          <div class="example-client">Hospitality · Lisbon</div>
+          <div class="example-title">Booking-funnel rebuild</div>
+          <p class="example-outcome"><strong>Direct bookings 1.6×</strong> first quarter. €0 in OTA commissions on those.</p>
+        </div>
+        <div class="example">
+          <div class="example-client">Wellness · Porto</div>
+          <div class="example-title">Brand site + appointment funnel</div>
+          <p class="example-outcome">From Squarespace to a custom build, <strong>3-week delivery.</strong></p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="sub-room" data-mod="1" data-sub="3">
+    <div class="room-inner">
+      <a class="back-link" data-back>← Modules</a>
+      <h2>How we build it.</h2>
+      <p class="lead">A 4-step process. Fixed timeline. No "it depends".</p>
+      <ol class="process-list">
+        <li data-step="01"><h4>Discovery</h4><p>30-min call. We map your audience, your competitors, your three core conversion goals.</p></li>
+        <li data-step="02"><h4>Design</h4><p>Wireframes + visual direction within a week. You approve before we touch code.</p></li>
+        <li data-step="03"><h4>Build</h4><p>Astro + Tailwind, sub-second loads, accessibility baked in. Staging URL day one.</p></li>
+        <li data-step="04"><h4>Launch & monitor</h4><p>DNS, analytics, monitoring. We watch the first two weeks of traffic and tune.</p></li>
+      </ol>
+    </div>
+  </section>
+  <section class="sub-room" data-mod="1" data-sub="4">
+    <div class="room-inner">
+      <a class="back-link" data-back>← Modules</a>
+      <h2>Pricing.</h2>
+      <p class="lead">Fixed scope, fixed price. No retainers.</p>
+      <div class="price-tiers">
+        <div class="tier">
+          <div class="tier-name">Starter</div>
+          <div class="tier-price">from €4,500</div>
+          <div class="tier-note">Up to 5 pages · 4-week delivery</div>
+          <ul>
+            <li>Custom design system</li>
+            <li>Copywriting collaboration</li>
+            <li>Analytics + monitoring</li>
+            <li>EU CDN launch</li>
+          </ul>
+        </div>
+        <div class="tier">
+          <div class="tier-name">Premium</div>
+          <div class="tier-price">from €11,000</div>
+          <div class="tier-note">Up to 20 pages, CMS, i18n · 6–8 weeks</div>
+          <ul>
+            <li>Everything in Starter</li>
+            <li>Headless CMS</li>
+            <li>Multi-language routing</li>
+            <li>A/B testing harness</li>
+          </ul>
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:32px"><a class="btn btn-primary" href="#">Book a discovery call <span class="arrow">→</span></a></div>
+    </div>
+  </section>
+
+  <!-- M.02/M.03/M.04 — Overview written, other sub-pages handled by stub -->
+  <section class="sub-room" data-mod="2" data-sub="1">
+    <div class="room-inner">
+      <a class="back-link" data-back>← Modules</a>
+      <h2>24/7 AI customer<br>assistant.</h2>
+      <p class="lead">An assistant trained on your product, your FAQs, your tone of voice. Handles repetitive questions in any language, escalates to humans when intent shifts or sentiment drops.</p>
+      <p class="lead"><strong>What's inside:</strong> training pipeline on your docs, channel integrations (web, WhatsApp, email), human handoff flows, monthly performance review.</p>
+    </div>
+  </section>
+  <section class="sub-room" data-mod="3" data-sub="1">
+    <div class="room-inner">
+      <a class="back-link" data-back>← Modules</a>
+      <h2>Internal process<br>automation.</h2>
+      <p class="lead">Data entry, report generation, invoice processing, lead routing — handled by AI agents that run reliably in the background.</p>
+      <p class="lead"><strong>What's inside:</strong> agent design, integration with your existing tools, monitoring dashboard, audit logs for compliance.</p>
+    </div>
+  </section>
+  <section class="sub-room" data-mod="4" data-sub="1">
+    <div class="room-inner">
+      <a class="back-link" data-back>← Modules</a>
+      <h2>Platform<br>integrations.</h2>
+      <p class="lead">Your CRM talks to your invoicing tool talks to your inventory system. We connect the platforms you already use so data flows where it needs to go.</p>
+      <p class="lead"><strong>What's inside:</strong> integration mapping, middleware setup, data sync verification, error monitoring, documentation your team can read.</p>
+    </div>
+  </section>
+
+  <!-- Generic stub for unwritten sub-pages -->
+  <section class="sub-room" data-mod-stub>
+    <div class="room-inner">
+      <a class="back-link" data-back>← Modules</a>
+      <h2 id="stub-title">Coming soon.</h2>
+      <p class="lead" id="stub-desc">This sub-page follows the same template as Websites.</p>
+      <p class="lead">For now, try <strong>M.01 Websites</strong> to see all four sub-pages filled in.</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  const TOTAL = 4;
+  const LABELS = ["Arrival", "The Gap", "Modules", "Invitation"];
+  const MODULE_LABELS = ["Websites", "AI Support", "Automation", "Integrations"];
+  const SUB_LABELS = ["Overview", "Examples", "Process", "Pricing"];
+  const HAS_CONTENT = {
+    "1-1": true, "1-2": true, "1-3": true, "1-4": true,
+    "2-1": true, "3-1": true, "4-1": true,
+  };
+
+  let current = 1;
+  let currentMod = null;
+  let currentSub = 1;
+  let animating = false;
+  let wheelAcc = 0;
+  let wheelTimer;
+  const WHEEL_THRESHOLD = 60;
+
+  const rooms = document.querySelectorAll('.room');
+  const subRooms = document.querySelectorAll('.sub-room');
+  const nodes = document.querySelectorAll('.nav-node');
+  const col1Nodes = document.querySelectorAll('.col1-node');
+  const stubRoom = document.querySelector('.sub-room[data-mod-stub]');
+  const stubTitle = document.getElementById('stub-title');
+  const stubDesc = document.getElementById('stub-desc');
+  const currentEl = document.querySelector('.counter .current');
+  const totalEl = document.querySelector('.counter .total');
+  const nextEl = document.getElementById('next-label');
+  const sectionName = document.getElementById('section-name');
+
+  function syncBodyTheme() {
+    const activeEl = (currentMod !== null)
+      ? document.querySelector('.sub-room.active')
+      : document.querySelector('.room.active');
+    if (activeEl && activeEl.getAttribute('data-theme') === 'dark') {
+      document.body.setAttribute('data-theme', 'dark');
+    } else {
+      document.body.removeAttribute('data-theme');
+    }
+  }
+
+  function paintTop() {
+    if (currentMod !== null) {
+      const modKey = 'M.' + String(currentMod).padStart(2, '0');
+      const sub = SUB_LABELS[currentSub - 1];
+      currentEl.textContent = modKey;
+      totalEl.textContent = '· ' + sub.toUpperCase();
+      sectionName.textContent = MODULE_LABELS[currentMod - 1].toUpperCase() + ' · ' + sub.toUpperCase();
+      sectionName.setAttribute('data-num', modKey);
+      nextEl.textContent = '↑ MODULES';
+    } else {
+      const num = String(current).padStart(2, '0');
+      currentEl.textContent = num;
+      totalEl.textContent = '/ 04';
+      sectionName.textContent = LABELS[current - 1].toUpperCase();
+      sectionName.setAttribute('data-num', num);
+      nextEl.textContent = current < TOTAL ? `— ${LABELS[current].toUpperCase()}` : '— END';
+    }
+  }
+
+  function updateNavDist() {
+    nodes.forEach(node => {
+      const goNum = Number(node.dataset.go);
+      if (currentMod !== null) {
+        if (goNum === 3) {
+          node.setAttribute('data-state', 'parent');
+          node.removeAttribute('data-dist');
+        } else {
+          node.removeAttribute('data-state');
+          node.dataset.dist = String(Math.min(3, Math.abs(goNum - 3)));
+        }
+      } else {
+        node.removeAttribute('data-state');
+        node.dataset.dist = String(Math.min(3, Math.abs(goNum - current)));
+      }
+    });
+  }
+
+  function updateCol1Dist() {
+    col1Nodes.forEach(node => {
+      node.dataset.dist = String(Math.min(3, Math.abs(Number(node.dataset.sub) - currentSub)));
+    });
+  }
+
+  function showSubRoom() {
+    subRooms.forEach(sr => sr.classList.remove('active'));
+    const key = currentMod + '-' + currentSub;
+    if (HAS_CONTENT[key]) {
+      const sr = document.querySelector(`.sub-room[data-mod="${currentMod}"][data-sub="${currentSub}"]`);
+      if (sr) sr.classList.add('active');
+    } else {
+      const sub = SUB_LABELS[currentSub - 1];
+      const mod = MODULE_LABELS[currentMod - 1];
+      stubTitle.textContent = mod + ' · ' + sub + '.';
+      stubDesc.textContent = mod + "'s " + sub.toLowerCase() + " page is on the same template as Websites · " + sub + ". Content TK.";
+      stubRoom.classList.add('active');
+    }
+  }
+
+  function go(n) {
+    if (animating || n < 1 || n > TOTAL) return;
+    if (currentMod === null && n === current) return;
+    animating = true;
+    if (currentMod !== null) {
+      currentMod = null;
+      currentSub = 1;
+      document.body.classList.remove('col1-open');
+      subRooms.forEach(sr => sr.classList.remove('active'));
+    }
+    current = n;
+    document.body.dataset.room = String(current);
+    rooms.forEach(r => r.classList.toggle('active', Number(r.dataset.room) === current));
+    updateNavDist();
+    paintTop();
+    syncBodyTheme();
+    setTimeout(() => { animating = false; }, 720);
+  }
+
+  function enterMod(modNum, subNum = 1) {
+    if (animating || modNum < 1 || modNum > 4) return;
+    animating = true;
+    currentMod = modNum;
+    currentSub = subNum;
+    if (current !== 3) {
+      current = 3;
+      document.body.dataset.room = '3';
+      rooms.forEach(r => r.classList.toggle('active', Number(r.dataset.room) === 3));
+    }
+    document.body.classList.add('col1-open');
+    updateNavDist();
+    updateCol1Dist();
+    showSubRoom();
+    paintTop();
+    syncBodyTheme();
+    setTimeout(() => { animating = false; }, 720);
+  }
+
+  function switchSub(subNum) {
+    if (animating || currentMod === null) return;
+    if (subNum < 1 || subNum > 4 || subNum === currentSub) return;
+    animating = true;
+    currentSub = subNum;
+    updateCol1Dist();
+    showSubRoom();
+    paintTop();
+    syncBodyTheme();
+    setTimeout(() => { animating = false; }, 720);
+  }
+
+  function exitMod() {
+    if (currentMod === null) return;
+    animating = true;
+    currentMod = null;
+    currentSub = 1;
+    document.body.classList.remove('col1-open');
+    subRooms.forEach(sr => sr.classList.remove('active'));
+    updateNavDist();
+    paintTop();
+    syncBodyTheme();
+    setTimeout(() => { animating = false; }, 720);
+  }
+
+  // Bindings
+  document.querySelectorAll('[data-go]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); go(parseInt(el.dataset.go, 10)); });
+  });
+  document.querySelectorAll('[data-mod]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); enterMod(parseInt(el.dataset.mod, 10), 1); });
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterMod(parseInt(el.dataset.mod, 10), 1); }
+    });
+  });
+  document.querySelectorAll('.col1-node').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); switchSub(parseInt(el.dataset.sub, 10)); });
+  });
+  document.querySelectorAll('[data-back]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); exitMod(); });
+  });
+
+  window.addEventListener('wheel', e => {
+    if (animating || currentMod !== null) return;
+    wheelAcc += e.deltaY;
+    clearTimeout(wheelTimer);
+    wheelTimer = setTimeout(() => { wheelAcc = 0; }, 220);
+    if (Math.abs(wheelAcc) >= WHEEL_THRESHOLD) {
+      go(current + (wheelAcc > 0 ? 1 : -1));
+      wheelAcc = 0;
+    }
+  }, { passive: true });
+
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && currentMod !== null) { e.preventDefault(); exitMod(); return; }
+    if (currentMod !== null) {
+      if (e.key === 'ArrowDown') { e.preventDefault(); switchSub(currentSub + 1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); switchSub(currentSub - 1); }
+      return;
+    }
+    if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(current + 1); }
+    else if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(current - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(1); }
+    else if (e.key === 'End') { e.preventDefault(); go(TOTAL); }
+  });
+
+  let touchY = 0;
+  window.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
+  window.addEventListener('touchend', e => {
+    if (currentMod !== null) return;
+    const dy = touchY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) > 50) go(current + (dy > 0 ? 1 : -1));
+  }, { passive: true });
+
+  syncBodyTheme();
+  paintTop();
+})();
+</script>
+</body>
+</html>

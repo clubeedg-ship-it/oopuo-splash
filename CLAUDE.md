@@ -49,5 +49,18 @@ All design intent lives in `design/`. If code disagrees with a design doc, fix t
 - Strings live in locale JSON files, never hardcoded in components.
 
 ## 8. Session Snapshot
-<!-- Updated at session close -->
-Last session: (none yet)
+
+**Active work: v2 lobby prototype** (separate from the v1 Astro site in `src/pages/`).
+
+- **Live prototype:** `public/lobby.html` (served at `http://localhost:4321/lobby.html`)
+- **Canonical state doc:** `design/08-v2-lobby/STATE.md` ← **READ THIS FIRST every session**
+- **DECISIONS.md** has D-002+ covering v2 architecture choices
+
+The v2 lobby is a single-file HTML prototype with Three.js + AsciiEffect + bloom pipeline, six rooms with animated cyan/warm sculpture, hash-based routing, editorial blog. The v1 invariants in §6–7 above describe the v1 Astro site — **the v2 lobby intentionally departs from several** (dark-first hero, full-viewport animation, no card shadows on the lobby). Do not enforce v1 invariants on v2 work without checking STATE.md.
+
+**Top priorities for next session:**
+1. Morph abort bug (sculpture shows wrong shape during fast scrolling — architectural fix)
+2. Blog post reading view (currently stub)
+3. v1/v2 production merge decision
+
+Last session: 2026-05-17 — finished alien-pulse color system (cyan/warm families with 4s palette transitions, narrow hue band, dancing gradient center), URL hash routing for state persistence, asymmetric room slide, bigger logo lockup. All documented in STATE.md.

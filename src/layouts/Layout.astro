@@ -13,6 +13,7 @@ interface Props {
   ogImage?: string;
   ogType?: 'website' | 'article';
   noindex?: boolean;
+  fullpage?: boolean;
 }
 
 const SITE_URL = 'https://oopuo.com';
@@ -26,6 +27,7 @@ const {
   ogImage = `${SITE_URL}/og-default.png`,
   ogType = 'website',
   noindex = false,
+  fullpage = false,
 } = Astro.props;
 
 const canonicalURL = canonical ?? `${SITE_URL}${Astro.url.pathname}`;
@@ -85,7 +87,7 @@ const resolvedOgDescription = ogDescription ?? description;
     <main>
       <slot />
     </main>
-    <Footer />
+    {!fullpage && <Footer />}
     <CookieBanner />
   </body>
 </html>
