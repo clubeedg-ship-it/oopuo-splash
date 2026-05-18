@@ -266,6 +266,14 @@ Each entry: date · id · title, then decision / rationale.
 
 ---
 
+### 2026-05-18 · D-016 · Blog reading view as in-DOM slide overlay, not separate pages
+
+**Decision:** Blog posts in the lobby render as `<article class="blog-reader">` panels inside `.stage`, opened via `openPost(n)` with `body.reader-open`. Hash format `#05/POST.NN`. Closes on Esc, back button, browser back, or any room/module nav.
+
+**Rationale:** Keeps the lobby's single-file architecture and unified hash routing, avoids per-post HTML files for the prototype phase. Real per-post URLs are deferred until the v1/v2 merge decision (OQ-1) resolves — at which point posts move to Astro pages with proper SEO. For now, shareable hash URLs are sufficient.
+
+---
+
 ## §C — Roadmap & open questions
 
 ### §C.1 Remaining work — v2 lobby
@@ -398,14 +406,15 @@ Pick one stream per task. Read only the stream you are working in.
 1. Morph abort bug fixed — `abortMorph()` with immediate cancel + position snapshot + `homePos`/`homeScale` permanent anchors.
 2. Favicon square-cropped — new `public/favicon.svg` with `viewBox="280 60 460 460"`.
 3. Project documentation consolidated from 7+ scattered files into `CLAUDE.md` + `PROJECT.md`.
+4. **Blog post reading view** — 4 posts (1 featured ~580w + 3 grid ~420w each), slide overlay, internal scroll, prev/next nav, Esc/back/nav-ball close, hash `#05/POST.NN`. Real OOPUO-voice copy.
 
 **Recommended next actions (priority order):**
 
-1. **Blog post reading view** (lobby stream) — wire blog cards to open an expanded reading view with editorial typography. Back-to-grid navigation. This is the top remaining stub.
-2. **Module sub-pages M.02–M.04** (content + lobby streams) — write copy for AI Support, Automation, Integrations (~440 words each × 4 sub-pages = ~5,280 words total). Then wire into lobby.
-3. **Contact CTAs** (lobby stream) — decide on scheduling tool (OQ-4) and wire "Book a free call" + "Send a message".
-4. **v1/v2 merge decision** (production stream) — resolve OQ-1. This gates SEO, i18n, and deployment.
-5. **Enterprise page implementation** (astro stream) — copy exists in `design/03-copy/enterprise.md`, needs Astro page build.
+1. **Module sub-pages M.02–M.04** (content + lobby streams) — write copy for AI Support, Automation, Integrations (~440 words each × 4 sub-pages = ~5,280 words total). Then wire into lobby.
+2. **Contact CTAs** (lobby stream) — decide on scheduling tool (OQ-4) and wire "Book a free call" + "Send a message".
+3. **v1/v2 merge decision** (production stream) — resolve OQ-1. This gates SEO, i18n, and deployment.
+4. **Enterprise page implementation** (astro stream) — copy exists in `design/03-copy/enterprise.md`, needs Astro page build.
+5. **Blog filter pills** (lobby stream) — wire category filter logic (currently visual-only).
 
 **Do not:**
 - Enforce v1 invariants on v2 lobby work without checking `design/08-v2-lobby/STATE.md`.
@@ -443,6 +452,7 @@ Pick one stream per task. Read only the stream you are working in.
 - **2026-05-18 — D-013** — Morph abort bug fixed: `abortMorph()` + `homePos`/`homeScale` architecture.
 - **2026-05-18 — D-014** — Favicon square-cropped to `viewBox="280 60 460 460"`.
 - **2026-05-18 — D-015** — Project docs consolidated into gospot-format `CLAUDE.md` + `PROJECT.md`.
+- **2026-05-18 — D-016** — Blog reading view: 4 posts as in-DOM slide overlay panels, hash `#05/POST.NN`. Esc/back/nav-ball close. Real OOPUO-voice copy.
 
 ### §F.4 Durable lessons
 

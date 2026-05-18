@@ -114,12 +114,12 @@ Do not create new top-level planning files when `CLAUDE.md` or `PROJECT.md` can 
 
 - branch: `main`
 - active stream: `lobby`
-- queue head: blog post reading view (stubs → functional)
+- queue head: Module sub-pages M.02–M.04 (Examples/Process/Pricing for AI Support, Automation, Integrations)
 - cluster: v2 lobby LIVE at `http://localhost:4321/lobby.html` via `npm run dev`
 - v1 astro: builds clean, 12 pages, all static
 - blockers: none
-- non-blockers: OQ-1 (v1/v2 merge strategy), OQ-2 (low-end perf), OQ-3 (i18n content)
-- last session: 2026-05-18 — morph abort bug fixed (abortMorph + homePos/homeScale architecture), favicon square-cropped, project docs consolidated into gospot format.
+- non-blockers: OQ-1 (v1/v2 merge strategy), OQ-2 (low-end perf), OQ-3 (i18n content), OQ-4 (scheduling tool for CTAs)
+- last session: 2026-05-18 — blog reading view shipped (4 posts, slide overlay, hash `#05/POST.NN`, prev/next nav, Esc/back/nav-ball close). D-016 logged.
 
 ## 10. Pointer table — `PROJECT.md` sections
 

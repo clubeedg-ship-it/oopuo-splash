@@ -475,6 +475,101 @@
     .blog-grid { grid-template-columns: 1fr; }
   }
 
+  .blog-card, .blog-read { cursor: pointer; }
+
+  /* Blog reader — slide overlay opened from a blog card or the featured Read button.
+     Sits above .room (z:3) and .sub-room (z:5) but below HUD (z:30). Internal scroll. */
+  .blog-reader {
+    position: absolute; inset: 0;
+    padding: 120px 48px 32px var(--gutter-left);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    opacity: 0; pointer-events: none;
+    transform: translateY(36px);
+    transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 6;
+    scrollbar-width: none;
+  }
+  .blog-reader::-webkit-scrollbar { display: none; }
+  .blog-reader.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+  body.reader-open .room { opacity: 0 !important; pointer-events: none; }
+  body.reader-open .sculpture { opacity: 0.35; }
+  body.reader-open .hud .br { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+
+  .reader-inner { max-width: 720px; margin: 0 auto; padding: 0 0 120px 0; }
+  .reader-back {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: transparent; border: 0; cursor: pointer;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--ink-mute); padding: 0; margin: 4px 0 64px 0;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+  .reader-back:hover { color: var(--ink); transform: translateX(-3px); }
+  .reader-meta {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--ink-mute); margin-bottom: 22px;
+    display: flex; gap: 14px; align-items: center;
+  }
+  .reader-meta .cat { color: var(--teal); }
+  .reader-meta .dot { color: var(--ink-faint); }
+  .reader-title {
+    font-family: "Instrument Serif", "Times New Roman", serif;
+    font-style: italic; font-weight: 400;
+    font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+    line-height: 1.08; letter-spacing: -0.01em;
+    color: var(--ink); margin: 0 0 32px 0;
+    max-width: 22ch;
+  }
+  .reader-lead {
+    font-family: var(--display); font-weight: 400;
+    font-size: 1.22rem; line-height: 1.55;
+    color: var(--ink); margin: 0 0 44px 0; max-width: 640px;
+  }
+  .reader-body { font-family: var(--display); font-size: 1.02rem; line-height: 1.7; color: var(--ink); }
+  .reader-body p { margin: 0 0 1.2em 0; max-width: 640px; color: var(--ink); }
+  .reader-body h3 {
+    font-family: var(--display); font-weight: 600;
+    font-size: 1.18rem; line-height: 1.3;
+    margin: 2.4em 0 0.7em 0; color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+  .reader-body ul, .reader-body ol { padding-left: 1.4em; margin: 0 0 1.4em 0; max-width: 640px; }
+  .reader-body li { margin-bottom: 0.55em; color: var(--ink); }
+  .reader-body strong { color: var(--ink); font-weight: 600; }
+  .reader-body em { color: var(--teal); font-style: normal; }
+
+  .reader-nav {
+    margin-top: 88px; padding-top: 28px;
+    border-top: 1px solid var(--line-strong);
+    display: flex; justify-content: space-between; gap: 32px;
+  }
+  .reader-nav button {
+    background: transparent; border: 0; padding: 0; cursor: pointer;
+    flex: 1; max-width: 320px;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--ink-mute); display: flex; flex-direction: column; gap: 10px;
+    text-align: left;
+    transition: color 0.2s ease;
+  }
+  .reader-nav button:disabled { opacity: 0.3; cursor: default; }
+  .reader-nav button:not(:disabled):hover { color: var(--ink); }
+  .reader-nav .next { align-items: flex-end; text-align: right; }
+  .reader-nav .title-hint {
+    font-family: "Instrument Serif", "Times New Roman", serif;
+    font-style: italic; font-weight: 400;
+    font-size: 1.05rem; letter-spacing: 0;
+    text-transform: none; color: var(--ink); line-height: 1.25;
+  }
+  .reader-nav button:not(:disabled):hover .title-hint { color: var(--teal); }
+
+  @media (max-width: 720px) {
+    .blog-reader { padding-left: 32px; padding-right: 32px; }
+    .reader-nav { flex-direction: column; gap: 24px; }
+    .reader-nav .next { align-items: flex-start; text-align: left; }
+  }
+
   /* Studio principles */
   .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line-strong); border: 1px solid var(--line-strong); margin-top: 24px; max-width: 820px; }
   .principle { background: var(--bg-elev); padding: 22px 22px 24px; }
@@ -512,7 +607,7 @@
   .back-link:hover { color: var(--ink); }
 
   .scroll-hint { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint); z-index: 25; animation: pulse 2.4s infinite; transition: opacity 0.3s ease; }
-  body[data-room="6"] .scroll-hint, body.col1-open .scroll-hint { opacity: 0 !important; animation: none !important; }
+  body[data-room="6"] .scroll-hint, body.col1-open .scroll-hint, body.reader-open .scroll-hint { opacity: 0 !important; animation: none !important; }
 
   /* Sub-page prev/next navigation — visible only when inside a sub-room */
   .sub-nav {
@@ -680,29 +775,29 @@
       </div>
       <hr class="blog-rule">
 
-      <article class="blog-featured">
+      <article class="blog-featured" data-post="1">
         <span class="blog-eyebrow">EU AI ACT · GUIDE</span>
         <h2 class="blog-featured-title">The EU AI Act for SMBs: a practical guide.</h2>
         <p class="blog-lead">
           What you actually need to do if your business uses AI — without hiring a lawyer. We walk through 5 common scenarios with concrete actions for each, mapped to the act's risk tiers.
         </p>
-        <a class="blog-read" href="#"><span>Read</span><span class="arrow">→</span></a>
+        <a class="blog-read" data-post-open="1"><span>Read</span><span class="arrow">→</span></a>
       </article>
 
       <hr class="blog-rule">
 
       <div class="blog-grid">
-        <article class="blog-card">
+        <article class="blog-card" data-post-open="2">
           <div class="blog-hero" data-category="automation" data-glyph="M.03"></div>
           <div class="blog-card-meta"><span>APR 2026</span><span class="dot">·</span><span class="cat">Automation</span></div>
           <h3 class="blog-card-title">AI automations that save SMBs 20+ hours a week.</h3>
         </article>
-        <article class="blog-card">
+        <article class="blog-card" data-post-open="3">
           <div class="blog-hero" data-category="compliance" data-glyph="OBS"></div>
           <div class="blog-card-meta"><span>MAR 2026</span><span class="dot">·</span><span class="cat">Compliance</span></div>
           <h3 class="blog-card-title">Agent observability: keeping AI systems compliant.</h3>
         </article>
-        <article class="blog-card">
+        <article class="blog-card" data-post-open="4">
           <div class="blog-hero" data-category="studio" data-glyph="STUDIO"></div>
           <div class="blog-card-meta"><span>FEB 2026</span><span class="dot">·</span><span class="cat">Studio Notes</span></div>
           <h3 class="blog-card-title">Why we cap at five clients. The case for small studios.</h3>
@@ -745,6 +840,169 @@
     </div>
   </section>
 
+  <article class="blog-reader" data-post="1">
+    <div class="reader-inner">
+      <button class="reader-back" type="button" data-post-back>← Back to all posts</button>
+      <div class="reader-meta"><span>MAY 2026</span><span class="dot">·</span><span class="cat">Compliance</span><span class="dot">·</span><span>EU AI Act · Guide</span></div>
+      <h1 class="reader-title">The EU AI Act for SMBs: a practical guide.</h1>
+      <p class="reader-lead">The Act passed in 2024. Most provisions take effect in 2026. If you use AI in any form — a chatbot, a copywriting tool, a recruitment scorer — you almost certainly fall under it. The good news: most SMB use cases are low-risk and need very little. The bad news: the few high-risk ones can be expensive to get wrong.</p>
+      <div class="reader-body">
+        <p>Here's the practical version, without the legalese.</p>
+        <h3>What the Act actually does</h3>
+        <p>It puts every AI system into one of four tiers based on how it's used. Not what model it runs — what it does. The same GPT-4 call is unregulated in one app and high-risk in another, depending on the context.</p>
+        <p>The four tiers, simplified:</p>
+        <ul>
+          <li><strong>Unacceptable risk</strong> — banned outright. Social scoring, predictive policing, manipulative subliminal techniques. You're not building this.</li>
+          <li><strong>High risk</strong> — heavily regulated. Hiring decisions, credit scoring, education evaluation, critical infrastructure, biometric ID. Most SMBs don't touch this. If you do, you need conformity assessments, documentation, post-market monitoring. Plan €30–80k of compliance work.</li>
+          <li><strong>Limited risk</strong> — transparency only. Chatbots, deepfakes, emotion recognition. You must tell users they're interacting with AI. That's mostly it.</li>
+          <li><strong>Minimal risk</strong> — no obligations. Spam filters, AI in games. Most internal tooling lives here.</li>
+        </ul>
+        <h3>The five SMB scenarios we see most</h3>
+        <p><strong>1. Customer support chatbot.</strong> Limited risk. You need a clear "you're talking to an AI" notice, an option to reach a human, and basic data handling docs. About a day of work.</p>
+        <p><strong>2. AI-generated marketing copy.</strong> Minimal risk in itself. But if it's deceptive — deepfake testimonials, fake reviews — it becomes a separate consumer-protection problem regardless of the AI Act.</p>
+        <p><strong>3. CV screening tool.</strong> <em>High risk.</em> This is the one to be careful about. If AI ranks or filters candidates, you're in the heavy tier. Either keep AI strictly assistive (final decision is human, documented) or invest in compliance.</p>
+        <p><strong>4. AI-assisted code generation.</strong> Internal tool, minimal risk. No special obligations beyond your existing IP and security practices.</p>
+        <p><strong>5. Personalisation engine on your site.</strong> Limited risk for recommendations. Becomes higher risk if it segments by sensitive attributes (health, politics, sexuality) — avoid that pattern entirely.</p>
+        <h3>What to do in the next 90 days</h3>
+        <ol>
+          <li><strong>Inventory</strong> every AI tool, model, or API your business uses. Including the ones marketing bought without telling IT.</li>
+          <li><strong>Tier each one.</strong> If you're unsure between limited and high, treat it as high until you have a confident reason otherwise.</li>
+          <li><strong>Add disclosure</strong> wherever a user interacts with AI without realising it.</li>
+          <li><strong>Document</strong> the high-risk ones — purpose, training data, monitoring, escalation path. This is the bulk of the compliance burden.</li>
+          <li><strong>Set a review cadence.</strong> Quarterly is realistic.</li>
+        </ol>
+        <p>The Act isn't designed to kill SMB AI use. It's designed to make sure the few genuinely consequential systems are accountable. Treat the high-risk cases seriously, document the limited-risk ones lightly, and move on.</p>
+        <p>If you want help mapping your tools to tiers, that's the kind of work we do. One call usually settles it.</p>
+      </div>
+      <nav class="reader-nav">
+        <button type="button" class="prev" disabled>
+          <span>← Previous</span>
+          <span class="title-hint">—</span>
+        </button>
+        <button type="button" class="next" data-post-open="2">
+          <span>Next →</span>
+          <span class="title-hint">AI automations that save SMBs 20+ hours a week</span>
+        </button>
+      </nav>
+    </div>
+  </article>
+
+  <article class="blog-reader" data-post="2">
+    <div class="reader-inner">
+      <button class="reader-back" type="button" data-post-back>← Back to all posts</button>
+      <div class="reader-meta"><span>APR 2026</span><span class="dot">·</span><span class="cat">Automation</span></div>
+      <h1 class="reader-title">AI automations that save SMBs 20+ hours a week.</h1>
+      <p class="reader-lead">Most SMBs we work with have 5–10 weekly hours of busywork hiding in plain sight. Not big-ticket processes — small ones, repeated. Each one is too small to bother automating in isolation. Together they're a full working day per week, every week.</p>
+      <div class="reader-body">
+        <p>Here are the ones we deploy most.</p>
+        <p><strong>Lead routing.</strong> New form submission → enrich with company data → score by fit → route to the right rep → log to CRM. Saves the four-minute manual triage on every inbound. At 30 leads/week, that's two hours.</p>
+        <p><strong>Invoice processing.</strong> PDF arrives → extracted to structured data → matched against PO → flagged for approval or auto-posted. Ten invoices/week at eight minutes each was the typical baseline. Down to 30 seconds of review.</p>
+        <p><strong>Status update generation.</strong> Pulls from project tracker, git, calendar → drafts the weekly client update in your voice → you edit and send. About 45 minutes saved per client per week, and people actually read shorter, structured updates.</p>
+        <p><strong>Meeting notes and actions.</strong> Transcript in → summary, decisions, action items out → posted to the project channel with owners and due dates assigned. Frees the meeting organiser from being a stenographer.</p>
+        <p><strong>Customer onboarding sequence.</strong> Triggered on signup. Sends personalised emails referencing the customer's specific use case (extracted from their sign-up form), schedules the kickoff call, provisions accounts, posts to a private Slack channel. 90 minutes of human work, done in two.</p>
+        <p><strong>Competitive monitoring.</strong> Watches competitor sites, pricing pages, blog, LinkedIn for changes. Daily digest. Used to be a marketing intern's morning ritual.</p>
+        <h3>Why these specifically</h3>
+        <p>They share three things: they happen often, they have a predictable input shape, and the cost of an occasional mistake is recoverable. That's the right starting set. We don't recommend automating one-off creative decisions or anything where a wrong answer is hard to undo.</p>
+        <h3>What it usually costs</h3>
+        <p>A bundle of five or six of these runs €8–15k to design and deploy, depending on integrations. They run for €40–150/month in API and infra costs. Most clients break even inside three months on time saved alone, before counting the second-order benefits of faster response times and fewer dropped balls.</p>
+        <h3>Where to start</h3>
+        <p>The single highest-leverage automation is almost always the one that's getting in the way of growth. Ask your team: what's the thing they spend 30 minutes on, three times a week, that they hate? Start there.</p>
+        <p>If you want a free 30-minute audit of where automation would pay back fastest in your business, that's a call we're happy to do.</p>
+      </div>
+      <nav class="reader-nav">
+        <button type="button" class="prev" data-post-open="1">
+          <span>← Previous</span>
+          <span class="title-hint">The EU AI Act for SMBs: a practical guide</span>
+        </button>
+        <button type="button" class="next" data-post-open="3">
+          <span>Next →</span>
+          <span class="title-hint">Agent observability: keeping AI systems compliant</span>
+        </button>
+      </nav>
+    </div>
+  </article>
+
+  <article class="blog-reader" data-post="3">
+    <div class="reader-inner">
+      <button class="reader-back" type="button" data-post-back>← Back to all posts</button>
+      <div class="reader-meta"><span>MAR 2026</span><span class="dot">·</span><span class="cat">Compliance</span></div>
+      <h1 class="reader-title">Agent observability: keeping AI systems compliant.</h1>
+      <p class="reader-lead">The reason AI projects fail audit isn't usually the model. It's that nobody can answer the basic questions: what did it do, when, with what input, and why?</p>
+      <div class="reader-body">
+        <p>Observability solves this. It's the boring infrastructure layer underneath every AI system that has to answer to anyone — customers, auditors, regulators, your own ops team.</p>
+        <h3>What to log, at minimum</h3>
+        <p>For every agent call:</p>
+        <ul>
+          <li><strong>Request</strong> — full prompt sent to the model, with redaction rules for PII.</li>
+          <li><strong>Context</strong> — what tools or data sources were available to the agent at that moment. Versioned. The same prompt with different RAG context gives different answers.</li>
+          <li><strong>Response</strong> — full model output. Token counts. Latency.</li>
+          <li><strong>Tool calls</strong> — which tools the agent called, with arguments. Each tool call gets its own span.</li>
+          <li><strong>Outcome</strong> — did it complete? Did it hand off to a human? Did the user accept the result?</li>
+          <li><strong>Identity</strong> — who triggered it, on whose behalf.</li>
+        </ul>
+        <p>That's the minimum for being able to reconstruct what happened on any given interaction.</p>
+        <h3>What to do with the logs</h3>
+        <p>Three things, in order of importance:</p>
+        <ol>
+          <li><strong>Make them queryable.</strong> "Show me every call where the agent recommended X" should take 10 seconds. If logs only exist as a text dump, they're not really observability.</li>
+          <li><strong>Alert on drift.</strong> Latency spike, hallucination rate climbing, sudden change in user-correction rate — these are the leading indicators of a degraded system.</li>
+          <li><strong>Audit-export.</strong> When someone asks "show me everything you did for customer Y between dates A and B", you can produce it in one query.</li>
+        </ol>
+        <h3>The compliance angle</h3>
+        <p>The EU AI Act explicitly requires logging for high-risk AI systems, with retention for the life of the system plus 10 years. GDPR adds the right to explanation. Sector regulations (FCA, MDR, etc.) layer on top.</p>
+        <p>You don't need to be in a heavily regulated sector to benefit. Most clients discover that having logs at all transforms their relationship with the system — they stop trusting it on faith and start trusting it on evidence.</p>
+        <h3>What we ship</h3>
+        <p>A standard observability layer is a half-day setup for new clients. OpenTelemetry traces, a small ClickHouse instance, a Grafana dashboard, retention policies wired to your data classification. Sits underneath whatever LLM provider you use.</p>
+        <p>If your AI is in production and you can't pull a complete trace of yesterday's interactions, you're not ready for the inevitable audit. Fix it now, not after.</p>
+      </div>
+      <nav class="reader-nav">
+        <button type="button" class="prev" data-post-open="2">
+          <span>← Previous</span>
+          <span class="title-hint">AI automations that save SMBs 20+ hours a week</span>
+        </button>
+        <button type="button" class="next" data-post-open="4">
+          <span>Next →</span>
+          <span class="title-hint">Why we cap at five clients</span>
+        </button>
+      </nav>
+    </div>
+  </article>
+
+  <article class="blog-reader" data-post="4">
+    <div class="reader-inner">
+      <button class="reader-back" type="button" data-post-back>← Back to all posts</button>
+      <div class="reader-meta"><span>FEB 2026</span><span class="dot">·</span><span class="cat">Studio Notes</span></div>
+      <h1 class="reader-title">Why we cap at five clients.</h1>
+      <p class="reader-lead">We have five active clients. Sometimes four. Never more than five. People ask why, often skeptically — surely we'd grow faster with ten? Twenty? Some kind of agency?</p>
+      <div class="reader-body">
+        <p>We've run that experiment. The answer is no.</p>
+        <h3>The math of attention</h3>
+        <p>A studio of three engineers can give one client about two days of focused attention per week without that attention degrading. Past five clients you start to notice things: response times slip, context-switching overhead eats Friday, the senior engineer becomes a router instead of a builder. You can grow the team, but the team's attention budget grows linearly while coordination overhead grows quadratically. By twelve people you've reinvented an agency, and now your fixed cost per client is high enough that you can't afford to take the small interesting projects anymore.</p>
+        <h3>What small buys you</h3>
+        <p><strong>Continuity.</strong> The same person who scoped your project is in the code two months later. Nothing gets lost in handoff because there's no handoff.</p>
+        <p><strong>Speed of decision.</strong> A client question gets a real answer in an hour, not three days of internal sync. The bottleneck of most agency work isn't the work itself — it's waiting for someone with context.</p>
+        <p><strong>The boring kind of quality.</strong> When the same five people are going to maintain something for two years, the incentives to cut corners disappear. Tests get written. Logs get added. Documentation exists.</p>
+        <p><strong>Selectivity.</strong> Five client slots means we say no to good projects, not just bad ones. The compounding effect of working only on things we'd be proud to ship is enormous.</p>
+        <h3>What we trade away</h3>
+        <p>The obvious one: revenue ceiling. Five clients × €X is a much smaller number than fifty clients × €X. We're fine with that. Our cost structure is built for it.</p>
+        <p>The less obvious one: we can't help you tomorrow. Lead time is real — usually four to six weeks before we can start. If your project is urgent and you need a partner who can spin up next Monday, we're not it.</p>
+        <h3>Who this works for</h3>
+        <p>Companies that value the engineer being three feet from the problem more than they value the agency org chart. Founders who've been burned by handoffs. Anyone who's seen the inside of an agency where 80% of the meeting attendees aren't doing the work.</p>
+        <p>If that's you, we'll probably get along. Drop us a line.</p>
+      </div>
+      <nav class="reader-nav">
+        <button type="button" class="prev" data-post-open="3">
+          <span>← Previous</span>
+          <span class="title-hint">Agent observability: keeping AI systems compliant</span>
+        </button>
+        <button type="button" class="next" disabled>
+          <span>Next →</span>
+          <span class="title-hint">—</span>
+        </button>
+      </nav>
+    </div>
+  </article>
+
 </div>
 
 <script>
@@ -761,6 +1019,9 @@
 
   const rooms = document.querySelectorAll('.room');
   const subRooms = document.querySelectorAll('.sub-room');
+  const blogReaders = document.querySelectorAll('.blog-reader');
+  const TOTAL_POSTS = blogReaders.length;
+  let currentPost = null;
   const nodes = document.querySelectorAll('.nav-node');
   const col1Nodes = document.querySelectorAll('.col1-node');
   const stubRoom = document.querySelector('.sub-room[data-mod-stub]');
@@ -1042,7 +1303,8 @@
 
   function go(n) {
     if (animating || n < 1 || n > TOTAL) return;
-    if (currentMod === null && n === current) return;
+    if (currentMod === null && currentPost === null && n === current) return;
+    if (currentPost !== null) closePost();
     animating = true;
     // Direction-aware slide: down when going forward, up when going back. CSS room
     // transforms read this to slide the incoming/outgoing rooms in the right direction.
@@ -1071,6 +1333,7 @@
 
   function enterMod(modNum, subNum = 1) {
     if (animating || modNum < 1 || modNum > 4) return;
+    if (currentPost !== null) closePost();
     animating = true;
     currentMod = modNum; currentSub = subNum;
     if (current !== 3) {
@@ -1107,6 +1370,36 @@
     setTimeout(() => { animating = false; }, 720);
   }
 
+  function openPost(n) {
+    if (n < 1 || n > TOTAL_POSTS) return;
+    if (currentPost === n) return;
+    if (current !== 5) {
+      current = 5;
+      document.body.dataset.room = '5';
+      rooms.forEach(r => r.classList.toggle('active', Number(r.dataset.room) === 5));
+      updateNavDist();
+      setSculpture(5);
+    }
+    currentPost = n;
+    document.body.classList.add('reader-open');
+    blogReaders.forEach(r => {
+      const isActive = Number(r.dataset.post) === n;
+      r.classList.toggle('active', isActive);
+      if (isActive) r.scrollTop = 0;
+    });
+    paintTop(); syncBodyTheme();
+    writeHash();
+  }
+
+  function closePost() {
+    if (currentPost === null) return;
+    currentPost = null;
+    document.body.classList.remove('reader-open');
+    blogReaders.forEach(r => r.classList.remove('active'));
+    paintTop(); syncBodyTheme();
+    writeHash();
+  }
+
   // —— Bindings ——
   document.querySelectorAll('[data-go]').forEach(el => {
     el.addEventListener('click', e => { e.preventDefault(); go(parseInt(el.dataset.go, 10)); });
@@ -1121,9 +1414,20 @@
   document.querySelectorAll('[data-back]').forEach(el => {
     el.addEventListener('click', e => { e.preventDefault(); exitMod(); });
   });
+  document.querySelectorAll('[data-post-open]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      openPost(parseInt(el.dataset.postOpen, 10));
+    });
+  });
+  document.querySelectorAll('[data-post-back]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); closePost(); });
+  });
 
   window.addEventListener('wheel', e => {
     if (animating || currentMod !== null) return;
+    // Reader open: the reader handles its own internal scroll. Never use wheel for room nav.
+    if (currentPost !== null) return;
     // Blog room: let the room scroll internally. Only treat the wheel as room-nav
     // when the user has scrolled to the top (going up) or the bottom (going down).
     if (current === 5) {
@@ -1142,7 +1446,9 @@
   }, { passive: true });
 
   window.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && currentPost !== null) { e.preventDefault(); closePost(); return; }
     if (e.key === 'Escape' && currentMod !== null) { e.preventDefault(); exitMod(); return; }
+    if (currentPost !== null) return; // reader: let arrows scroll natively
     if (currentMod !== null) {
       if (e.key === 'ArrowDown') { e.preventDefault(); switchSub(currentSub + 1); }
       else if (e.key === 'ArrowUp') { e.preventDefault(); switchSub(currentSub - 1); }
@@ -1157,7 +1463,7 @@
   let touchY = 0;
   window.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
   window.addEventListener('touchend', e => {
-    if (currentMod !== null) return;
+    if (currentMod !== null || currentPost !== null) return;
     const dy = touchY - e.changedTouches[0].clientY;
     if (Math.abs(dy) > 50) go(current + (dy > 0 ? 1 : -1));
   }, { passive: true });
@@ -1174,6 +1480,8 @@
     let h = '#' + String(current).padStart(2, '0');
     if (currentMod !== null) {
       h += '/M.' + String(currentMod).padStart(2, '0') + '/' + currentSub;
+    } else if (currentPost !== null) {
+      h += '/POST.' + String(currentPost).padStart(2, '0');
     }
     return h;
   }
@@ -1201,6 +1509,12 @@
           out.mod = mod; out.sub = sub;
         }
       }
+    } else if (parts.length >= 2 && parts[1].startsWith('POST.')) {
+      const postM = parts[1].match(/^POST\.0?(\d+)$/);
+      if (postM) {
+        const post = parseInt(postM[1], 10);
+        if (post >= 1 && post <= TOTAL_POSTS) out.post = post;
+      }
     }
     return out;
   }
@@ -1209,9 +1523,14 @@
     if (!s) return;
     restoringHash = true;
     if (s.mod !== undefined) {
+      if (currentPost !== null) closePost();
       enterMod(s.mod, s.sub);
+    } else if (s.post !== undefined) {
+      if (currentMod !== null) exitMod();
+      openPost(s.post);
     } else {
       if (currentMod !== null) exitMod();
+      if (currentPost !== null) closePost();
       if (s.room !== current) go(s.room);
     }
     // Release suppression after the animations settle so subsequent navigations write hash

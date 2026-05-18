@@ -1,6 +1,6 @@
 # Lobby v2 — Current Prototype State
 
-**Last updated:** 2026-05-17 · End of build session.
+**Last updated:** 2026-05-18 · Blog reader added.
 
 This is the canonical state doc for the v2 lobby prototype. If anything contradicts code, **the code wins** — update this file. Pulled together so a fresh session can resume in 5 minutes instead of 30.
 
@@ -87,9 +87,9 @@ All registered as `@property <color>` for transition support. Body has `transiti
 
 ### URL hash routing
 
-Format: `#NN` for rooms, `#03/M.01/N` for sub-pages.
+Format: `#NN` for rooms, `#03/M.01/N` for sub-pages, `#05/POST.NN` for blog posts.
 
-- `writeHash()` via `history.pushState` on every nav state change (`go`, `enterMod`, `switchSub`, `exitMod`).
+- `writeHash()` via `history.pushState` on every nav state change (`go`, `enterMod`, `switchSub`, `exitMod`, `openPost`, `closePost`).
 - `popstate` listener restores state from hash on browser back/forward.
 - On page load, `restoreFromHash()` runs 160ms after initial paint to navigate to the deep-linked state.
 - `restoringHash` flag prevents history pollution during programmatic restoration.
@@ -105,6 +105,16 @@ Shareable URLs work. Cmd+R preserves state. Browser back/forward traverses navig
 - **Layout:** large "Blog" title → pill filter row → horizontal rule → text-only featured post → 3-column grid of cards (subtle bg-surface heroes with category glyph).
 - **HUD backdrop:** top 84px gets `backdrop-filter: blur(14px)` so content scrolls cleanly under without overlapping HUD elements.
 - **Internal scroll** in the room itself (`overflow-y: auto`), wheel handler defers to internal scroll first.
+
+### Reader overlay (added 2026-05-18)
+
+- 4 `<article class="blog-reader" data-post="N">` panels sit inside `.stage`. Hidden by default (`opacity: 0; transform: translateY(36px); z-index: 6`).
+- Opening: card click → `openPost(n)` adds `.active` to target reader + `.reader-open` to body. Slides up + fades in (0.55–0.7s ease).
+- Closing: back button, Esc, browser back, or any room/module nav all call `closePost()`. `go()` and `enterMod()` auto-close any open post first.
+- `body.reader-open .room { opacity: 0 }` hides the blog grid behind. Sculpture stays at 0.35 opacity. `.scroll-hint` and `.hud .br` hide so they don't compete with reading.
+- Reader has its own internal scroll (`overflow-y: auto; overscroll-behavior: contain`). Wheel handler bails entirely when `currentPost !== null` so wheel scrolls reader content, never the room.
+- Each reader's bottom `<nav class="reader-nav">` has prev/next post buttons with italic-serif title hints. Disabled buttons at the ends.
+- Content: 1 featured (EU AI Act, ~580w) + 3 grid posts (Automation 430w, Observability 420w, Studio Notes 440w). Real OOPUO-voice copy, not placeholder.
 
 ---
 
@@ -129,6 +139,7 @@ Shareable URLs work. Cmd+R preserves state. Browser back/forward traverses navig
 - Mouse wheel, arrow keys, touch swipe, ball clicks
 - Sub-page nav via col1 balls, prev/next arrows, or up/down arrow keys
 - URL hash sync + browser back/forward + Cmd+R state preservation
+- Blog reading view (4 posts) with slide overlay, internal scroll, prev/next, Esc to close
 - HUD persistence + theme inversion
 - `prefers-reduced-motion` support
 - Tab favicon (white logo) + browser tab title
@@ -142,7 +153,6 @@ Shareable URLs work. Cmd+R preserves state. Browser back/forward traverses navig
 
 ### Stubs (not yet wired)
 - Module M.02, M.03, M.04 sub-pages (Examples, Process, Pricing) — only show generic placeholder. Only Websites has all 4 with real content.
-- Blog post reading view — cards are clickable visual placeholders, no actual post pages.
 - Pill category filters — visual only, no filtering logic.
 - Enterprise link — `href="#enterprise"`, no destination page.
 - All contact CTAs ("Book a free call", "Send a message") — no handlers.
@@ -187,7 +197,9 @@ design/08-v2-lobby/
 
 **Top priorities for next session** (in order):
 1. ~~Morph abort fix~~ — DONE.
-2. Wire blog post reading view (currently stub).
-3. Decide v1 vs v2 production direction. Either:
+2. ~~Blog post reading view~~ — DONE 2026-05-18.
+3. Module sub-pages M.02-M.04 (Examples/Process/Pricing for Support, Automation, Integrations).
+4. Wire contact CTAs (decide scheduling tool first).
+5. Decide v1 vs v2 production direction. Either:
    - Port lobby into Astro pages (proper URLs, SEO, View Transitions API)
    - Or commit to single-file lobby + add per-route static HTML files
