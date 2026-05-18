@@ -138,7 +138,7 @@ Shareable URLs work. Cmd+R preserves state. Browser back/forward traverses navig
 ## 7. Known issues / TBD
 
 ### Bugs
-- **Morph abort on fast scroll** (UNFIXED, planned): when user scrolls quickly between rooms, the in-flight morph completes to the *previous* target before starting the queued one. User briefly sees wrong sculpture for their room. Architecture change needed: cancel `requestAnimationFrame` + capture live piece positions as new `fromPos` + re-target. ~30–40 lines of touchy code in the morph state machine. Planned for next session.
+- ~~**Morph abort on fast scroll**~~ (FIXED 2026-05-17): `abortMorph()` cancels the rAF, snapshots live piece positions into `origPos`, promotes incoming → current, and lets the next `__sculpt3D` call start immediately from the mid-morph state. `homePos`/`homeScale` added as permanent design-position anchors so `resetShape` always restores true origins regardless of abort history.
 
 ### Stubs (not yet wired)
 - Module M.02, M.03, M.04 sub-pages (Examples, Process, Pricing) — only show generic placeholder. Only Websites has all 4 with real content.
@@ -186,7 +186,7 @@ design/08-v2-lobby/
 5. The main IIFE for navigation/state is in the inline `<script>` above it.
 
 **Top priorities for next session** (in order):
-1. Morph abort fix (architectural — see §7).
+1. ~~Morph abort fix~~ — DONE.
 2. Wire blog post reading view (currently stub).
 3. Decide v1 vs v2 production direction. Either:
    - Port lobby into Astro pages (proper URLs, SEO, View Transitions API)

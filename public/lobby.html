@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>OOPUO — Lobby</title>
-<link rel="icon" type="image/svg+xml" href="/oopuo-logo-white.svg">
-<link rel="mask-icon" href="/oopuo-logo-white.svg" color="#FFFFFF">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1599,25 +1599,29 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
     6: makePortal(),
   };
 
-  // Capture each child's design position + scale once, so we can reset/morph from a known origin.
+  // Capture each child's design position + scale once as the permanent home pose.
   function captureOriginals(shape) {
     shape.children.forEach(child => {
+      child.userData.homePos = child.position.clone();
+      child.userData.homeScale = child.scale.clone();
       child.userData.origPos = child.position.clone();
       child.userData.origScale = child.scale.clone();
     });
   }
   function resetShape(shape) {
     shape.children.forEach(child => {
-      child.position.copy(child.userData.origPos);
-      child.scale.copy(child.userData.origScale);
+      child.position.copy(child.userData.homePos);
+      child.scale.copy(child.userData.homeScale);
+      child.userData.origPos.copy(child.userData.homePos);
+      child.userData.origScale.copy(child.userData.homeScale);
     });
   }
   Object.values(shapes).forEach(captureOriginals);
 
   let current = null;
   let incoming = null;
-  let queued = null;
   let morphing = false;
+  let morphRAF = null;
 
   function gatherPos() {
     // Tight cluster — pieces converge into a compact blob, not a spread constellation.
@@ -1731,13 +1735,40 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
     });
   }
 
+  function abortMorph() {
+    if (!morphing) return;
+    cancelAnimationFrame(morphRAF);
+    morphRAF = null;
+    // Snapshot the incoming shape's live positions as its new design origin
+    // so the next morph starts from wherever pieces are right now.
+    if (incoming) {
+      incoming.children.forEach(child => {
+        child.userData.origPos.copy(child.position);
+        child.userData.origScale.copy(child.scale);
+      });
+    }
+    // Remove the old leaving shape.
+    if (current && current !== incoming) {
+      scene.remove(current);
+      resetShape(current);
+      current.position.set(0, 0, 0);
+    }
+    // The incoming shape is now current.
+    if (incoming) {
+      current = incoming;
+      current.position.set(0, 0, 0);
+    }
+    incoming = null;
+    morphing = false;
+  }
+
   window.__sculpt3D = function (n) {
     const next = shapes[n];
     if (!next || next === current) return;
-    if (morphing) { queued = n; return; }
+
+    if (morphing) abortMorph();
 
     if (!current) {
-      // First load — just place the initial shape with a soft fade-in
       resetShape(next);
       scene.add(next);
       current = next;
@@ -1747,13 +1778,11 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 
     morphing = true;
     incoming = next;
-    // ONE shared bow direction for this transition — every piece curves the same way.
     transitionCurve.set(
       (Math.random() - 0.5),
       (Math.random() - 0.5) * 0.5,
       (Math.random() - 0.5) * 0.6,
     ).normalize().multiplyScalar(0.4 + Math.random() * 0.25);
-    // Perpendicular direction for flutter — cross with up, fallback if parallel.
     transitionFlutterDir.copy(transitionCurve).cross(new THREE.Vector3(0, 1, 0));
     if (transitionFlutterDir.lengthSq() < 0.0001) transitionFlutterDir.set(1, 0, 0);
     transitionFlutterDir.normalize();
@@ -1771,7 +1800,6 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
       const time = elapsed / 1000;
       tweenShape(current, t, time);
       tweenShape(next, t, time);
-      // Group-level breathing — halved amplitude so per-piece variation reads through.
       const breathZone = 1 - Math.min(1, Math.abs(t - 0.5) * 2.0);
       if (breathZone > 0) {
         const w = breathZone * breathZone;
@@ -1785,7 +1813,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
         next.position.set(0, 0, 0);
       }
       if (t < 1) {
-        requestAnimationFrame(step);
+        morphRAF = requestAnimationFrame(step);
       } else {
         scene.remove(current);
         resetShape(current);
@@ -1794,13 +1822,10 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
         current.position.set(0, 0, 0);
         incoming = null;
         morphing = false;
-        if (queued !== null && queued !== n) {
-          const q = queued; queued = null;
-          window.__sculpt3D(q);
-        }
+        morphRAF = null;
       }
     }
-    requestAnimationFrame(step);
+    morphRAF = requestAnimationFrame(step);
   };
 
   // Initial placement
