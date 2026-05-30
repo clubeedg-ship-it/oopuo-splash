@@ -11,12 +11,12 @@ Cadence per section:
 
 ### §A.1 Overview
 
-OOPUO Splash is the marketing website for OOPUO, an AI systems consultancy based in Amsterdam. Two codebases coexist in one repo:
+OOPUO Splash is the marketing website for OOPUO, an AI systems consultancy based in Amsterdam. It is **one product** expressed as two artifacts in one repo (direction locked in D-017):
 
-1. **v1 Astro site** (`src/pages/`) — static, SSG, Tailwind 4, TypeScript strict, Astro built-in i18n (7 locale folders, only EN populated). Builds to `dist/`. Currently 12 pages: home, enterprise, about, contact, blog index, blog posts, privacy, terms, accessibility, sitemap.xml.
-2. **v2 lobby prototype** (`public/lobby.html`) — single self-contained HTML file (~2000 lines, inline CSS + JS + Three.js CDN module). Six full-viewport "rooms" with procedural 3D sculpture rendered through an ASCII effect pipeline. Served as a static asset by the Astro dev server at `/lobby.html`.
+1. **Design canvas** (`public/lobby.html`) — a single self-contained HTML file (~2000 lines, inline CSS + JS + Three.js CDN module). Six full-viewport "rooms" with procedural 3D sculpture through an ASCII pipeline. This is a **non-shipping design sketch** — the source of truth for the visual design. It is served by the Astro dev server at `/lobby.html` for reference; it never deploys.
+2. **Production site** (`src/pages/`) — static, SSG, Tailwind 4, TypeScript strict, Astro built-in i18n (7 locale folders, only EN populated). Builds to `dist/`. This is **what ships**, rebuilt to look **pixel-accurate to the canvas**.
 
-The two are not merged. v1 is production-shaped (pages, SEO, i18n scaffolding). v2 is the creative direction (immersive lobby UX). Production launch requires either porting v2 into Astro pages or committing to v2 as the primary experience with v1 content as secondary routes. See §C OQ-1.
+The canvas aesthetic is canonical. The Astro site's *current* 12 pages carry a now-**superseded** conventional design (light-first marketing layout); they will be rebuilt to the canon — content survives, the visual shell is replaced. The hard engineering is making the canvas's signature moves survive real routing: the sculpture becomes a persistent island (Astro View Transitions) instead of one hash-routed page, so every section/post is a crawlable URL with real HTML (SEO). English-first launch; the other 6 locales are a post-launch phase. See §C roadmap, D-017, OQ-3.
 
 ### §A.2 Stack
 
@@ -40,6 +40,8 @@ The v1 site is **light-primary with dark accent sections**. Components work in b
 - **Dark sections on homepage:** hero, enterprise teaser, final CTA, footer.
 - **Always light:** nav bar. **Always dark:** footer.
 - **Warm highlight** (#C4814A): max 1× per page, final CTA only.
+
+> **Superseded (D-017):** this conventional dual-context v1 layout is replaced by the canvas aesthetic (dark-first, full-viewport sculpture, no card shadows). Kept as a record of the original v1 design; the rebuild does not follow it — it matches the canvas (§A.4–§A.9).
 
 ### §A.4 v2 lobby rendering pipeline
 
@@ -274,46 +276,92 @@ Each entry: date · id · title, then decision / rationale.
 
 ---
 
+### 2026-05-18 · D-017 · Canvas is the design; Astro is the product (resolves OQ-1)
+
+**Decision:** `public/lobby.html` is a **non-shipping design canvas** — a sketch that defines the visual look. The **production site is Astro** (`src/pages/`), rebuilt to be **pixel-accurate to the canvas**. The canvas aesthetic is canonical; the existing conventional v1 page design is **superseded** and will be rebuilt to match the canvas (content survives, visual shell replaced). Launch is **English-first** (resolves OQ-3); the other 6 locales are a post-launch phase.
+
+**Rationale:** The operator's model is "design as a single-HTML sketch, then build the real site in Astro." Astro itself is SEO-strong, but the canvas's *architecture* (one page, hash routing, JS-revealed content) is not crawlable. So the port is not a 1:1 copy — each room/post/module becomes a real route with server-rendered HTML, and the Three.js/ASCII sculpture becomes a persistent island preserved across navigations via the View Transitions API (keeps the seamless room-to-room feel while giving real URLs + SEO + i18n). Nothing built is wasted — the sculpture engine, palette system, and content all port over.
+
+**Consequences:** OQ-1 resolved. OQ-3 resolved (EN-first). Unblocks the deployment roadmap (§C.2). Reframes the `astro` and `production` workstreams from "paused/blocked" to active.
+
+---
+
 ## §C — Roadmap & open questions
 
-### §C.1 Remaining work — v2 lobby
+### §C.1 Status
 
-| Item | Status | Priority | Notes |
-|---|---|---|---|
-| Blog post reading view | Stub | High | Cards are visual placeholders. Need: click → expanded post view with editorial typography, back-to-grid. |
-| Module sub-pages M.02–M.04 | Stub | Medium | AI Support, Automation, Integrations — only show generic placeholder. Only M.01 Websites has all 4 sub-pages with real content. Need copy for 12 sub-pages (~440 words each). |
-| Pill category filters (blog) | Visual only | Low | Pill row renders but no filtering logic wired. |
-| Contact CTAs | Stub | Medium | "Book a free call" and "Send a message" have no handlers. Need: Calendly embed or scheduling link, contact form or mailto. |
-| Enterprise link | Stub | Low | `href="#enterprise"`, no destination. Depends on v1/v2 merge decision (§C.3 OQ-1). |
-| Room 04 Studio content | Minimal | Low | Currently has Torii gate sculpture + placeholder. Needs "about" content about OOPUO team/approach. |
+- **Direction locked (D-017):** canvas = design; Astro = product, pixel-accurate to the canvas; English-first launch.
+- Canvas (`public/lobby.html`): 6 rooms + blog reader. Module M.01 complete; M.02–M.04 stubs.
+- Astro site: 12 pages, EN, builds clean — conventional design superseded, awaiting rebuild to canon.
+- Nothing deployed. Hosting not chosen (OQ-6).
 
-### §C.2 Remaining work — v1 Astro site
+### §C.2 Roadmap to deployment (English-first)
 
-| Item | Status | Notes |
-|---|---|---|
-| Enterprise page content | Copy exists (`design/03-copy/enterprise.md`) | 6 sections: hero, stakes, services, approach, timeline, CTA. Needs implementation. |
-| Blog posts | 3 launch posts written (`design/07-blog/`) | Need MDX content collection wiring + post layout. |
-| i18n content | EN only | 6 other locales (pt-br, en-us, nl, fr, rs, zh) need translation. Architecture ready. |
-| Contact form | Placeholder | HubSpot form (TBD) + Calendly embed (TBD) + WhatsApp wizard (client-side island). |
-| Blog reading layout | Scaffolded | Needs editorial typography pass matching v2 blog design. |
+> Phased plan from current state to a live English production site. i18n for the other 6 locales is Phase 7 (post-launch). Each phase ends in a reviewable, buildable state.
+
+**Phase 0 — Lock the canvas (design freeze)**
+- Module sub-pages M.02–M.04 content + wiring (AI Support, Automation, Integrations × Examples/Process/Pricing). Optionally Studio (room 04) content.
+- Benchmark canvas perf on low-end mobile (OQ-2) → decide reduced-motion / static fallback strategy. Informs Phases 1 + 5.
+- Decisions only (wiring lands later): contact infra/scheduling (OQ-4), blog CMS approach (OQ-5), hosting target (OQ-6).
+- Exit: the canvas is the complete, locked visual spec. Re-snapshot it in STATE.md.
+
+**Phase 1 — Astro foundation for the canon**
+- Extract the Three.js / ASCII / bloom engine from `lobby.html` into a reusable module under `src/`.
+- Make the sculpture a **persistent island** that survives navigation (Astro `transition:persist` + View Transitions).
+- Port canvas tokens 1:1 into Tailwind `@theme` + `@property` color vars (palette families, fonts, HUD).
+- Build the shared shell layout: HUD (brand, counter, section title, nav rail) + palette-by-route + View Transitions config.
+- Exit: one Astro route renders the canvas look; the sculpture persists across a test navigation.
+
+**Phase 2 — Rooms → real routes**
+- Map rooms to routes: `/` (Arrival), `/why` (The Gap), `/services` + module pages (Modules), `/studio` (Studio), `/blog` (Blog), `/contact` (Invitation).
+- Each route: real server-rendered HTML content, per-route palette + sculpture on entry, room-to-room slide as a View Transition.
+- Nav rail + sub-rail become real links with active states. Retire hash routing.
+- Exit: every section is a crawlable URL; navigation matches the canvas feel.
+
+**Phase 3 — Blog as real content**
+- Move the 4 posts from canvas markup → MDX content collection (`src/content/blog`); resolve MDX-vs-headless (OQ-5).
+- `/blog` index (featured + grid) and `/blog/[slug]` reading view matching the reader aesthetic, as real pages.
+- Category filter pills → real filtering. Add RSS + per-post OG.
+- Exit: SEO-indexable blog with real per-post URLs.
+
+**Phase 4 — Conversion & integrations**
+- Wire contact CTAs to the chosen tool (OQ-4): "Book a free call" + "Send a message". Contact form backend (handler + email).
+- Enterprise page content (`design/03-copy/enterprise.md`). WhatsApp wizard island (`design/05-component-specs/`) if in scope.
+- Exit: leads can convert end-to-end.
+
+**Phase 5 — SEO / perf / a11y hardening**
+- Per-route meta, canonical, OG/Twitter, JSON-LD (Organization + Article). sitemap.xml, robots.txt, self-referencing hreflang.
+- Perf: code-split Three.js, lazy-init + reduced-motion static fallback (OQ-2), Core Web Vitals tuning. Target Lighthouse ≥ 90 all categories.
+- A11y: keyboard nav, focus management across View Transitions, ARIA on nav rail, contrast, reduced-motion.
+- Exit: launch-quality on every metric.
+
+**Phase 6 — Pre-launch & deploy**
+- Hosting setup (OQ-6): adapter, build config, headers, redirects, caching, security headers. Domain + DNS + HTTPS.
+- Analytics (privacy-friendly) + error monitoring + cookie/consent if needed. Port privacy/terms/accessibility pages to canon. 404 page, OG images.
+- Final cross-browser/device QA, content proofread. Deploy → smoke test → submit sitemap to Search Console.
+- Exit: **LIVE (English).**
+
+**Phase 7 — Post-launch fast-follow**
+- i18n: translate remaining 6 locales (OQ-3 phase 2), hreflang + locale switcher.
+- Iterate perf/SEO from real RUM data. Blog cadence 2/month.
 
 ### §C.3 Open questions
 
-- **OQ-1 — v1/v2 merge strategy.** Port v2 lobby into Astro pages (proper URLs, SEO, View Transitions API)? Or commit to v2 as primary + add per-route static HTML files for SEO? Drives enterprise link, blog SEO, sitemap, and i18n decisions.
-- **OQ-2 — Low-end performance.** Three.js + bloom + ASCII is heavy. No mobile/low-end benchmarking done. May need: reduced particle count, bloom bypass on mobile, or ASCII-only fallback.
-- **OQ-3 — i18n content pipeline.** Architecture ready (7 locale folders). No translation vendor or process chosen. Blocks non-EN launch.
-- **OQ-4 — Contact infrastructure.** HubSpot vs Formspree vs simple mailto? Calendly vs Cal.com? WhatsApp Business API vs deep link? None chosen.
-- **OQ-5 — Blog CMS.** Currently MDX files in repo. For 2/month cadence, is a headless CMS (Sanity, Contentful, Keystatic) worth the complexity?
-- **OQ-6 — Domain & hosting.** No domain purchased. No hosting provider chosen (Vercel, Netlify, Cloudflare Pages, self-hosted on gospot cluster).
+| ID | Question | Status | Notes |
+|---|---|---|---|
+| OQ-1 | v1/v2 direction — port lobby into Astro, or keep separate? | **RESOLVED (D-017)** | Canvas = design; Astro = product, pixel-accurate. |
+| OQ-2 | Low-end mobile perf — Three.js + bloom + ASCII viable on cheap Android? | OPEN | Benchmark in Phase 0; static/reduced fallback in Phase 5. |
+| OQ-3 | i18n — all 7 locales, or launch EN-only? | **RESOLVED (D-017)** | English-first; other 6 locales are Phase 7. Translation vendor still TBD. |
+| OQ-4 | Contact infrastructure (HubSpot/Formspree/mailto; Calendly/Cal.com; WhatsApp)? | OPEN | Decide in Phase 0; wire in Phase 4. |
+| OQ-5 | Blog CMS — MDX-in-repo vs headless (Sanity/Contentful/Keystatic)? | OPEN | Decide in Phase 0/3. MDX is the default unless cadence demands more. |
+| OQ-6 | Domain & hosting (Vercel/Netlify/Cloudflare Pages/self-host)? | OPEN | Decide in Phase 0; set up in Phase 6. |
 
-### §C.4 Production gaps
+### §C.4 Production gaps (all addressed by the roadmap)
 
-- No real URLs for blog posts (v2 is hash-routing only). SEO-blocking.
-- Logo favicon wide aspect (1.88:1) — FIXED 2026-05-18 with square-cropped `favicon.svg`.
-- No `<meta>` tags, OpenGraph, Twitter cards, or JSON-LD structured data on v2 lobby.
-- No analytics or tracking.
-- No cookie consent / GDPR compliance UI.
-- No 404 page.
+- Hash-only routing / no real URLs → fixed structurally in Phases 2–3 (real routes).
+- No `<meta>`/OpenGraph/Twitter/JSON-LD → Phase 5.
+- No analytics, cookie consent, or 404 page → Phase 6.
+- Favicon wide-aspect letterboxing → FIXED (D-014, `public/favicon.svg`).
 
 ---
 
@@ -326,7 +374,7 @@ Pick one stream per task. Read only the stream you are working in.
 **Scope:**
 - Primary root: `public/lobby.html` (the single file)
 - Supporting: `design/08-v2-lobby/STATE.md` (canonical state), `design/08-v2-lobby/GRAPH.md` (site graph)
-- All v2 sculpture, navigation, morph, color, room content work
+- All canvas sculpture, navigation, morph, color, room content work. **Canvas is non-shipping (D-017)** — it is the visual spec the Astro rebuild matches.
 
 **Delivery contract:**
 - All edits go in `public/lobby.html`. No external JS/CSS files.
@@ -346,7 +394,7 @@ Pick one stream per task. Read only the stream you are working in.
 - All v1 page implementation, component work, Tailwind styling, i18n
 
 **Delivery contract:**
-- Follow dual-context pattern (§A.3). Components must work in both light and dark via `data-theme="dark"`.
+- Build **pixel-accurate to the canvas** (D-017); the conventional dual-context v1 design is superseded. Sculpture is a persistent View-Transitions island; every section is a real crawlable route.
 - Strings in locale JSON files, never hardcoded.
 - `npm run build` must pass clean.
 - Design docs in `design/` are source of truth — if code disagrees, fix the code.
@@ -376,19 +424,19 @@ Pick one stream per task. Read only the stream you are working in.
 ### §D.4 Production stream
 
 **Scope:**
-- Domain, hosting, deployment pipeline
+- Domain, hosting, deployment pipeline (OQ-6)
 - SEO (meta tags, OpenGraph, JSON-LD, sitemap, robots.txt)
 - Analytics, cookie consent, GDPR
-- v1/v2 merge decision and execution
-- Performance benchmarking
+- Astro rebuild deployment (§C.2 Phases 5–6) + perf/a11y hardening
+- Performance benchmarking (OQ-2)
 
 **Delivery contract:**
-- No deployment without OQ-1 (v1/v2 merge) resolved.
+- OQ-1 resolved (D-017). Deploy after §C.2 Phases 1–5 complete; English-first.
 - All production decisions logged in §B.
-- Performance budget defined before launch.
+- Performance budget defined before launch (Lighthouse ≥ 90).
 
 **Recent work:**
-- None yet. Blocked on OQ-1.
+- None yet. Unblocked by D-017; work starts at §C.2 Phase 0 decisions (OQ-2/4/5/6).
 
 ---
 
@@ -398,23 +446,23 @@ Pick one stream per task. Read only the stream you are working in.
 
 **Current mode:**
 - Solo operator (user + Claude agents).
-- v2 lobby prototype LIVE at `http://localhost:4321/lobby.html` via `npm run dev`.
-- v1 Astro site builds clean (`npm run build`).
-- Project docs consolidated into gospot format (CLAUDE.md + PROJECT.md).
+- Direction LOCKED (D-017): canvas = design, Astro = product (pixel-accurate to canvas), English-first.
+- Canvas LIVE at `http://localhost:4321/lobby.html` via `npm run dev`. Astro site builds clean (`npm run build`).
+- Full deployment roadmap (Phases 0–7) written in §C.2.
 
 **What just landed (2026-05-18):**
-1. Morph abort bug fixed — `abortMorph()` with immediate cancel + position snapshot + `homePos`/`homeScale` permanent anchors.
-2. Favicon square-cropped — new `public/favicon.svg` with `viewBox="280 60 460 460"`.
-3. Project documentation consolidated from 7+ scattered files into `CLAUDE.md` + `PROJECT.md`.
-4. **Blog post reading view** — 4 posts (1 featured ~580w + 3 grid ~420w each), slide overlay, internal scroll, prev/next nav, Esc/back/nav-ball close, hash `#05/POST.NN`. Real OOPUO-voice copy.
+1. **Blog post reading view** — 4 posts, slide overlay, prev/next nav, Esc/back/nav-ball close, hash `#05/POST.NN` (D-016).
+2. **Direction resolved (D-017)** — canvas/Astro relationship locked; OQ-1 + OQ-3 closed; deployment roadmap written.
+3. Docs made coherent with D-017 (CLAUDE.md §1/§5/§6/§9, PROJECT.md §A/§C/§D, STATE.md, DECISIONS.md).
 
-**Recommended next actions (priority order):**
+**Recommended next actions (follow §C.2 roadmap):**
 
-1. **Module sub-pages M.02–M.04** (content + lobby streams) — write copy for AI Support, Automation, Integrations (~440 words each × 4 sub-pages = ~5,280 words total). Then wire into lobby.
-2. **Contact CTAs** (lobby stream) — decide on scheduling tool (OQ-4) and wire "Book a free call" + "Send a message".
-3. **v1/v2 merge decision** (production stream) — resolve OQ-1. This gates SEO, i18n, and deployment.
-4. **Enterprise page implementation** (astro stream) — copy exists in `design/03-copy/enterprise.md`, needs Astro page build.
-5. **Blog filter pills** (lobby stream) — wire category filter logic (currently visual-only).
+1. **Phase 0 — lock the canvas:** module sub-pages M.02–M.04 (AI Support, Automation, Integrations × Examples/Process/Pricing); benchmark low-end mobile perf (OQ-2); decide contact infra/scheduling (OQ-4), blog CMS (OQ-5), hosting (OQ-6).
+2. **Phase 1 — Astro foundation:** extract the sculpture engine into a persistent island (View Transitions); port tokens + HUD shell to match the canvas.
+3. **Phase 2 — rooms → real routes:** every section becomes a crawlable URL with View Transition navigation.
+4. Then Phases 3–6: blog content collection → conversion wiring → SEO/perf/a11y hardening → deploy (English live).
+
+**Decisions still needed from operator:** OQ-2 (perf fallback appetite), OQ-4 (contact infra / scheduling tool), OQ-5 (blog CMS), OQ-6 (hosting). All slated for Phase 0.
 
 **Do not:**
 - Enforce v1 invariants on v2 lobby work without checking `design/08-v2-lobby/STATE.md`.
@@ -453,11 +501,13 @@ Pick one stream per task. Read only the stream you are working in.
 - **2026-05-18 — D-014** — Favicon square-cropped to `viewBox="280 60 460 460"`.
 - **2026-05-18 — D-015** — Project docs consolidated into gospot-format `CLAUDE.md` + `PROJECT.md`.
 - **2026-05-18 — D-016** — Blog reading view: 4 posts as in-DOM slide overlay panels, hash `#05/POST.NN`. Esc/back/nav-ball close. Real OOPUO-voice copy.
+- **2026-05-18 — D-017** — Direction locked: canvas = design sketch (never ships), Astro = product rebuilt pixel-accurate to it. OQ-1 + OQ-3 resolved. Full deployment roadmap (Phases 0–7) written into §C.2.
 
 ### §F.4 Durable lessons
 
 - **Single-file prototype is fast but has a ceiling.** `public/lobby.html` at ~2000 lines is approaching the limit of comfortable single-file editing. D-010 (hash routing) defers the Astro port but doesn't eliminate it. The port conversation (OQ-1) must happen before production.
 - **Morph state needs immutable anchors.** Mutable `origPos` corrupts across multiple aborts. Permanent `homePos`/`homeScale` ensure `resetShape` always returns to ground truth. Pattern: keep one immutable copy + one mutable working copy for any position-based animation system.
+- **SEO is about architecture, not file format.** Astro is SEO-strong, but a 1:1 port of the canvas would inherit its un-crawlable shape: one page, hash routing (`#NN`), JS-revealed content. Search engines index URLs + initial HTML, not `#hash` fragments. The fix is structural — each section/post becomes a real route with server-rendered HTML; the sculpture stays as decoration via a persistent View-Transitions island. Decoration can be JS-only; content cannot.
 - **Palette transitions need `@property` registration.** CSS custom properties don't animate by default. Registering each `--grad-*` as `@property <color>` enables smooth 4s transitions. Without registration, colors snap.
 - **Design docs are source of truth, code follows.** Enforced from day one. If code and design doc disagree, fix the code. This prevents design drift and keeps the `design/` tree reliable.
 

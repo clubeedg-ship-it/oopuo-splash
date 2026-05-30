@@ -8,7 +8,7 @@ Short snapshot + rules. Long-form lives in `PROJECT.md` and is retrieved by sect
 - What: Marketing website for OOPUO — AI systems consultancy based in Amsterdam
 - Repo: `/Users/ottogen/oopuo-splash`
 - GitHub: `ottogen/oopuo-splash`
-- Two codebases in one repo: v1 Astro site (`src/pages/`) and v2 lobby prototype (`public/lobby.html`)
+- One product, two artifacts (D-017): the **design canvas** (`public/lobby.html`, a non-shipping Three.js/ASCII sketch that defines the look) and the **production site** (Astro in `src/pages/`, rebuilt pixel-accurate to the canvas — this is what ships).
 
 ## 2. Session start
 
@@ -39,8 +39,8 @@ Pick exactly one workstream per task: `lobby`, `astro`, `content`, or `productio
 
 ## 5. Locked vocabulary
 
-- `lobby` = v2 single-file prototype at `public/lobby.html` (Three.js + AsciiEffect + bloom)
-- `astro site` = v1 Astro pages in `src/pages/` (static, Tailwind, i18n)
+- `lobby` / `canvas` = the design canvas at `public/lobby.html` (Three.js + AsciiEffect + bloom). Non-shipping sketch; source of truth for the visual design.
+- `astro site` = the production site in `src/pages/` (static, Tailwind, i18n). Rebuilt pixel-accurate to the canvas; this is what deploys.
 - `room` = one full-viewport section in the lobby (6 main rooms)
 - `sub-room` = nested page within Modules room (4 modules × 4 sub-pages)
 - `sculpture` = Three.js ASCII-rendered 3D shape, one per room
@@ -52,23 +52,27 @@ Pick exactly one workstream per task: `lobby`, `astro`, `content`, or `productio
 
 ## 6. Invariants
 
-### v1 Astro site invariants
-- Never ship Inter, Roboto, or Arial — Instrument Sans + Satoshi + JetBrains Mono only.
-- `[data-theme="dark"]` sections: hero, enterprise teaser, final CTA, footer.
-- Nav is always light (bg-elevated, white). Footer is always dark.
-- Warm highlight (#C4814A) appears at most once per page — final CTA only.
-- All animations honor `prefers-reduced-motion: reduce`.
-- Body text max-width: 720px.
-- Strings live in locale JSON files (`src/i18n/`), never hardcoded in components.
-- Card shadows on light sections, glow borders on dark sections.
-- Logo switches based on section context (black on light, white on dark).
+> The canvas aesthetic is canonical for the whole product (D-017). The production
+> Astro site is rebuilt to match it pixel-accurate. The old conventional v1 page
+> design is SUPERSEDED — do not extend it; rebuild to the canon.
 
-### v2 lobby invariants
-- The lobby intentionally departs from v1 invariants (dark-first hero, full-viewport animation, no card shadows).
-- Do NOT enforce v1 invariants on v2 work without checking `design/08-v2-lobby/STATE.md`.
-- All edits to the prototype go in `public/lobby.html` — single file, inline everything.
-- Sculpture color: cyan family by default, warm family for blog room only.
-- `prefers-reduced-motion: reduce` must be respected (disables sculpture rotation + morph).
+### Canonical design invariants (from the canvas; govern the production site)
+- Dark-first hero / full-viewport sculpture composition.
+- ASCII-rendered Three.js sculpture per section; cyan family default, warm family for blog only.
+- No card shadows — glow / HUD treatment instead.
+- Logo switches on context (white on dark, black on light).
+- `prefers-reduced-motion: reduce` disables sculpture rotation + morph.
+
+### Production-foundation invariants (Astro site)
+- Every section / post / module is a REAL crawlable route — NO hash-only routing. SEO requires it.
+- The sculpture is a PERSISTENT island that survives route changes (View Transitions), not re-initialized per page.
+- Strings live in locale JSON files (`src/i18n/`), never hardcoded in components.
+- Body text max-width: ~720px.
+- Launch English-first; other 6 locales are a post-launch phase (D-017, OQ-3).
+
+### Design-canvas (lobby) invariants
+- All canvas edits go in `public/lobby.html` — single file, inline everything. Non-shipping.
+- The canvas defines intent; when the Astro site disagrees with the canvas, match the canvas.
 
 ### Shared invariants
 - Fonts: Instrument Sans (display) + Satoshi (body) + JetBrains Mono (code/labels). No exceptions.
@@ -95,7 +99,7 @@ Pick exactly one workstream per task: `lobby`, `astro`, `content`, or `productio
 - One bounded task at a time. Review delegated work before accepting.
 - Design docs in `design/` are source of truth for intent — if code disagrees, fix the code. Never edit a design doc without operator approval.
 - The lobby prototype (`public/lobby.html`) is a single self-contained file (~2000 lines). Inline CSS + JS + Three.js module. No external deps except CDN Three.js.
-- `DECISIONS.md` at repo root is the append-only decision log (next id: D-013).
+- `DECISIONS.md` at repo root is the append-only decision log (next id: D-018).
 - Per-section write rules:
   - `PROJECT.md §A` — design system / architecture. Stable; update with care.
   - `PROJECT.md §B` — decisions. Append-only; next id `D-NNN`.
@@ -113,13 +117,15 @@ Do not create new top-level planning files when `CLAUDE.md` or `PROJECT.md` can 
 > Overwritten at session close. Mirrors current hot state.
 
 - branch: `main`
-- active stream: `lobby`
-- queue head: Module sub-pages M.02–M.04 (Examples/Process/Pricing for AI Support, Automation, Integrations)
-- cluster: v2 lobby LIVE at `http://localhost:4321/lobby.html` via `npm run dev`
-- v1 astro: builds clean, 12 pages, all static
+- active stream: `lobby` (canvas) → pivoting to `astro` (production rebuild)
+- direction: LOCKED (D-017) — canvas defines the look; Astro site rebuilt pixel-accurate to it, real routes, English-first.
+- queue head: finalize the canvas (module sub-pages M.02–M.04), then begin the Astro pixel-accurate rebuild per §C roadmap.
+- cluster: v2 canvas LIVE at `http://localhost:4321/lobby.html` via `npm run dev`
+- astro: builds clean, 12 pages — conventional design now SUPERSEDED, awaiting rebuild to canon.
 - blockers: none
-- non-blockers: OQ-1 (v1/v2 merge strategy), OQ-2 (low-end perf), OQ-3 (i18n content), OQ-4 (scheduling tool for CTAs)
-- last session: 2026-05-18 — blog reading view shipped (4 posts, slide overlay, hash `#05/POST.NN`, prev/next nav, Esc/back/nav-ball close). D-016 logged.
+- resolved: OQ-1 (direction → Astro rebuild), OQ-3 (English-first launch).
+- open: OQ-2 (low-end perf), OQ-4 (contact infra), OQ-5 (blog CMS), OQ-6 (hosting).
+- last session: 2026-05-18 — blog reading view shipped (D-016); v1/v2 direction resolved (D-017), deployment roadmap written.
 
 ## 10. Pointer table — `PROJECT.md` sections
 

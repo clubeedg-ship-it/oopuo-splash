@@ -1,8 +1,10 @@
-# Lobby v2 — Current Prototype State
+# Lobby v2 — Current Canvas State
 
-**Last updated:** 2026-05-18 · Blog reader added.
+**Last updated:** 2026-05-18 · Direction locked (D-017).
 
-This is the canonical state doc for the v2 lobby prototype. If anything contradicts code, **the code wins** — update this file. Pulled together so a fresh session can resume in 5 minutes instead of 30.
+> **Role (D-017):** this lobby is the **design canvas** — a non-shipping sketch that defines the look. It never deploys. The production site is Astro, rebuilt pixel-accurate to this canvas. See `PROJECT.md §C.2` for the deployment roadmap. This file remains the canonical visual spec the Astro rebuild must match.
+
+This is the canonical state doc for the design canvas. If anything contradicts code, **the code wins** — update this file. Pulled together so a fresh session can resume in 5 minutes instead of 30.
 
 ---
 
@@ -17,7 +19,7 @@ This is the canonical state doc for the v2 lobby prototype. If anything contradi
 
 > ⚠️ Do **not** use `design/08-v2-lobby/PROTOTYPE.html` — that's a stale predecessor.
 
-The Astro v1 site in `src/pages/` still exists separately. v1 and v2 are not yet merged.
+The Astro site in `src/pages/` is the production target. Per D-017 it will be **rebuilt pixel-accurate to this canvas** (real routes, SEO, i18n). This canvas never deploys — it stays the visual spec. See `PROJECT.md §C.2` for the deployment roadmap.
 
 ---
 
@@ -157,11 +159,11 @@ Shareable URLs work. Cmd+R preserves state. Browser back/forward traverses navig
 - Enterprise link — `href="#enterprise"`, no destination page.
 - All contact CTAs ("Book a free call", "Send a message") — no handlers.
 
-### Production gaps
-- No real URLs for blog posts (currently single-page hash routing only). SEO-blocking.
-- Astro v1 site (`src/pages/`) and v2 prototype not merged. Need to decide migration path before launch.
-- Logo favicon wide aspect (1.88:1) gets letterboxed in square tab-icon space — consider a square-cropped variant.
-- Performance on low-end hardware not benchmarked (Three.js + bloom + ASCII is heavy on mobile).
+### Production gaps (all addressed by the Astro rebuild — see PROJECT.md §C.2)
+- No real URLs / hash-only routing is SEO-blocking — **resolved by design** in the Astro rebuild (rooms/posts → real routes; sculpture → persistent View-Transitions island). D-017.
+- ~~Astro vs canvas direction~~ — DECIDED (D-017): canvas = design, Astro = product, pixel-accurate.
+- ~~Favicon wide-aspect letterboxing~~ — FIXED (D-014, `public/favicon.svg` `viewBox="280 60 460 460"`).
+- Performance on low-end hardware not benchmarked (Three.js + bloom + ASCII is heavy on mobile) — OQ-2, scheduled for Phase 0 of the roadmap.
 
 ---
 
@@ -198,8 +200,8 @@ design/08-v2-lobby/
 **Top priorities for next session** (in order):
 1. ~~Morph abort fix~~ — DONE.
 2. ~~Blog post reading view~~ — DONE 2026-05-18.
-3. Module sub-pages M.02-M.04 (Examples/Process/Pricing for Support, Automation, Integrations).
-4. Wire contact CTAs (decide scheduling tool first).
-5. Decide v1 vs v2 production direction. Either:
-   - Port lobby into Astro pages (proper URLs, SEO, View Transitions API)
-   - Or commit to single-file lobby + add per-route static HTML files
+3. ~~Decide v1 vs v2 production direction~~ — DECIDED 2026-05-18 (D-017): canvas = design, Astro = product, pixel-accurate. Roadmap in `PROJECT.md §C.2`.
+4. **Phase 0 (finish the canvas):** module sub-pages M.02–M.04 (Examples/Process/Pricing for AI Support, Automation, Integrations) — this is the last canvas work before design freeze.
+5. Then begin the Astro rebuild (Phase 1+): extract the sculpture engine into a persistent View-Transitions island; port tokens + HUD; rooms → real routes.
+
+> After Phase 0, work shifts out of this file into `src/` (the Astro build). This canvas stays frozen as the visual spec to match.
