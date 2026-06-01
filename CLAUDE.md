@@ -117,16 +117,17 @@ Do not create new top-level planning files when `CLAUDE.md` or `PROJECT.md` can 
 > Overwritten at session close. Mirrors current hot state.
 
 - branch: `main`
-- active stream: `lobby` (canvas) → pivoting to `astro` (production rebuild)
-- direction: LOCKED (D-017) — canvas defines the look; Astro site rebuilt pixel-accurate to it, real routes, English-first.
-- positioning: TWO tracks (D-018) — Europe/English (enterprise, EU AI Act) + Brazil/pt-BR (SMB: WhatsApp-first, partnership, R$, LGPD, Goiás). Locales ≠ 1:1 translations; pt-BR is its own strategy. Enterprise/EU AI Act never shown to Brazil; WhatsApp/LGPD/partnership never shown to Europe.
-- queue head: finalize the canvas (module sub-pages M.02–M.04), then begin the Astro pixel-accurate rebuild per §C roadmap.
+- active stream: `astro` (production rebuild — Phase 1 foundation)
+- direction: LOCKED (D-017) — canvas defines the look; Astro site rebuilt pixel-accurate to it, real routes.
+- positioning: TWO tracks (D-018) — Europe/English (enterprise, EU AI Act) + Brazil/pt-BR (SMB: WhatsApp-first, partnership, R$, LGPD, Goiás). Locales ≠ 1:1 translations; pt-BR is its own strategy. Enterprise/EU never shown to Brazil; WhatsApp/LGPD/partnership never shown to Europe.
+- launch scope: LOCKED (D-019) — EN/pt-BR/NL/FR at launch on Hostinger (static); HubSpot contact/scheduling (TBD); Keystatic blog; frozen post-launch except blog.
+- queue head: Astro Phase 1 foundation — persistent sculpture island, port canvas tokens, i18n for EN/pt-BR/NL/FR.
 - cluster: v2 canvas LIVE at `http://localhost:4321/lobby.html` via `npm run dev`
-- astro: builds clean, 12 pages — conventional design now SUPERSEDED, awaiting rebuild to canon.
+- astro: builds clean, 11 pages + 7 locale JSONs — conventional design SUPERSEDED, rebuilding to canon.
 - blockers: none
-- resolved: OQ-1 (direction → Astro rebuild), OQ-3 (English-first launch).
-- open: OQ-2 (low-end perf), OQ-4 (contact infra), OQ-5 (blog CMS), OQ-6 (hosting).
-- last session: 2026-05-18 — blog reading view (D-016); direction locked (D-017); two-market positioning locked from strategy doc (D-018).
+- resolved: OQ-1 (Astro rebuild), OQ-3 (EN/pt-BR/NL/FR at launch), OQ-5 (Keystatic), OQ-6 (Hostinger), OQ-7 (Brazil at launch).
+- open: OQ-2 (perf — defaulting to reduced-motion fallback), OQ-4 tentative (HubSpot setup TBD).
+- last session: 2026-06-01 — launch scope locked (D-019); starting Astro Phase 1 foundation.
 
 ## 10. Pointer table — `PROJECT.md` sections
 

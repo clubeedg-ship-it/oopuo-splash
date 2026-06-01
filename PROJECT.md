@@ -300,6 +300,16 @@ Each entry: date · id · title, then decision / rationale.
 
 ---
 
+### 2026-06-01 · D-019 · Launch scope: EN/pt-BR/NL/FR at launch; static set-and-forget; Hostinger + HubSpot + Keystatic
+
+**Decision:** All chosen locales ship **at launch** — **EN, pt-BR, NL, FR** (resolves OQ-3; en-us/rs/zh deferred). The Brazil/pt-BR SMB track ships at launch alongside the Europe track (resolves OQ-7). After upload the site is **frozen**; the only ongoing change is **posting new blog pages**. Host = **Hostinger** (static `dist/` deploy; resolves OQ-6). Contact + scheduling = **HubSpot** embeds (forms + meetings), replacing Cal.com — exact setup still to discuss (tentatively resolves OQ-4); Brazil leads with a WhatsApp deep link. Blog editing = **Keystatic** admin UI (resolves OQ-5).
+
+**Rationale:** Operator wants a professional, fast, set-and-forget static site. HubSpot is already their CRM and its forms/meetings embed on a static host with no backend. Keystatic gives a no-code posting UI that commits to the repo.
+
+**Consequences / watch-outs:** Hostinger shared hosting serves **static files only** (no serverless). So: (a) Astro must build to fully static output; (b) HubSpot forms/meetings work (client-side embeds); (c) **Keystatic's live admin needs GitHub mode + a small OAuth proxy (e.g. free Cloudflare Worker) or local mode** — pick at Phase 3; (d) a CI pipeline (GitHub Actions → build → deploy to Hostinger) gives "edit in Keystatic → auto-publish." Tracks stay separated (D-018): EU/enterprise EN/NL/FR; SMB pt-BR.
+
+---
+
 ## §C — Roadmap & open questions
 
 ### §C.1 Status
@@ -311,7 +321,7 @@ Each entry: date · id · title, then decision / rationale.
 
 ### §C.2 Roadmap to deployment (English-first)
 
-> Phased plan to a live **Europe/English** production site (the current enterprise framing). The **Brazil/pt-BR SMB track** (D-018) is a distinct content + positioning build, not a translation — see Phase 7 and OQ-7 for sequencing. Each phase ends in a reviewable, buildable state.
+> Phased plan to a live multi-locale production site shipping **EN, pt-BR, NL, FR at launch** (D-019) on **Hostinger** (static). Europe track = EN/NL/FR (enterprise); Brazil track = pt-BR (SMB) — distinct content, not a translation (D-018). After upload the site is frozen except for new blog posts. Each phase ends in a reviewable, buildable state.
 
 **Phase 0 — Lock the canvas (design freeze)**
 - Module sub-pages M.02–M.04 content + wiring (AI Support, Automation, Integrations × Examples/Process/Pricing). Optionally Studio (room 04) content.
@@ -349,16 +359,15 @@ Each entry: date · id · title, then decision / rationale.
 - A11y: keyboard nav, focus management across View Transitions, ARIA on nav rail, contrast, reduced-motion.
 - Exit: launch-quality on every metric.
 
-**Phase 6 — Pre-launch & deploy**
-- Hosting setup (OQ-6): adapter, build config, headers, redirects, caching, security headers. Domain + DNS + HTTPS.
-- Analytics (privacy-friendly) + error monitoring + cookie/consent if needed. Port privacy/terms/accessibility pages to canon. 404 page, OG images.
-- Final cross-browser/device QA, content proofread. Deploy → smoke test → submit sitemap to Search Console.
-- Exit: **LIVE (English).**
+**Phase 6 — Pre-launch & deploy (Hostinger)**
+- Fully static build → deploy `dist/` to **Hostinger** (D-019). CI (GitHub Actions → build → upload via FTP/SSH) so Keystatic edits auto-publish. Domain + DNS + HTTPS. Cache/security headers via `.htaccess`.
+- Wire **HubSpot** embeds (forms + meetings; OQ-4, details TBD) + Brazil WhatsApp deep link. Analytics (privacy-friendly) + cookie/consent. Port privacy/terms/accessibility to canon. 404 page, OG images, hreflang across EN/pt-BR/NL/FR.
+- Final cross-browser/device QA, proofread all 4 locales. Deploy → smoke test → submit sitemap to Search Console.
+- Exit: **LIVE — EN, pt-BR, NL, FR.**
 
-**Phase 7 — Post-launch fast-follow**
-- **Brazil SMB track (pt-BR, D-018):** build the distinct SMB experience — WhatsApp-first entry offer, partnership story, three progressive offers, R$ pricing, LGPD, Goiás. Own copy + pricing, NOT a translation of the English site. May be pulled earlier if Brazil is the priority motion (OQ-7).
-- **Europe locales:** translate en-us/nl/fr/rs/zh of the enterprise track; hreflang + locale switcher.
-- Iterate perf/SEO from real RUM data. Blog cadence 2/month.
+**Phase 7 — Post-launch (only ongoing surface: blog)**
+- Operator posts new blog pages via **Keystatic** → CI rebuild/redeploy. No other changes to the frozen site (D-019).
+- Optional later: extra locales (en-us, rs, zh) if needed; iterate perf/SEO from real RUM data.
 
 ### §C.3 Open questions
 
@@ -366,11 +375,11 @@ Each entry: date · id · title, then decision / rationale.
 |---|---|---|---|
 | OQ-1 | v1/v2 direction — port lobby into Astro, or keep separate? | **RESOLVED (D-017)** | Canvas = design; Astro = product, pixel-accurate. |
 | OQ-2 | Low-end mobile perf — Three.js + bloom + ASCII viable on cheap Android? | OPEN | Benchmark in Phase 0; static/reduced fallback in Phase 5. |
-| OQ-3 | i18n / market strategy at launch? | **RESOLVED (D-017/D-018)** | English (Europe/enterprise) first. pt-BR = distinct Brazil SMB track, not a translation. Other Europe locales later. |
-| OQ-4 | Contact infrastructure (HubSpot/Formspree/mailto; Calendly/Cal.com; WhatsApp)? | OPEN | Decide in Phase 0; wire in Phase 4. Note: Brazil track leads with WhatsApp. |
-| OQ-5 | Blog CMS — MDX-in-repo vs headless (Sanity/Contentful/Keystatic)? | OPEN | Decide in Phase 0/3. MDX is the default unless cadence demands more. |
-| OQ-6 | Domain & hosting (Vercel/Netlify/Cloudflare Pages/self-host)? | OPEN | Decide in Phase 0; set up in Phase 6. |
-| OQ-7 | Does the Brazil/pt-BR SMB track ship at launch or fast-follow English? | OPEN | Active sales motion in the strategy guide is Brazil; but launch was scoped English-first (D-017). Operator to confirm. |
+| OQ-3 | i18n / market strategy at launch? | **RESOLVED (D-019)** | EN, pt-BR, NL, FR at launch. Europe=EN/NL/FR (enterprise); Brazil=pt-BR (SMB). en-us/rs/zh deferred. |
+| OQ-4 | Contact + scheduling? | **TENTATIVE (D-019)** | HubSpot (forms + meetings) embeds — static-friendly. Exact setup still to discuss. Brazil leads with WhatsApp deep link. |
+| OQ-5 | Blog editing? | **RESOLVED (D-019)** | Keystatic admin UI → commits to repo → CI rebuild. (Hostinger static: GitHub mode + OAuth proxy or local mode — confirm Phase 3.) |
+| OQ-6 | Domain & hosting? | **RESOLVED (D-019)** | Hostinger (static `dist/` deploy via CI). |
+| OQ-7 | Brazil track at launch or fast-follow? | **RESOLVED (D-019)** | Ships at launch (pt-BR). |
 
 ### §C.4 Production gaps (all addressed by the roadmap)
 
@@ -472,6 +481,7 @@ Pick one stream per task. Read only the stream you are working in.
 2. **Direction resolved (D-017)** — canvas/Astro relationship locked; OQ-1 + OQ-3 closed; deployment roadmap written.
 3. Docs made coherent with D-017 (CLAUDE.md §1/§5/§6/§9, PROJECT.md §A/§C/§D, STATE.md, DECISIONS.md).
 4. **Two-market positioning locked (D-018)** — Europe/English enterprise track + Brazil/pt-BR SMB track (WhatsApp-first, partnership, R$, LGPD, Goiás), from the operator's strategy guide. Locales ≠ translations. The "basic starting point" = Brazil track (still to be built).
+5. **Launch scope locked (D-019)** — EN/pt-BR/NL/FR at launch on Hostinger; HubSpot for contact/scheduling (details TBD); Keystatic for blog; static set-and-forget. OQ-3/5/6/7 resolved, OQ-4 tentative.
 
 **Recommended next actions (follow §C.2 roadmap):**
 
@@ -480,7 +490,7 @@ Pick one stream per task. Read only the stream you are working in.
 3. **Phase 2 — rooms → real routes:** every section becomes a crawlable URL with View Transition navigation.
 4. Then Phases 3–6: blog content collection → conversion wiring → SEO/perf/a11y hardening → deploy (English live).
 
-**Decisions still needed from operator:** OQ-2 (perf fallback appetite), OQ-4 (contact infra / scheduling tool), OQ-5 (blog CMS), OQ-6 (hosting) — all Phase 0. Plus **OQ-7: does the Brazil/pt-BR SMB track ship at launch or fast-follow English?**
+**Decisions still needed from operator:** finalize **HubSpot** setup (OQ-4 — forms/meetings specifics + portal ID); plus these assets when ready: Hostinger deploy access (FTP/SSH), domain, Brazil WhatsApp number, HubSpot meeting link. Perf fallback (OQ-2) I'm defaulting to reduced-motion + static poster. Everything else locked (D-019).
 
 **Do not:**
 - Enforce v1 invariants on v2 lobby work without checking `design/08-v2-lobby/STATE.md`.
@@ -521,6 +531,7 @@ Pick one stream per task. Read only the stream you are working in.
 - **2026-05-18 — D-016** — Blog reading view: 4 posts as in-DOM slide overlay panels, hash `#05/POST.NN`. Esc/back/nav-ball close. Real OOPUO-voice copy.
 - **2026-05-18 — D-017** — Direction locked: canvas = design sketch (never ships), Astro = product rebuilt pixel-accurate to it. OQ-1 + OQ-3 resolved. Full deployment roadmap (Phases 0–7) written into §C.2.
 - **2026-05-18 — D-018** — Two markets, two strategies locked from the operator's strategy guide: Europe/English (enterprise, EU AI Act) + Brazil/pt-BR (SMB: WhatsApp-first, partnership, R$, LGPD, Goiás). Locale = strategy, not translation. Added OQ-7 (Brazil launch sequencing).
+- **2026-06-01 — D-019** — Launch scope locked: EN/pt-BR/NL/FR at launch on Hostinger; HubSpot (contact/scheduling, TBD); Keystatic (blog); static set-and-forget. OQ-3/5/6/7 resolved, OQ-4 tentative.
 
 ### §F.4 Durable lessons
 
