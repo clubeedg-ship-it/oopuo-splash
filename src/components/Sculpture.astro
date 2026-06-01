@@ -1,0 +1,18 @@
+---
+// Persistent ASCII sculpture island (D-017 canon).
+// The container survives Astro View Transitions via transition:persist, so the
+// Three.js engine mounts once and keeps running across page navigations. Each
+// page sets <body data-room="N">; on navigation we re-point the sculpture.
+---
+
+<div id="sculpture" class="sculpture" aria-hidden="true" transition:persist="sculpture"></div>
+
+<script>
+  import '../scripts/sculpture.js';
+
+  // Sync the sculpture to the new page's room after a View Transition swap.
+  document.addEventListener('astro:after-swap', () => {
+    const room = parseInt(document.body.dataset.room || '1', 10) || 1;
+    if (typeof window.__sculpt3D === 'function') window.__sculpt3D(room);
+  });
+</script>

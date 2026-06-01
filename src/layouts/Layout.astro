@@ -1,8 +1,10 @@
 ---
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 import NavBar from '../components/NavBar.astro';
 import Footer from '../components/Footer.astro';
 import CookieBanner from '../components/CookieBanner.astro';
+import Sculpture from '../components/Sculpture.astro';
 
 interface Props {
   title: string;
@@ -14,6 +16,9 @@ interface Props {
   ogType?: 'website' | 'article';
   noindex?: boolean;
   fullpage?: boolean;
+  lang?: string;
+  room?: number;
+  showSculpture?: boolean;
 }
 
 const SITE_URL = 'https://oopuo.com';
@@ -28,6 +33,9 @@ const {
   ogType = 'website',
   noindex = false,
   fullpage = false,
+  lang = 'en',
+  room = 1,
+  showSculpture = false,
 } = Astro.props;
 
 const canonicalURL = canonical ?? `${SITE_URL}${Astro.url.pathname}`;
@@ -36,7 +44,7 @@ const resolvedOgDescription = ogDescription ?? description;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -67,6 +75,7 @@ const resolvedOgDescription = ogDescription ?? description;
     <meta name="twitter:image" content={ogImage} />
 
     <meta name="generator" content={Astro.generator} />
+    <ClientRouter />
 
     <slot name="head" />
 
@@ -82,9 +91,14 @@ const resolvedOgDescription = ogDescription ?? description;
       rel="stylesheet"
     />
   </head>
-  <body class="bg-bg-primary text-text-primary">
-    <NavBar />
-    <main>
+  <body
+    class={showSculpture ? 'text-text-on-dark' : 'bg-bg-primary text-text-primary'}
+    data-room={room}
+    data-theme={showSculpture ? 'dark' : undefined}
+  >
+    {showSculpture && <Sculpture />}
+    {!fullpage && <NavBar />}
+    <main class="relative z-10">
       <slot />
     </main>
     {!fullpage && <Footer />}

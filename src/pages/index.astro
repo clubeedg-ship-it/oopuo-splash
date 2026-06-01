@@ -1,12 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import FullPageScroll from '../components/FullPageScroll.astro';
-import Button from '../components/Button.astro';
-import SectionLabel from '../components/SectionLabel.astro';
-import ServiceCard from '../components/ServiceCard.astro';
-import StatBlock from '../components/StatBlock.astro';
-import Footer from '../components/Footer.astro';
 
+// Europe / English homepage (enterprise track, D-018). Canon dark hero rendered
+// over the persistent ASCII sculpture island (room 1 — crystal spire).
 const organizationJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -18,28 +14,10 @@ const organizationJsonLd = {
     email: 'hello@oopuo.com',
     contactType: 'customer service',
   },
-  founder: {
-    '@type': 'Person',
-    name: 'Otavio Alves',
-  },
+  founder: { '@type': 'Person', name: 'Otavio Alves' },
   areaServed: 'EU',
   description:
     'Engineering-first AI consultancy building automation, websites, and EU AI Act compliance for European businesses.',
-};
-
-const websiteJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'OOPUO',
-  url: 'https://oopuo.com',
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: 'https://oopuo.com/blog?q={search_term_string}',
-    },
-    'query-input': 'required name=search_term_string',
-  },
 };
 ---
 
@@ -48,161 +26,40 @@ const websiteJsonLd = {
   description="We build AI-powered websites, automation, and customer support that save growing European businesses time and money. Engineering-first, no slide decks."
   ogTitle="OOPUO — We Build Your AI Systems. You Focus on Growing."
   fullpage
+  showSculpture
+  room={1}
 >
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationJsonLd)} />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
   </Fragment>
 
-  <FullPageScroll>
-    <!-- SLIDE 1: HERO (dark) -->
-    <div data-fp-section data-theme="dark" class="bg-bg-dark flex items-center">
-      <div class="max-w-[var(--max-width-site)] mx-auto px-6 w-full">
-        <h1 class="font-display font-bold text-hero text-text-on-dark max-w-4xl mb-6">
-          We build your AI systems. You focus on growing.
-        </h1>
-        <p class="text-text-on-dark-secondary text-body-lg max-w-[720px] mb-10 leading-relaxed">
-          AI-powered websites, automation, and customer support for European businesses that want to move faster — without hiring a tech department.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4">
-          <Button variant="primary" href="#services">See what we build &rarr;</Button>
-          <Button variant="ghost" href="/contact">Book a free call &rarr;</Button>
-        </div>
+  <section class="min-h-[100dvh] flex items-center px-6 sm:px-10 lg:px-20">
+    <div class="max-w-[var(--max-width-site)] w-full">
+      <p class="font-mono text-caption uppercase tracking-[0.18em] text-text-on-dark-secondary mb-7 flex items-center gap-3">
+        <span class="inline-block w-7 h-px bg-[var(--teal)]"></span>
+        An engineering studio · Amsterdam
+      </p>
+      <h1 class="font-display font-bold text-hero leading-[1.02] tracking-[-0.035em] text-text-on-dark max-w-[16ch] mb-7">
+        We build your AI systems. You focus on growing.
+      </h1>
+      <p class="font-body text-body-lg text-text-on-dark-secondary max-w-[640px] mb-10 leading-relaxed">
+        AI-powered websites, automation, and customer support for European businesses
+        that want to move faster — without hiring a tech department.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a
+          href="/enterprise"
+          class="inline-flex items-center gap-2.5 rounded-[var(--radius-sm)] px-6 py-3.5 font-display font-medium bg-[#67E8F9] text-[#06202a] hover:-translate-y-0.5 transition-transform"
+        >
+          See what we build <span aria-hidden="true">&rarr;</span>
+        </a>
+        <a
+          href="/contact"
+          class="inline-flex items-center gap-2.5 rounded-[var(--radius-sm)] px-6 py-3.5 font-display font-medium border border-white/25 text-text-on-dark hover:border-white/50 transition-colors"
+        >
+          Book a free call <span aria-hidden="true">&rarr;</span>
+        </a>
       </div>
     </div>
-
-    <!-- SLIDE 2: PROBLEM (light) — trust strip merged -->
-    <div data-fp-section class="bg-bg-elevated flex items-center">
-      <div class="max-w-[var(--max-width-site)] mx-auto px-6 w-full">
-        <p class="text-accent font-mono text-caption uppercase tracking-[0.08em] mb-6">
-          Businesses we work with save <strong>20+ hours a week</strong> through automation
-        </p>
-        <h2 class="font-display font-bold text-h2 mb-8 max-w-3xl">
-          You're growing. Your tools aren't keeping up.
-        </h2>
-        <div class="max-w-[720px] space-y-6">
-          <p class="text-text-secondary text-body-lg leading-relaxed">
-            You're answering the same customer questions for the third time today. Your website was "temporary" two years ago. Your team copies data between spreadsheets because nobody had time to connect the systems.
-          </p>
-          <p class="text-text-secondary text-body-lg leading-relaxed">
-            You don't need a digital transformation. You need the three or four automations that give you your week back.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 3: SERVICES (light) -->
-    <div data-fp-section id="services" class="bg-bg-primary flex items-center">
-      <div class="max-w-[var(--max-width-site)] mx-auto px-6 w-full">
-        <SectionLabel class="mb-4 block">What we build</SectionLabel>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-          <ServiceCard
-            icon="&#9672;"
-            title="Custom Websites & Landing Pages"
-            description="Modern, fast, conversion-focused. Built on frameworks that load in under a second and rank on Google without ongoing SEO retainers."
-          />
-          <ServiceCard
-            icon="&#9673;"
-            title="AI-Powered Customer Support"
-            description="An AI assistant trained on your product, your FAQs, your tone of voice. It handles the repetitive questions 24/7 so your team handles the ones that matter."
-          />
-          <ServiceCard
-            icon="&#9881;"
-            title="Internal Process Automation"
-            description='Data entry, report generation, invoice processing, lead routing — automated with AI agents that run reliably in the background.'
-          />
-          <ServiceCard
-            icon="&#8644;"
-            title="Platform Integrations"
-            description="Your CRM talks to your invoicing tool talks to your inventory system. We connect the platforms you already use so data flows where it needs to go."
-          />
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 4: HOW IT WORKS (light) -->
-    <div data-fp-section class="bg-bg-elevated flex items-center">
-      <div class="max-w-[var(--max-width-site)] mx-auto px-6 w-full">
-        <SectionLabel class="mb-4 block">The process</SectionLabel>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mt-8">
-          <div>
-            <div class="font-mono text-caption text-accent mb-2">01</div>
-            <h3 class="font-display font-semibold text-h3 mb-2">Discovery Call</h3>
-            <span class="font-mono text-caption text-text-muted block mb-3">30 min</span>
-            <p class="text-text-secondary leading-relaxed">You tell us what's eating your time. We identify the two or three automations with the highest impact.</p>
-          </div>
-          <div>
-            <div class="font-mono text-caption text-accent mb-2">02</div>
-            <h3 class="font-display font-semibold text-h3 mb-2">Proposal & Timeline</h3>
-            <span class="font-mono text-caption text-text-muted block mb-3">within 48 hours</span>
-            <p class="text-text-secondary leading-relaxed">A clear scope, fixed price, and realistic deadline. No vague "it depends" answers.</p>
-          </div>
-          <div>
-            <div class="font-mono text-caption text-accent mb-2">03</div>
-            <h3 class="font-display font-semibold text-h3 mb-2">Build & Deploy</h3>
-            <span class="font-mono text-caption text-text-muted block mb-3">1&ndash;4 weeks</span>
-            <p class="text-text-secondary leading-relaxed">We build it, test it, deploy it, and walk your team through how it works.</p>
-          </div>
-          <div>
-            <div class="font-mono text-caption text-accent mb-2">04</div>
-            <h3 class="font-display font-semibold text-h3 mb-2">Support & Iteration</h3>
-            <span class="font-mono text-caption text-text-muted block mb-3">&nbsp;</span>
-            <p class="text-text-secondary leading-relaxed">Things change. We're available for adjustments, monitoring, and scaling when you're ready.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 5: PROOF POINTS (light) -->
-    <div data-fp-section class="bg-bg-primary flex items-center">
-      <div class="max-w-[var(--max-width-site)] mx-auto px-6 w-full text-center">
-        <SectionLabel class="mb-8 block text-center">Real results</SectionLabel>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-8">
-          <StatBlock value="20+" label="hours/week saved through automation" />
-          <StatBlock value="< 2 weeks" label="typical deployment time" />
-          <StatBlock value="€0" label="spent on WordPress licenses" />
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 6: ENTERPRISE TEASER (dark) -->
-    <div data-fp-section data-theme="dark" class="bg-bg-dark flex items-center">
-      <div class="max-w-[var(--max-width-site)] mx-auto px-6 w-full">
-        <SectionLabel class="mb-4 block">For regulated companies</SectionLabel>
-        <h2 class="font-display font-bold text-h2 text-text-on-dark mb-6 max-w-3xl">
-          Need EU AI Act compliance?
-        </h2>
-        <div class="max-w-[720px] space-y-6 mb-10">
-          <p class="text-text-on-dark-secondary text-body-lg leading-relaxed">
-            If your company uses AI in high-risk contexts — hiring, credit scoring, automated decisions — the EU AI Act creates obligations you can't ignore. Fines reach up to &euro;35 million.
-          </p>
-          <p class="text-text-on-dark-secondary text-body-lg leading-relaxed">
-            We run compliance audits, deploy observability, and write the documentation that regulators actually accept.
-          </p>
-        </div>
-        <Button variant="primary" href="/enterprise">Learn about our compliance services &rarr;</Button>
-      </div>
-    </div>
-
-    <!-- SLIDE 7: FINAL CTA + FOOTER (dark) -->
-    <div data-fp-section data-theme="dark" class="bg-bg-dark flex flex-col">
-      <div class="flex-1 flex items-center justify-center text-center">
-        <div class="max-w-[var(--max-width-site)] mx-auto px-6">
-          <h2 class="font-display font-bold text-h2 text-text-on-dark mb-6">
-            Ready to get your time back?
-          </h2>
-          <p class="text-text-on-dark-secondary text-body-lg max-w-[720px] mx-auto mb-10">
-            A 30-minute call is all it takes to find out which automations will save you the most.
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button variant="warm" href="/contact">Book a Free Call</Button>
-            <a href="/contact" class="text-text-on-dark-secondary hover:text-text-on-dark transition-colors duration-150">
-              Or send us a message &rarr;
-            </a>
-          </div>
-        </div>
-      </div>
-      <Footer />
-    </div>
-  </FullPageScroll>
+  </section>
 </Layout>

@@ -148,4 +148,135 @@ html {
 body {
   margin: 0;
   min-height: 100dvh;
+  /* Palette morphs smoothly when navigating between rooms (D-017 sculpture canon). */
+  transition:
+    --grad-0 4s ease, --grad-1 4s ease, --grad-2 4s ease, --grad-3 4s ease, --grad-4 4s ease,
+    --shadow-soft 4s ease, --shadow-mid 4s ease, --shadow-far 4s ease,
+    --teal 4s ease, --teal-glow 4s ease;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SCULPTURE PALETTE + ASCII LAYER — ported from the design canvas (D-017).
+   The persistent Three.js/ASCII island (#sculpture) is colourised entirely
+   in CSS: a radial gradient clipped to the ASCII glyphs, driven by --grad-*.
+   Cyan family by default; warm family on body[data-room="5"] (blog).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Each gradient stop registered as <color> so it interpolates smoothly. */
+@property --grad-0 { syntax: '<color>'; initial-value: #DFF7F9; inherits: true; }
+@property --grad-1 { syntax: '<color>'; initial-value: #67E8F9; inherits: true; }
+@property --grad-2 { syntax: '<color>'; initial-value: #22D3EE; inherits: true; }
+@property --grad-3 { syntax: '<color>'; initial-value: #0E9FBE; inherits: true; }
+@property --grad-4 { syntax: '<color>'; initial-value: rgba(14, 159, 190, 0.35); inherits: true; }
+@property --shadow-soft { syntax: '<color>'; initial-value: rgba(34, 211, 238, 0.40); inherits: true; }
+@property --shadow-mid  { syntax: '<color>'; initial-value: rgba(34, 211, 238, 0.50); inherits: true; }
+@property --shadow-far  { syntax: '<color>'; initial-value: rgba(34, 211, 238, 0.25); inherits: true; }
+@property --teal { syntax: '<color>'; initial-value: #0E9FBE; inherits: true; }
+@property --teal-glow { syntax: '<color>'; initial-value: rgba(14, 159, 190, 0.20); inherits: true; }
+@property --color-x { syntax: '<percentage>'; initial-value: 65%; inherits: true; }
+@property --color-y { syntax: '<percentage>'; initial-value: 50%; inherits: true; }
+@property --color-sx { syntax: '<percentage>'; initial-value: 42%; inherits: true; }
+@property --color-sy { syntax: '<percentage>'; initial-value: 55%; inherits: true; }
+@property --hue-base { syntax: '<angle>'; initial-value: 0deg; inherits: true; }
+@property --hue-breath { syntax: '<angle>'; initial-value: 0deg; inherits: true; }
+
+:root {
+  --grad-0: #DFF7F9;
+  --grad-1: #67E8F9;
+  --grad-2: #22D3EE;
+  --grad-3: #0E9FBE;
+  --grad-4: rgba(14, 159, 190, 0.35);
+  --shadow-soft: rgba(34, 211, 238, 0.40);
+  --shadow-mid:  rgba(34, 211, 238, 0.50);
+  --shadow-far:  rgba(34, 211, 238, 0.25);
+  --teal: #0E9FBE;
+  --teal-glow: rgba(14, 159, 190, 0.20);
+}
+
+/* Warm family — blog (room 5). */
+body[data-room="5"] {
+  --grad-0: #F7E8D6;
+  --grad-1: #E0B080;
+  --grad-2: #C4814A;
+  --grad-3: #8B5A2E;
+  --grad-4: rgba(70, 40, 15, 0.35);
+  --shadow-soft: rgba(196, 129, 74, 0.40);
+  --shadow-mid:  rgba(196, 129, 74, 0.50);
+  --shadow-far:  rgba(196, 129, 74, 0.25);
+  --teal: #C4814A;
+  --teal-glow: rgba(196, 129, 74, 0.22);
+}
+
+@keyframes colorDance {
+  0%   { --color-x: 65%; --color-y: 50%; --color-sx: 42%; --color-sy: 55%; }
+  18%  { --color-x: 55%; --color-y: 42%; --color-sx: 48%; --color-sy: 50%; }
+  36%  { --color-x: 72%; --color-y: 58%; --color-sx: 36%; --color-sy: 62%; }
+  54%  { --color-x: 48%; --color-y: 48%; --color-sx: 46%; --color-sy: 52%; }
+  72%  { --color-x: 70%; --color-y: 55%; --color-sx: 38%; --color-sy: 58%; }
+  88%  { --color-x: 58%; --color-y: 45%; --color-sx: 44%; --color-sy: 56%; }
+  100% { --color-x: 65%; --color-y: 50%; --color-sx: 42%; --color-sy: 55%; }
+}
+@keyframes hueGlow {
+  0%, 100% { --hue-base: 0deg; }
+  50% { --hue-base: -10deg; }
+}
+@keyframes hueBreath {
+  0%, 100% { --hue-breath: -2deg; }
+  50% { --hue-breath: 2deg; }
+}
+@keyframes ambientDrift {
+  0%   { transform: translate(-50%, -50%) scale(1.0);  opacity: 0.55; }
+  20%  { transform: translate(-42%, -58%) scale(1.18); opacity: 0.45; }
+  40%  { transform: translate(-62%, -44%) scale(0.88); opacity: 0.60; }
+  60%  { transform: translate(-46%, -54%) scale(1.08); opacity: 0.50; }
+  80%  { transform: translate(-58%, -42%) scale(1.12); opacity: 0.50; }
+  100% { transform: translate(-50%, -50%) scale(1.0);  opacity: 0.55; }
+}
+
+/* Full-viewport persistent island. Dark backdrop so the ASCII reads as the
+   dark-first hero composition (canon). Sits behind content (z-index 0). */
+.sculpture {
+  position: fixed; inset: 0; width: 100vw; height: 100vh;
+  pointer-events: none; z-index: 0; overflow: hidden;
+  background: #070709;
+  opacity: 1; transition: opacity 0.7s ease;
+}
+.sculpture > * {
+  position: absolute !important; top: 50% !important; left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  margin: 0 !important; padding: 0 !important;
+  line-height: 1 !important; letter-spacing: 0 !important;
+  pointer-events: none;
+  border-collapse: collapse; border-spacing: 0;
+  font-family: "JetBrains Mono", ui-monospace, monospace !important;
+  background: radial-gradient(
+    ellipse var(--color-sx) var(--color-sy) at var(--color-x) var(--color-y),
+    var(--grad-0) 0%,
+    var(--grad-1) 18%,
+    var(--grad-2) 45%,
+    var(--grad-3) 75%,
+    var(--grad-4) 85%,
+    transparent 100%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: none !important;
+  animation: hueGlow 36s ease-in-out infinite, hueBreath 3.5s ease-in-out infinite, colorDance 42s ease-in-out infinite;
+  filter: blur(0.9px) hue-rotate(calc(var(--hue-base) + var(--hue-breath))) drop-shadow(0 0 8px var(--shadow-mid)) drop-shadow(0 0 18px var(--shadow-far));
+}
+/* Ambient drift blob — soft negative-space lava-lamp motion. */
+.sculpture::after {
+  content: ""; position: absolute; top: 50%; left: 30%;
+  width: 55vw; height: 65vh; transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, #070709 0%, transparent 65%);
+  opacity: 0.55; pointer-events: none;
+  animation: ambientDrift 64s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sculpture > * { animation: none !important; }
+  .sculpture::after { animation: none !important; }
 }
