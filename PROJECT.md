@@ -11,12 +11,14 @@ Cadence per section:
 
 ### §A.1 Overview
 
-OOPUO Splash is the marketing website for OOPUO, an AI systems consultancy based in Amsterdam. It is **one product** expressed as two artifacts in one repo (direction locked in D-017):
+OOPUO Splash is the marketing website for OOPUO, an AI systems consultancy that runs **two market strategies** (D-018): **Europe** (English — enterprise, EU AI Act, Amsterdam credibility) and **Brazil** (pt-BR — SMB: WhatsApp-first automated service, partnership model, R$ pricing, LGPD, Goiás PMEs). The two audiences never see each other's framing. Technically it is **one product** expressed as two artifacts in one repo (direction locked in D-017):
 
 1. **Design canvas** (`public/lobby.html`) — a single self-contained HTML file (~2000 lines, inline CSS + JS + Three.js CDN module). Six full-viewport "rooms" with procedural 3D sculpture through an ASCII pipeline. This is a **non-shipping design sketch** — the source of truth for the visual design. It is served by the Astro dev server at `/lobby.html` for reference; it never deploys.
 2. **Production site** (`src/pages/`) — static, SSG, Tailwind 4, TypeScript strict, Astro built-in i18n (7 locale folders, only EN populated). Builds to `dist/`. This is **what ships**, rebuilt to look **pixel-accurate to the canvas**.
 
 The canvas aesthetic is canonical. The Astro site's *current* 12 pages carry a now-**superseded** conventional design (light-first marketing layout); they will be rebuilt to the canon — content survives, the visual shell is replaced. The hard engineering is making the canvas's signature moves survive real routing: the sculpture becomes a persistent island (Astro View Transitions) instead of one hash-routed page, so every section/post is a crawlable URL with real HTML (SEO). English-first launch; the other 6 locales are a post-launch phase. See §C roadmap, D-017, OQ-3.
+
+**Two-track content model (D-018).** Locales are NOT 1:1 translations. The **Europe track** (default English; later en-us/nl/fr/rs/zh) carries the enterprise + EU AI Act positioning. The **Brazil track** (pt-BR) is a distinct strategy with its own copy, offers, pricing, and trust signals — drawn from the internal strategy guide (Google Doc "OOPUO — Guia estratégico interno"): entry offer = automated WhatsApp customer service, expanding into process automation and system integrations; differentiator "parceria, não produto" (partnership + monthly accompaniment); pricing R$3–5k setup + R$350/500/750/mo; trust via LGPD; target Goiás PMEs. Enterprise/EU content must never surface to the Brazil audience, and the Brazil SMB content must never surface to Europe.
 
 ### §A.2 Stack
 
@@ -286,6 +288,18 @@ Each entry: date · id · title, then decision / rationale.
 
 ---
 
+### 2026-05-18 · D-018 · Two markets, two strategies (locale = strategy, not translation)
+
+**Decision:** OOPUO runs two separate go-to-market strategies, and the website serves both as distinct audience tracks that never mix:
+- **Europe track (English; later en-us/nl/fr/rs/zh):** enterprise / regulated companies / EU AI Act / Amsterdam credibility. This is the *current* site framing — keep it.
+- **Brazil track (pt-BR):** SMB strategy from the internal guide (Google Doc "OOPUO — Guia estratégico interno"). Target: Goiás PMEs (shops, clinics, accounting/law offices, service providers, small e-commerce). Entry offer = **automated WhatsApp customer service** (the "basic starting point"), sold progressively into (2) process automation and (3) system integrations. Differentiator = "parceria, não produto" — a dedicated tech partner with monthly accompaniment. Pricing R$3,000–5,000 setup + R$350/500/750/mo. Trust via **LGPD** (not EU AI Act). Plain owner-to-owner Portuguese.
+
+**Rationale:** The strategy doc the operator shared is unambiguously Brazil SMB; the live site is Europe enterprise. Both are intended — different markets, different motions. The operator's worry ("does the site communicate the basic starting point, not only enterprise?") resolves here: the basic starting point lives in the Brazil/pt-BR track, which does not exist yet; the English site correctly stays enterprise.
+
+**Consequences:** i18n is **not** translation — pt-BR is its own positioning, content, offers, and pricing (refines D-017's "6 locales = translation" note). Enterprise + EU AI Act = Europe only; WhatsApp/LGPD/partnership = Brazil only. Adds a **Brazil SMB content + page track** to the roadmap (§C). Open: launch sequencing — does pt-BR ship at launch or fast-follow English (OQ-7)? The active sales motion in the guide is Brazil.
+
+---
+
 ## §C — Roadmap & open questions
 
 ### §C.1 Status
@@ -297,7 +311,7 @@ Each entry: date · id · title, then decision / rationale.
 
 ### §C.2 Roadmap to deployment (English-first)
 
-> Phased plan from current state to a live English production site. i18n for the other 6 locales is Phase 7 (post-launch). Each phase ends in a reviewable, buildable state.
+> Phased plan to a live **Europe/English** production site (the current enterprise framing). The **Brazil/pt-BR SMB track** (D-018) is a distinct content + positioning build, not a translation — see Phase 7 and OQ-7 for sequencing. Each phase ends in a reviewable, buildable state.
 
 **Phase 0 — Lock the canvas (design freeze)**
 - Module sub-pages M.02–M.04 content + wiring (AI Support, Automation, Integrations × Examples/Process/Pricing). Optionally Studio (room 04) content.
@@ -342,7 +356,8 @@ Each entry: date · id · title, then decision / rationale.
 - Exit: **LIVE (English).**
 
 **Phase 7 — Post-launch fast-follow**
-- i18n: translate remaining 6 locales (OQ-3 phase 2), hreflang + locale switcher.
+- **Brazil SMB track (pt-BR, D-018):** build the distinct SMB experience — WhatsApp-first entry offer, partnership story, three progressive offers, R$ pricing, LGPD, Goiás. Own copy + pricing, NOT a translation of the English site. May be pulled earlier if Brazil is the priority motion (OQ-7).
+- **Europe locales:** translate en-us/nl/fr/rs/zh of the enterprise track; hreflang + locale switcher.
 - Iterate perf/SEO from real RUM data. Blog cadence 2/month.
 
 ### §C.3 Open questions
@@ -351,10 +366,11 @@ Each entry: date · id · title, then decision / rationale.
 |---|---|---|---|
 | OQ-1 | v1/v2 direction — port lobby into Astro, or keep separate? | **RESOLVED (D-017)** | Canvas = design; Astro = product, pixel-accurate. |
 | OQ-2 | Low-end mobile perf — Three.js + bloom + ASCII viable on cheap Android? | OPEN | Benchmark in Phase 0; static/reduced fallback in Phase 5. |
-| OQ-3 | i18n — all 7 locales, or launch EN-only? | **RESOLVED (D-017)** | English-first; other 6 locales are Phase 7. Translation vendor still TBD. |
-| OQ-4 | Contact infrastructure (HubSpot/Formspree/mailto; Calendly/Cal.com; WhatsApp)? | OPEN | Decide in Phase 0; wire in Phase 4. |
+| OQ-3 | i18n / market strategy at launch? | **RESOLVED (D-017/D-018)** | English (Europe/enterprise) first. pt-BR = distinct Brazil SMB track, not a translation. Other Europe locales later. |
+| OQ-4 | Contact infrastructure (HubSpot/Formspree/mailto; Calendly/Cal.com; WhatsApp)? | OPEN | Decide in Phase 0; wire in Phase 4. Note: Brazil track leads with WhatsApp. |
 | OQ-5 | Blog CMS — MDX-in-repo vs headless (Sanity/Contentful/Keystatic)? | OPEN | Decide in Phase 0/3. MDX is the default unless cadence demands more. |
 | OQ-6 | Domain & hosting (Vercel/Netlify/Cloudflare Pages/self-host)? | OPEN | Decide in Phase 0; set up in Phase 6. |
+| OQ-7 | Does the Brazil/pt-BR SMB track ship at launch or fast-follow English? | OPEN | Active sales motion in the strategy guide is Brazil; but launch was scoped English-first (D-017). Operator to confirm. |
 
 ### §C.4 Production gaps (all addressed by the roadmap)
 
@@ -411,6 +427,7 @@ Pick one stream per task. Read only the stream you are working in.
 - Content quality, tone ("calm authority, senior engineer explaining to smart non-specialist")
 
 **Delivery contract:**
+- **Two tracks, never mixed (D-018):** Europe = English, enterprise / EU AI Act tone. Brazil = pt-BR, plain owner-to-owner Portuguese, SMB / WhatsApp / partnership / LGPD. Source for Brazil copy: the internal strategy guide ("OOPUO — Guia estratégico interno").
 - Blog: 800–1500 words. Clear H2/H3. Short paragraphs (3 sentences max). Lead with problem. End with topic-specific CTA.
 - 4 categories: EU AI Act, AI Automation, Technical Deep Dives, Industry Perspectives.
 - Launch with 3 posts. Then 2/month cadence.
@@ -454,6 +471,7 @@ Pick one stream per task. Read only the stream you are working in.
 1. **Blog post reading view** — 4 posts, slide overlay, prev/next nav, Esc/back/nav-ball close, hash `#05/POST.NN` (D-016).
 2. **Direction resolved (D-017)** — canvas/Astro relationship locked; OQ-1 + OQ-3 closed; deployment roadmap written.
 3. Docs made coherent with D-017 (CLAUDE.md §1/§5/§6/§9, PROJECT.md §A/§C/§D, STATE.md, DECISIONS.md).
+4. **Two-market positioning locked (D-018)** — Europe/English enterprise track + Brazil/pt-BR SMB track (WhatsApp-first, partnership, R$, LGPD, Goiás), from the operator's strategy guide. Locales ≠ translations. The "basic starting point" = Brazil track (still to be built).
 
 **Recommended next actions (follow §C.2 roadmap):**
 
@@ -462,7 +480,7 @@ Pick one stream per task. Read only the stream you are working in.
 3. **Phase 2 — rooms → real routes:** every section becomes a crawlable URL with View Transition navigation.
 4. Then Phases 3–6: blog content collection → conversion wiring → SEO/perf/a11y hardening → deploy (English live).
 
-**Decisions still needed from operator:** OQ-2 (perf fallback appetite), OQ-4 (contact infra / scheduling tool), OQ-5 (blog CMS), OQ-6 (hosting). All slated for Phase 0.
+**Decisions still needed from operator:** OQ-2 (perf fallback appetite), OQ-4 (contact infra / scheduling tool), OQ-5 (blog CMS), OQ-6 (hosting) — all Phase 0. Plus **OQ-7: does the Brazil/pt-BR SMB track ship at launch or fast-follow English?**
 
 **Do not:**
 - Enforce v1 invariants on v2 lobby work without checking `design/08-v2-lobby/STATE.md`.
@@ -502,6 +520,7 @@ Pick one stream per task. Read only the stream you are working in.
 - **2026-05-18 — D-015** — Project docs consolidated into gospot-format `CLAUDE.md` + `PROJECT.md`.
 - **2026-05-18 — D-016** — Blog reading view: 4 posts as in-DOM slide overlay panels, hash `#05/POST.NN`. Esc/back/nav-ball close. Real OOPUO-voice copy.
 - **2026-05-18 — D-017** — Direction locked: canvas = design sketch (never ships), Astro = product rebuilt pixel-accurate to it. OQ-1 + OQ-3 resolved. Full deployment roadmap (Phases 0–7) written into §C.2.
+- **2026-05-18 — D-018** — Two markets, two strategies locked from the operator's strategy guide: Europe/English (enterprise, EU AI Act) + Brazil/pt-BR (SMB: WhatsApp-first, partnership, R$, LGPD, Goiás). Locale = strategy, not translation. Added OQ-7 (Brazil launch sequencing).
 
 ### §F.4 Durable lessons
 
@@ -510,6 +529,7 @@ Pick one stream per task. Read only the stream you are working in.
 - **SEO is about architecture, not file format.** Astro is SEO-strong, but a 1:1 port of the canvas would inherit its un-crawlable shape: one page, hash routing (`#NN`), JS-revealed content. Search engines index URLs + initial HTML, not `#hash` fragments. The fix is structural — each section/post becomes a real route with server-rendered HTML; the sculpture stays as decoration via a persistent View-Transitions island. Decoration can be JS-only; content cannot.
 - **Palette transitions need `@property` registration.** CSS custom properties don't animate by default. Registering each `--grad-*` as `@property <color>` enables smooth 4s transitions. Without registration, colors snap.
 - **Design docs are source of truth, code follows.** Enforced from day one. If code and design doc disagree, fix the code. This prevents design drift and keeps the `design/` tree reliable.
+- **A locale can be a different strategy, not a translation (D-018).** OOPUO's pt-BR is a separate market (Brazil SMB) with its own offers, pricing (R$), trust signals (LGPD), and tone — distinct from the English enterprise track. Don't assume i18n = same copy translated. Check which *market* a locale serves before writing or porting its content; never leak one track's framing into the other.
 
 ---
 

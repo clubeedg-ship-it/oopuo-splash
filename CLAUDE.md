@@ -5,7 +5,7 @@ Short snapshot + rules. Long-form lives in `PROJECT.md` and is retrieved by sect
 ## 1. Identity
 
 - Working title: OOPUO Splash
-- What: Marketing website for OOPUO — AI systems consultancy based in Amsterdam
+- What: Marketing website for OOPUO — an AI systems consultancy running TWO market strategies (D-018): **Europe** (English; enterprise / EU AI Act / Amsterdam credibility) and **Brazil** (pt-BR; SMB — WhatsApp-first automated service, partnership model, R$ pricing, LGPD, Goiás PMEs). The two audiences never see each other's framing.
 - Repo: `/Users/ottogen/oopuo-splash`
 - GitHub: `ottogen/oopuo-splash`
 - One product, two artifacts (D-017): the **design canvas** (`public/lobby.html`, a non-shipping Three.js/ASCII sketch that defines the look) and the **production site** (Astro in `src/pages/`, rebuilt pixel-accurate to the canvas — this is what ships).
@@ -119,13 +119,14 @@ Do not create new top-level planning files when `CLAUDE.md` or `PROJECT.md` can 
 - branch: `main`
 - active stream: `lobby` (canvas) → pivoting to `astro` (production rebuild)
 - direction: LOCKED (D-017) — canvas defines the look; Astro site rebuilt pixel-accurate to it, real routes, English-first.
+- positioning: TWO tracks (D-018) — Europe/English (enterprise, EU AI Act) + Brazil/pt-BR (SMB: WhatsApp-first, partnership, R$, LGPD, Goiás). Locales ≠ 1:1 translations; pt-BR is its own strategy. Enterprise/EU AI Act never shown to Brazil; WhatsApp/LGPD/partnership never shown to Europe.
 - queue head: finalize the canvas (module sub-pages M.02–M.04), then begin the Astro pixel-accurate rebuild per §C roadmap.
 - cluster: v2 canvas LIVE at `http://localhost:4321/lobby.html` via `npm run dev`
 - astro: builds clean, 12 pages — conventional design now SUPERSEDED, awaiting rebuild to canon.
 - blockers: none
 - resolved: OQ-1 (direction → Astro rebuild), OQ-3 (English-first launch).
 - open: OQ-2 (low-end perf), OQ-4 (contact infra), OQ-5 (blog CMS), OQ-6 (hosting).
-- last session: 2026-05-18 — blog reading view shipped (D-016); v1/v2 direction resolved (D-017), deployment roadmap written.
+- last session: 2026-05-18 — blog reading view (D-016); direction locked (D-017); two-market positioning locked from strategy doc (D-018).
 
 ## 10. Pointer table — `PROJECT.md` sections
 
