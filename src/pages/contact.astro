@@ -1,254 +1,109 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Button from '../components/Button.astro';
-import SectionLabel from '../components/SectionLabel.astro';
-
+// Room 6 — "Invitation". Contact + scheduling (Europe / English track).
+// HubSpot Meetings + Forms embed here once the portal is wired (OQ-4); WhatsApp
+// deep-link wizard is functional now. Brazil/pt-BR track leads with WhatsApp.
 const contactPageJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ContactPage',
   name: 'Get in Touch — OOPUO',
   url: 'https://oopuo.com/contact',
   description: 'Book a free 30-minute consultation about AI automation or EU AI Act compliance.',
-  mainEntity: {
-    '@type': 'Organization',
-    name: 'OOPUO',
-    email: 'hello@oopuo.com',
-    url: 'https://oopuo.com',
-  },
+  mainEntity: { '@type': 'Organization', name: 'OOPUO', email: 'hello@oopuo.com', url: 'https://oopuo.com' },
 };
 ---
 
 <Layout
   title="Get in Touch — OOPUO"
   description="Book a free 30-minute consultation about AI automation or EU AI Act compliance. No sales pitch, just clarity."
+  fullpage
+  showSculpture
+  room={6}
 >
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(contactPageJsonLd)} />
   </Fragment>
-  <!-- HEADER (light) -->
-  <section class="bg-bg-primary py-24 md:py-32">
-    <div class="max-w-[var(--max-width-site)] mx-auto px-6">
-      <SectionLabel class="mb-4 block">Get in touch</SectionLabel>
-      <h1 class="font-display font-bold text-hero max-w-4xl mb-6">
-        Let's figure out what you need.
-      </h1>
-      <p class="text-text-secondary text-body-lg max-w-[720px] leading-relaxed">
-        30 minutes. No sales pitch. Just a clear conversation about your challenges and whether OOPUO is the right fit.
-      </p>
-    </div>
-  </section>
 
-  <!-- TABBED CONTACT (light) -->
-  <section class="bg-bg-elevated py-section">
-    <div class="max-w-[720px] mx-auto px-6">
-      <div class="flex border-b border-border-subtle mb-8" role="tablist">
-        <button
-          id="tab-message"
-          role="tab"
-          aria-selected="true"
-          aria-controls="panel-message"
-          class="tab-btn px-6 py-3 font-body font-medium text-text-primary border-b-2 border-accent transition-colors duration-150"
-        >
-          Send a Message
-        </button>
-        <button
-          id="tab-call"
-          role="tab"
-          aria-selected="false"
-          aria-controls="panel-call"
-          class="tab-btn px-6 py-3 font-body font-medium text-text-muted border-b-2 border-transparent hover:text-text-primary transition-colors duration-150"
-        >
-          Book a Call
-        </button>
-        <button
-          id="tab-whatsapp"
-          role="tab"
-          aria-selected="false"
-          aria-controls="panel-whatsapp"
-          class="tab-btn px-6 py-3 font-body font-medium text-text-muted border-b-2 border-transparent hover:text-text-primary transition-colors duration-150"
-        >
-          WhatsApp
-        </button>
-      </div>
-
-      <div id="panel-message" role="tabpanel" aria-labelledby="tab-message" class="tab-panel">
-        <form class="space-y-6" action="#" method="POST">
-          <div>
-            <label for="name" class="block font-body text-caption text-text-secondary mb-2">Your name *</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              required
-              class="w-full bg-bg-primary border border-border-subtle rounded-[6px] px-4 py-3 font-body text-text-primary focus:outline-none focus:border-accent transition-colors duration-150"
-            />
-          </div>
-          <div>
-            <label for="email" class="block font-body text-caption text-text-secondary mb-2">Email address *</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              class="w-full bg-bg-primary border border-border-subtle rounded-[6px] px-4 py-3 font-body text-text-primary focus:outline-none focus:border-accent transition-colors duration-150"
-            />
-          </div>
-          <div>
-            <label for="company" class="block font-body text-caption text-text-secondary mb-2">Company name</label>
-            <input
-              type="text"
-              id="company"
-              name="company"
-              class="w-full bg-bg-primary border border-border-subtle rounded-[6px] px-4 py-3 font-body text-text-primary focus:outline-none focus:border-accent transition-colors duration-150"
-            />
-          </div>
-          <div>
-            <label for="interest" class="block font-body text-caption text-text-secondary mb-2">I'm interested in...</label>
-            <select
-              id="interest"
-              name="interest"
-              class="w-full bg-bg-primary border border-border-subtle rounded-[6px] px-4 py-3 font-body text-text-primary focus:outline-none focus:border-accent transition-colors duration-150"
-            >
-              <option value="">Select one</option>
-              <option value="ai-automation">AI automation & websites</option>
-              <option value="ai-support">AI-powered customer support</option>
-              <option value="process-automation">Process automation & integrations</option>
-              <option value="compliance">EU AI Act compliance</option>
-              <option value="other">Something else</option>
-            </select>
-          </div>
-          <div>
-            <label for="message" class="block font-body text-caption text-text-secondary mb-2">Tell us about your situation</label>
-            <textarea
-              id="message"
-              name="message"
-              rows="5"
-              placeholder="A few sentences about your challenge — no formal brief needed."
-              class="w-full bg-bg-primary border border-border-subtle rounded-[6px] px-4 py-3 font-body text-text-primary focus:outline-none focus:border-accent transition-colors duration-150 resize-y"
-            ></textarea>
-          </div>
-          <Button variant="primary">Send Message</Button>
-        </form>
-      </div>
-
-      <div id="panel-call" role="tabpanel" aria-labelledby="tab-call" class="tab-panel hidden">
-        <div class="bg-bg-primary border border-border-subtle rounded-[10px] p-8 min-h-[400px] flex items-center justify-center text-center">
-          <div>
-            <p class="text-text-muted text-body-lg mb-4">Calendly embed will appear here.</p>
-            <p class="text-text-secondary text-caption">Integration pending — please use the message form or WhatsApp in the meantime.</p>
-          </div>
+  <section class="min-h-[100dvh] px-6 sm:px-10 lg:px-20 pt-28 pb-24 flex items-center">
+    <div class="max-w-[var(--max-width-site)] w-full mx-auto grid lg:grid-cols-2 gap-14 items-start">
+      <!-- Invitation -->
+      <div>
+        <p class="font-mono text-caption uppercase tracking-[0.18em] text-text-on-dark-secondary mb-7 flex items-center gap-3">
+          <span class="inline-block w-7 h-px bg-[var(--teal)]"></span>
+          Invitation
+        </p>
+        <h1 class="font-display font-bold text-hero leading-[1.02] tracking-[-0.035em] text-text-on-dark max-w-[14ch] mb-7">
+          Ready to get your time back?
+        </h1>
+        <p class="font-body text-body-lg text-text-on-dark-secondary max-w-[520px] mb-10 leading-relaxed">
+          A 30-minute call is all it takes to find out which systems will save you the most.
+          No sales pitch — just a clear conversation.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a
+            href="#book"
+            class="inline-flex items-center gap-2.5 rounded-[var(--radius-sm)] px-6 py-3.5 font-display font-medium bg-[#67E8F9] text-[#06202a] hover:-translate-y-0.5 transition-transform"
+          >
+            Book a free call <span aria-hidden="true">&rarr;</span>
+          </a>
+          <a href="mailto:hello@oopuo.com" class="inline-flex items-center gap-2.5 rounded-[var(--radius-sm)] px-6 py-3.5 font-display font-medium border border-white/25 text-text-on-dark hover:border-white/50 transition-colors">
+            hello@oopuo.com
+          </a>
         </div>
       </div>
 
-      <div id="panel-whatsapp" role="tabpanel" aria-labelledby="tab-whatsapp" class="tab-panel hidden">
-        <form id="whatsapp-form" class="space-y-6">
+      <!-- WhatsApp wizard -->
+      <div class="rounded-[var(--radius-md)] border border-white/10 bg-[#0b0d12]/70 backdrop-blur-sm p-7">
+        <p class="font-mono text-caption uppercase tracking-[0.18em] text-[var(--teal)] mb-5">Message us on WhatsApp</p>
+        <form id="wa-form" class="space-y-4">
           <div>
-            <label for="wa-name" class="block font-body text-caption text-text-secondary mb-2">Your name</label>
-            <input
-              type="text"
-              id="wa-name"
-              name="wa-name"
-              class="w-full bg-bg-primary border border-border-subtle rounded-[6px] px-4 py-3 font-body text-text-primary focus:outline-none focus:border-accent transition-colors duration-150"
-            />
+            <label for="wa-name" class="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-text-on-dark-secondary mb-2">Your name</label>
+            <input id="wa-name" type="text" class="w-full bg-black/30 border border-white/15 rounded-[var(--radius-sm)] px-4 py-3 font-body text-text-on-dark focus:outline-none focus:border-[var(--teal)] transition-colors" />
           </div>
           <div>
-            <label for="wa-interest" class="block font-body text-caption text-text-secondary mb-2">I'm interested in...</label>
-            <select
-              id="wa-interest"
-              name="wa-interest"
-              class="w-full bg-bg-primary border border-border-subtle rounded-[6px] px-4 py-3 font-body text-text-primary focus:outline-none focus:border-accent transition-colors duration-150"
-            >
+            <label for="wa-interest" class="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-text-on-dark-secondary mb-2">I'm interested in</label>
+            <select id="wa-interest" class="w-full bg-black/30 border border-white/15 rounded-[var(--radius-sm)] px-4 py-3 font-body text-text-on-dark focus:outline-none focus:border-[var(--teal)] transition-colors">
               <option value="">Select one</option>
-              <option value="AI automation & websites">AI automation & websites</option>
-              <option value="AI-powered customer support">AI-powered customer support</option>
-              <option value="Process automation & integrations">Process automation & integrations</option>
-              <option value="EU AI Act compliance">EU AI Act compliance</option>
-              <option value="Something else">Something else</option>
+              <option>AI automation &amp; websites</option>
+              <option>AI customer support</option>
+              <option>Process automation &amp; integrations</option>
+              <option>EU AI Act compliance</option>
+              <option>Something else</option>
             </select>
           </div>
           <div>
-            <label for="wa-message" class="block font-body text-caption text-text-secondary mb-2">Brief message</label>
-            <textarea
-              id="wa-message"
-              name="wa-message"
-              rows="3"
-              class="w-full bg-bg-primary border border-border-subtle rounded-[6px] px-4 py-3 font-body text-text-primary focus:outline-none focus:border-accent transition-colors duration-150 resize-y"
-            ></textarea>
+            <label for="wa-message" class="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-text-on-dark-secondary mb-2">Brief message</label>
+            <textarea id="wa-message" rows="3" class="w-full bg-black/30 border border-white/15 rounded-[var(--radius-sm)] px-4 py-3 font-body text-text-on-dark focus:outline-none focus:border-[var(--teal)] transition-colors resize-y"></textarea>
           </div>
-
-          <div class="bg-bg-surface border border-border-subtle rounded-[10px] p-6">
-            <p class="font-mono text-caption text-text-muted mb-2">Message preview:</p>
-            <p id="wa-preview" class="text-text-secondary text-body-lg leading-relaxed">
-              Hi, I'm [name] and I'm interested in [interest]. [message] I found you through oopuo.com — looking forward to chatting!
-            </p>
-          </div>
-
-          <a
-            id="wa-link"
-            href="#"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-block bg-accent text-white rounded-[6px] px-6 py-3 font-body font-medium hover:bg-accent-hover transition-all duration-150 hover:-translate-y-px"
-          >
-            Open WhatsApp
+          <a id="wa-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2.5 rounded-[var(--radius-sm)] px-6 py-3.5 font-display font-medium bg-[#25D366] text-[#06140a] hover:-translate-y-0.5 transition-transform">
+            Open WhatsApp <span aria-hidden="true">&rarr;</span>
           </a>
         </form>
-      </div>
-
-      <div class="mt-12 pt-8 border-t border-border-subtle text-center">
-        <p class="text-text-muted">
-          Or reach me directly: <a href="mailto:hello@oopuo.com" class="text-accent hover:text-accent-hover transition-colors duration-150">hello@oopuo.com</a>
-        </p>
+        <!-- HubSpot Meetings embed mounts here once the portal is configured (OQ-4). -->
+        <div id="book" class="mt-6 text-caption text-text-on-dark-muted font-mono">Scheduling via HubSpot — coming soon.</div>
       </div>
     </div>
   </section>
 </Layout>
 
 <script>
-  const tabs = document.querySelectorAll('.tab-btn');
-  const panels = document.querySelectorAll('.tab-panel');
+  // WhatsApp deep-link wizard. Number is a placeholder until the operator
+  // provides the business line (Europe) / Brazil number (OQ-4).
+  const WA_NUMBER = '31000000000';
+  const nameEl = document.getElementById('wa-name') as HTMLInputElement | null;
+  const interestEl = document.getElementById('wa-interest') as HTMLSelectElement | null;
+  const msgEl = document.getElementById('wa-message') as HTMLTextAreaElement | null;
+  const link = document.getElementById('wa-link') as HTMLAnchorElement | null;
 
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      tabs.forEach((t) => {
-        t.setAttribute('aria-selected', 'false');
-        t.classList.remove('text-text-primary', 'border-accent');
-        t.classList.add('text-text-muted', 'border-transparent');
-      });
-      tab.setAttribute('aria-selected', 'true');
-      tab.classList.remove('text-text-muted', 'border-transparent');
-      tab.classList.add('text-text-primary', 'border-accent');
-
-      const panelId = tab.getAttribute('aria-controls');
-      panels.forEach((p) => {
-        if (p.id === panelId) {
-          p.classList.remove('hidden');
-        } else {
-          p.classList.add('hidden');
-        }
-      });
-    });
-  });
-
-  const waName = document.getElementById('wa-name') as HTMLInputElement;
-  const waInterest = document.getElementById('wa-interest') as HTMLSelectElement;
-  const waMessage = document.getElementById('wa-message') as HTMLTextAreaElement;
-  const waPreview = document.getElementById('wa-preview');
-  const waLink = document.getElementById('wa-link') as HTMLAnchorElement;
-
-  function updateWhatsApp() {
-    const name = waName?.value || '[name]';
-    const interest = waInterest?.value || '[interest]';
-    const msg = waMessage?.value || '[message]';
-
-    const previewText = `Hi, I'm ${name} and I'm interested in ${interest}. ${msg} I found you through oopuo.com — looking forward to chatting!`;
-    if (waPreview) waPreview.textContent = previewText;
-
-    const encoded = encodeURIComponent(previewText);
-    if (waLink) waLink.href = `https://wa.me/31000000000?text=${encoded}`;
+  function update() {
+    const name = nameEl?.value || 'there';
+    const interest = interestEl?.value || 'your services';
+    const msg = msgEl?.value ? ` ${msgEl.value}` : '';
+    const text = `Hi, I'm ${name} and I'm interested in ${interest}.${msg} (via oopuo.com)`;
+    if (link) link.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
   }
-
-  waName?.addEventListener('input', updateWhatsApp);
-  waInterest?.addEventListener('change', updateWhatsApp);
-  waMessage?.addEventListener('input', updateWhatsApp);
+  nameEl?.addEventListener('input', update);
+  interestEl?.addEventListener('change', update);
+  msgEl?.addEventListener('input', update);
+  update();
 </script>

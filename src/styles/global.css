@@ -48,6 +48,7 @@
   --font-display: "Instrument Sans", system-ui, sans-serif;
   --font-body: "Satoshi", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
+  --font-serif: "Instrument Serif", Georgia, serif;
 
   /* Font Sizes */
   --text-hero: 4rem;
