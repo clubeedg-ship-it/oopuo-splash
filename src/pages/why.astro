@@ -1,0 +1,41 @@
+---
+import Layout from '../layouts/Layout.astro';
+// Room 2 — "The Gap". Problem framing (Europe / English track).
+---
+
+<Layout
+  title="The Gap — OOPUO"
+  description="You're growing, but your tools aren't keeping up. OOPUO builds the three or four systems that give you your week back."
+  fullpage
+  showSculpture
+  room={2}
+>
+  <section class="min-h-[100dvh] flex items-center px-6 sm:px-10 lg:px-20">
+    <div class="max-w-[var(--max-width-site)] w-full">
+      <p class="font-mono text-caption uppercase tracking-[0.18em] text-text-on-dark-secondary mb-7 flex items-center gap-3">
+        <span class="inline-block w-7 h-px bg-[var(--teal)]"></span>
+        The gap
+      </p>
+      <h1 class="font-display font-bold text-hero leading-[1.02] tracking-[-0.035em] text-text-on-dark max-w-[15ch] mb-7">
+        You're growing. Your tools aren't keeping up.
+      </h1>
+      <div class="max-w-[620px] space-y-5 mb-10">
+        <p class="font-body text-body-lg text-text-on-dark-secondary leading-relaxed">
+          You're answering the same question for the third time today. Your team copies
+          data between systems because nobody had time to connect them. The website was
+          "temporary" two years ago.
+        </p>
+        <p class="font-body text-body-lg text-text-on-dark-secondary leading-relaxed">
+          You don't need a digital transformation. You need the three or four systems
+          that give you your week back.
+        </p>
+      </div>
+      <a
+        href="/services"
+        class="inline-flex items-center gap-2.5 rounded-[var(--radius-sm)] px-6 py-3.5 font-display font-medium bg-[#67E8F9] text-[#06202a] hover:-translate-y-0.5 transition-transform"
+      >
+        See what we build <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </section>
+</Layout>
