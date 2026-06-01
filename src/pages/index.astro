@@ -1,19 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import HomeHero from '../components/sections/HomeHero.astro';
 
-// Europe / English homepage (enterprise track, D-018). Canon dark hero rendered
-// over the persistent ASCII sculpture island (room 1 — crystal spire).
+// Europe / English homepage (enterprise track, D-018). Room 1 — crystal spire.
 const organizationJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'OOPUO',
   url: 'https://oopuo.com',
   logo: 'https://oopuo.com/favicon.svg',
-  contactPoint: {
-    '@type': 'ContactPoint',
-    email: 'hello@oopuo.com',
-    contactType: 'customer service',
-  },
+  contactPoint: { '@type': 'ContactPoint', email: 'hello@oopuo.com', contactType: 'customer service' },
   founder: { '@type': 'Person', name: 'Otavio Alves' },
   areaServed: 'EU',
   description:
@@ -28,38 +24,11 @@ const organizationJsonLd = {
   fullpage
   showSculpture
   room={1}
+  locale="en"
+  localized
 >
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationJsonLd)} />
   </Fragment>
-
-  <section class="min-h-[100dvh] flex items-center px-6 sm:px-10 lg:px-20">
-    <div class="max-w-[var(--max-width-site)] w-full">
-      <p class="font-mono text-caption uppercase tracking-[0.18em] text-text-on-dark-secondary mb-7 flex items-center gap-3">
-        <span class="inline-block w-7 h-px bg-[var(--teal)]"></span>
-        An engineering studio · Amsterdam
-      </p>
-      <h1 class="font-display font-bold text-hero leading-[1.02] tracking-[-0.035em] text-text-on-dark max-w-[16ch] mb-7">
-        We build your AI systems. You focus on growing.
-      </h1>
-      <p class="font-body text-body-lg text-text-on-dark-secondary max-w-[640px] mb-10 leading-relaxed">
-        AI-powered websites, automation, and customer support for European businesses
-        that want to move faster — without hiring a tech department.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4">
-        <a
-          href="/enterprise"
-          class="inline-flex items-center gap-2.5 rounded-[var(--radius-sm)] px-6 py-3.5 font-display font-medium bg-[#67E8F9] text-[#06202a] hover:-translate-y-0.5 transition-transform"
-        >
-          See what we build <span aria-hidden="true">&rarr;</span>
-        </a>
-        <a
-          href="/contact"
-          class="inline-flex items-center gap-2.5 rounded-[var(--radius-sm)] px-6 py-3.5 font-display font-medium border border-white/25 text-text-on-dark hover:border-white/50 transition-colors"
-        >
-          Book a free call <span aria-hidden="true">&rarr;</span>
-        </a>
-      </div>
-    </div>
-  </section>
+  <HomeHero locale="en" />
 </Layout>

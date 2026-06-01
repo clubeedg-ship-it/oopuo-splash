@@ -3,31 +3,36 @@
 // Brand mark, section counter, section title, vertical nav rail, enterprise link.
 // Re-renders per page (cheap) so the active nav dot + counter stay correct; the
 // expensive sculpture is what persists across View Transitions, not this.
-interface Props { room?: number; }
-const { room = 1 } = Astro.props;
+import { nav as navTitles, localePath, LOCALES, LOCALE_LABEL, type Locale } from '../i18n/canon';
 
-const NAV = [
-  { n: 1, path: '/',         title: 'Arrival' },
-  { n: 2, path: '/why',      title: 'The Gap' },
-  { n: 3, path: '/services', title: 'Modules' },
-  { n: 4, path: '/studio',   title: 'Studio' },
-  { n: 5, path: '/blog',     title: 'Blog' },
-  { n: 6, path: '/contact',  title: 'Invitation' },
-];
+interface Props { room?: number; locale?: Locale; }
+const { room = 1, locale = 'en' } = Astro.props;
+
+const PATHS = ['/', '/why', '/services', '/studio', '/blog', '/contact'];
+const titles = navTitles(locale);
+const NAV = PATHS.map((path, i) => ({ n: i + 1, path: localePath(path, locale), title: titles[i] }));
 const active = NAV.find((r) => r.n === room) ?? NAV[0];
 const nn = String(room).padStart(2, '0');
+
+// Locale switcher → same page in another locale.
+const stripped = Astro.url.pathname.replace(/^\/(nl|fr|pt-br)(?=\/|$)/, '') || '/';
 ---
 
 <div class="hud" aria-hidden="false">
   <!-- Brand mark (top-left) -->
-  <a href="/" class="hud-brand" aria-label="OOPUO home">
+  <a href={localePath('/', locale)} class="hud-brand" aria-label="OOPUO home">
     <img src="/oopuo-logo-white.svg" alt="" width="40" height="40" />
     <span>OOPUO</span>
   </a>
 
-  <!-- Enterprise link + counter (top-right) -->
+  <!-- Locale switcher + enterprise link + counter (top-right) -->
   <div class="hud-tr">
-    <a href="/enterprise" class="hud-ent">Enterprise →</a>
+    <div class="hud-locales">
+      {LOCALES.map((loc) => (
+        <a href={localePath(stripped, loc)} class:list={['hud-loc', { 'is-active': loc === locale }]}>{LOCALE_LABEL[loc]}</a>
+      ))}
+    </div>
+    {locale !== 'pt-br' && <a href={localePath('/enterprise', locale)} class="hud-ent">Enterprise →</a>}
     <span class="hud-counter"><em>{nn}</em> / 06</span>
   </div>
 
@@ -74,6 +79,10 @@ const nn = String(room).padStart(2, '0');
   }
   .hud-ent { color: var(--color-text-on-dark-secondary); text-decoration: none; padding-right: 18px; border-right: 1px solid rgba(255,255,255,0.18); transition: color 0.15s ease; }
   .hud-ent:hover { color: var(--color-text-on-dark); }
+  .hud-locales { display: inline-flex; gap: 10px; padding-right: 18px; border-right: 1px solid rgba(255,255,255,0.18); }
+  .hud-loc { color: var(--color-text-on-dark-muted); text-decoration: none; transition: color 0.15s ease; }
+  .hud-loc:hover { color: var(--color-text-on-dark); }
+  .hud-loc.is-active { color: var(--teal); }
   .hud-counter em { font-style: normal; color: var(--color-text-on-dark); }
 
   .hud-section {
