@@ -1,4 +1,7 @@
-name: CI
+name: Static site check
+
+# No build step (D-021): the site is hand-authored static HTML in site/.
+# This workflow only sanity-checks the static output and enforces project rules.
 
 on:
   push:
@@ -7,23 +10,29 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
+      - name: Required static files present
+        run: |
+          set -e
+          for f in site/index.html site/pt-br/index.html site/robots.txt site/sitemap.xml; do
+            test -f "$f" || { echo "::error::missing $f"; exit 1; }
+          done
+          echo "All required static files present."
 
-      - run: npm ci
+      - name: Brazil page stays Brazil (D-018)
+        run: |
+          if grep -q "EU AI Act" site/pt-br/index.html; then
+            echo "::error::Europe/EU content leaked into /pt-br/ (violates D-018)"; exit 1
+          fi
+          echo "No Europe/enterprise content in /pt-br/."
 
-      - name: Typecheck
-        run: npx astro check
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Build
-        run: npm run build
+      - name: WhatsApp CTAs use brand colors, never green
+        run: |
+          if grep -rniE "25D366" site/; then
+            echo "::error::WhatsApp green (#25D366) found — CTAs must use brand colors"; exit 1
+          fi
+          echo "No WhatsApp green."
