@@ -125,7 +125,8 @@ Do not create new top-level planning files when `CLAUDE.md` or `PROJECT.md` can 
 - astro: PARKED (committed, revertible) — `src/` + `public/lobby.html` (canvas = design reference).
 - blockers: none
 - resolved: OQ-3 (EN/pt-BR/NL/FR at launch), OQ-6 (Hostinger static, manual upload), OQ-7 (Brazil at launch).
-- open: OQ-2 (perf — reduced-motion fallback present), OQ-4 (HubSpot/WhatsApp — need number + portal), OQ-5 (blog: now plain static HTML, no Keystatic build).
+- open: OQ-2 (perf — reduced-motion fallback present), OQ-4 (HubSpot portal TBD), OQ-5 (blog: now plain static HTML, no Keystatic build).
+- WhatsApp (Brazil): **+55 66 99232-3668** → `https://wa.me/5566992323668`. RULE: WhatsApp CTAs use BRAND colors (cyan/teal/warm), NEVER WhatsApp green (#25D366).
 - last session: 2026-06-01 — launch scope locked (D-019); starting Astro Phase 1 foundation.
 
 ## 10. Pointer table — `PROJECT.md` sections
