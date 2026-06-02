@@ -2,18 +2,6 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "Astro Dev",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 4321
-    },
-    {
-      "name": "Astro Preview (after build)",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "preview"],
-      "port": 4321
-    },
-    {
       "name": "Static Site",
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "4330", "--directory", "site"],
