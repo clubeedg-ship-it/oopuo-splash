@@ -121,15 +121,16 @@ Do not create new top-level planning files when `CLAUDE.md` or `PROJECT.md` can 
 - direction: PIVOTED (D-020, supersedes D-017/D-019 Astro build) — ship a hand-authored **static, no-build** site. Core = the canvas single-page (snap-scroll + morph + scrim) per locale; real static blog pages for SEO. Deploy = upload `site/` to Hostinger.
 - positioning: TWO tracks (D-018) — Europe/English (enterprise, EU AI Act) + Brazil/pt-BR (SMB: WhatsApp-first, partnership, R$, LGPD, Goiás). Locales ≠ 1:1 translations; pt-BR is its own strategy. Enterprise/EU never shown to Brazil; WhatsApp/LGPD/partnership never shown to Europe.
 - astro: **REMOVED entirely (D-021)** — repo is now pure static, **no build step, no Node/npm**. `src/`, `public/`, `astro.config.mjs`, `package.json`, `node_modules` all deleted. The canvas/design source is now `site/index.html` itself (single source of truth; no separate lobby.html).
-- static structure: `site/index.html` = Europe EN (LIVE); `site/pt-br/index.html` = Brazil SMB (LIVE, clean). Self-contained: CDN Three.js (importmap) + Google Fonts; logos/favicon in `site/`. Deploy = upload `site/` to Hostinger.
+- static structure: 4 locales LIVE — `site/index.html` (EN), `site/nl/` (NL), `site/fr/` (FR) = Europe track; `site/pt-br/` = Brazil SMB. Self-contained: CDN Three.js (importmap) + Google Fonts; logos/favicon + robots.txt + sitemap.xml in `site/`. Deploy = upload `site/` to Hostinger.
 - preview: `Static Site` config → `http://localhost:4330/` (python http.server on `site/`). Only config.
-- launch scope: ship **EN + pt-BR** (the two real strategies). NL/FR deferred (fast-follow — just more static files).
-- TODO: NL/FR pages; static `/blog/<slug>.html`; HubSpot embed (Europe contact); `robots.txt` + `sitemap.xml`; optional shared `assets/` extraction.
+- NL/FR are lean Europe pages (6 rooms): module sub-rooms, blog posts, and the enterprise overlay are **EN-only at launch** (deferred for secondary locales).
+- HubSpot (D-022): portal **148607612**, region **eu1**, owner clubeedg@gmail.com. Europe contact "Book a free call" → HubSpot Meetings. **ACTION NEEDED:** replace placeholder slug in `https://meetings-eu1.hubspot.com/oopuo` (EN/NL/FR room 6) with the real meeting link (create a free Meeting in HubSpot). "Send a message" = mailto (can swap to a HubSpot form share link later).
+- TODO: set real HubSpot meeting slug; (optional) static `/blog/<slug>.html`; (optional) translated NL/FR blog + enterprise; optional shared `assets/` extraction.
 - blockers: none
-- resolved: OQ-1/D-020 (static no-build), OQ-3 (EN+pt-BR launch; NL/FR follow), OQ-5 (blog = plain static HTML), OQ-6 (Hostinger static, manual upload), OQ-7 (Brazil at launch).
-- open: OQ-2 (perf — reduced-motion fallback present), OQ-4 (HubSpot portal TBD for Europe contact).
+- resolved: OQ-1/D-020 (static no-build), OQ-3 (EN+pt-BR+NL+FR built), OQ-5 (blog = plain static HTML), OQ-6 (Hostinger static, manual upload), OQ-7 (Brazil at launch).
+- open: OQ-2 (perf — reduced-motion fallback present), OQ-4 (HubSpot — just needs the real meeting slug; portal wired).
 - WhatsApp (Brazil): **+55 66 99232-3668** → `https://wa.me/5566992323668`. RULE: WhatsApp CTAs use BRAND colors (cyan/teal/warm), NEVER WhatsApp green (#25D366).
-- last session: 2026-06-02 — Brazil /pt-br/ built + cleaned; Astro removed entirely (D-021); repo is pure static no-build.
+- last session: 2026-06-02 — NL + FR Europe pages built; HubSpot Meetings wired (D-022); 4 locales live.
 
 ## 10. Pointer table — `PROJECT.md` sections
 
