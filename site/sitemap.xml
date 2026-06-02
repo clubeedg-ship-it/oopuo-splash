@@ -4,12 +4,32 @@
   <url>
     <loc>https://oopuo.com/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://oopuo.com/pt-br/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/nl/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://oopuo.com/pt-br/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/fr/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://oopuo.com/pt-br/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/"/>
   </url>
   <url>
     <loc>https://oopuo.com/pt-br/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://oopuo.com/pt-br/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/"/>
   </url>
