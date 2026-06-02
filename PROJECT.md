@@ -306,7 +306,7 @@ Each entry: date · id · title, then decision / rationale.
 
 **Rationale:** Operator wants a professional, fast, set-and-forget static site. HubSpot is already their CRM and its forms/meetings embed on a static host with no backend. Keystatic gives a no-code posting UI that commits to the repo.
 
-**Consequences / watch-outs:** Hostinger shared hosting serves **static files only** (no serverless). So: (a) Astro must build to fully static output; (b) HubSpot forms/meetings work (client-side embeds); (c) **Keystatic's live admin needs GitHub mode + a small OAuth proxy (e.g. free Cloudflare Worker) or local mode** — pick at Phase 3; (d) a CI pipeline (GitHub Actions → build → deploy to Hostinger) gives "edit in Keystatic → auto-publish." Tracks stay separated (D-018): EU/enterprise EN/NL/FR; SMB pt-BR.
+**Consequences / watch-outs:** Hostinger shared hosting serves **static files only** (no serverless). So: (a) Astro must build to fully static output; (b) HubSpot forms/meetings work (client-side embeds); (c) **Keystatic runs in local mode** — operator edits posts locally, rebuilds `dist/`, and uploads manually (no CI, no OAuth proxy). Deploy is a manual `dist/` upload. Tracks stay separated (D-018): EU/enterprise EN/NL/FR; SMB pt-BR.
 
 ---
 
@@ -360,7 +360,7 @@ Each entry: date · id · title, then decision / rationale.
 - Exit: launch-quality on every metric.
 
 **Phase 6 — Pre-launch & deploy (Hostinger)**
-- Fully static build → deploy `dist/` to **Hostinger** (D-019). CI (GitHub Actions → build → upload via FTP/SSH) so Keystatic edits auto-publish. Domain + DNS + HTTPS. Cache/security headers via `.htaccess`.
+- Fully static build → operator uploads `dist/` to **Hostinger** manually (no CI; D-019). Domain + DNS + HTTPS. Cache/security headers via `.htaccess`.
 - Wire **HubSpot** embeds (forms + meetings; OQ-4, details TBD) + Brazil WhatsApp deep link. Analytics (privacy-friendly) + cookie/consent. Port privacy/terms/accessibility to canon. 404 page, OG images, hreflang across EN/pt-BR/NL/FR.
 - Final cross-browser/device QA, proofread all 4 locales. Deploy → smoke test → submit sitemap to Search Console.
 - Exit: **LIVE — EN, pt-BR, NL, FR.**
@@ -377,8 +377,8 @@ Each entry: date · id · title, then decision / rationale.
 | OQ-2 | Low-end mobile perf — Three.js + bloom + ASCII viable on cheap Android? | OPEN | Benchmark in Phase 0; static/reduced fallback in Phase 5. |
 | OQ-3 | i18n / market strategy at launch? | **RESOLVED (D-019)** | EN, pt-BR, NL, FR at launch. Europe=EN/NL/FR (enterprise); Brazil=pt-BR (SMB). en-us/rs/zh deferred. |
 | OQ-4 | Contact + scheduling? | **TENTATIVE (D-019)** | HubSpot (forms + meetings) embeds — static-friendly. Exact setup still to discuss. Brazil leads with WhatsApp deep link. |
-| OQ-5 | Blog editing? | **RESOLVED (D-019)** | Keystatic admin UI → commits to repo → CI rebuild. (Hostinger static: GitHub mode + OAuth proxy or local mode — confirm Phase 3.) |
-| OQ-6 | Domain & hosting? | **RESOLVED (D-019)** | Hostinger (static `dist/` deploy via CI). |
+| OQ-5 | Blog editing? | **RESOLVED (D-019)** | Keystatic **local mode** — operator edits posts locally, rebuilds `dist/`, uploads. No OAuth proxy / CI needed. |
+| OQ-6 | Domain & hosting? | **RESOLVED (D-019)** | Hostinger — static `dist/`, **manual upload** by operator (no CI). |
 | OQ-7 | Brazil track at launch or fast-follow? | **RESOLVED (D-019)** | Ships at launch (pt-BR). |
 
 ### §C.4 Production gaps (all addressed by the roadmap)

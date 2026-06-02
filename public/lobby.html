@@ -294,13 +294,46 @@
   .btn-row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
   .btn { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border-radius: 4px; font-family: var(--display); font-weight: 500; font-size: 0.95rem; text-decoration: none; transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease; cursor: pointer; border: 1px solid transparent; white-space: nowrap; }
   .btn-primary { background: var(--teal); color: white; }
-  .btn-primary:hover { background: #24917F; transform: translateY(-1px); }
+  .btn-primary:hover { background: color-mix(in srgb, var(--teal) 86%, #000); transform: translateY(-1px); }
   .btn-ghost { color: var(--ink); border-color: var(--line-strong); background: transparent; }
   .btn-ghost:hover { border-color: var(--ink-mute); }
   .btn-warm { background: var(--warm); color: white; box-shadow: 0 8px 24px -10px rgba(196, 129, 74, 0.45); }
   .btn-warm:hover { background: #D4945E; transform: translateY(-1px); }
   .btn .arrow { transition: transform 0.2s ease; }
   .btn:hover .arrow { transform: translateX(3px); }
+
+  /* —— Legibility scrim ————————————————————————————————————————————
+     Per-letter halo (stacked text-shadows) so thin text stays readable
+     over the animated sculpture. The halo hugs each glyph — no panel
+     behind the paragraph. Tint flips automatically with the room theme.
+     Applied ONLY to text that sits over the open room background; text
+     inside cards with their own background is intentionally excluded
+     (module cards, principle cards, tier cards, example cards, stat
+     cards, ent-fact/ent-service cards, blog hero gradients). */
+  :root { --scrim-glow: rgba(241, 243, 246, 0.98); }
+  [data-theme="dark"] { --scrim-glow: rgba(7, 10, 15, 0.98); }
+  .scrim,
+  .label, .lead,
+  .blog-eyebrow, .blog-lead,
+  .process-list h4, .process-list p,
+  .ent-sub, .ent-body,
+  .ent-week, .ent-phase, .ent-note {
+    text-shadow:
+      0 0 2px var(--scrim-glow),
+      0 0 4px var(--scrim-glow),
+      0 0 9px var(--scrim-glow),
+      0 0 16px var(--scrim-glow),
+      0 0 26px var(--scrim-glow);
+  }
+  /* Punch up body-text colour to full ink so the letters themselves
+     sit darker against the busy bg. Excludes the teal mono labels
+     (.label, .blog-eyebrow, .ent-week) which keep their accent colour.
+     body prefix wins specificity vs the lobby's own .lead/etc rules. */
+  body .lead, body .blog-lead, body .blog-card-title,
+  body .process-list h4, body .process-list p,
+  body .ent-sub, body .ent-body, body .ent-phase, body .ent-note {
+    color: var(--ink);
+  }
 
   /* Modules */
   .modules { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line-strong); border: 1px solid var(--line-strong); margin-top: 16px; max-width: 760px; }
@@ -445,8 +478,29 @@
 
   /* Post grid (3-column). Hero blocks are subtle category swatches, not marketing visuals. */
   .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 28px; }
-  .blog-card { display: flex; flex-direction: column; gap: 16px; cursor: pointer; transition: transform 0.2s ease; }
-  .blog-card:hover { transform: translateY(-3px); }
+  .blog-card {
+    display: flex; flex-direction: column; gap: 16px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.70);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    backdrop-filter: blur(22px) saturate(170%);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    border-radius: 16px;
+    padding: 16px 16px 22px;
+    box-shadow:
+      0 22px 48px -16px rgba(20, 24, 32, 0.22),
+      0 4px 12px -4px rgba(20, 24, 32, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .blog-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 28px 56px -16px rgba(20, 24, 32, 0.26),
+      0 6px 14px -4px rgba(20, 24, 32, 0.10),
+      inset 0 1px 0 rgba(255, 255, 255, 1);
+    border-color: rgba(255, 255, 255, 0.95);
+  }
   .blog-card .blog-hero { aspect-ratio: 16 / 11; border-radius: 10px; background: var(--bg-surface) !important; }
   .blog-card .blog-hero::before { display: none; }
   .blog-card .blog-hero::after { color: var(--ink-mute); font-size: 10px; letter-spacing: 0.22em; }
@@ -497,6 +551,138 @@
   body.reader-open .room { opacity: 0 !important; pointer-events: none; }
   body.reader-open .sculpture { opacity: 0.35; }
   body.reader-open .hud .br { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+
+  /* —— Enterprise overlay — mirrors the blog-reader chrome —— */
+  .ent-page {
+    position: absolute; inset: 0;
+    padding: 120px 48px 32px var(--gutter-left);
+    overflow-y: auto; overscroll-behavior: contain;
+    opacity: 0; pointer-events: none;
+    transform: translateY(36px);
+    transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 7; scrollbar-width: none;
+  }
+  .ent-page::-webkit-scrollbar { display: none; }
+  .ent-page.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  body.ent-open .room { opacity: 0 !important; pointer-events: none; }
+  body.ent-open .sculpture { opacity: 0.35; }
+  body.ent-open .hud .br { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+  body.ent-open .scroll-hint { opacity: 0 !important; animation: none !important; }
+
+  .ent-inner { max-width: 760px; margin: 0 auto; padding: 0 0 120px 0; }
+  .ent-label {
+    display: block; font-family: var(--mono);
+    font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 20px;
+  }
+  .ent-h1 {
+    font-family: var(--display); font-weight: 600;
+    font-size: clamp(2.3rem, 4.6vw, 3.6rem); line-height: 1.06;
+    letter-spacing: -0.02em; color: var(--ink); margin: 0 0 26px 0;
+  }
+  .ent-sub {
+    font-family: var(--display); font-weight: 400;
+    font-size: 1.2rem; line-height: 1.55; color: var(--ink-mute);
+    margin: 0 0 30px 0; max-width: 600px;
+  }
+  .ent-section { margin-top: 84px; }
+  .ent-section h2 {
+    font-family: var(--display); font-weight: 600;
+    font-size: clamp(1.6rem, 3vw, 2.2rem); line-height: 1.12;
+    letter-spacing: -0.015em; color: var(--ink); margin: 0 0 22px 0; max-width: 20ch;
+  }
+  .ent-body {
+    font-family: var(--display); font-size: 1.02rem; line-height: 1.7;
+    color: var(--ink-mute); margin: 0 0 1.15em 0; max-width: 620px;
+  }
+  .ent-body strong { color: var(--ink); font-weight: 600; }
+
+  .ent-facts {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--line-strong); border: 1px solid var(--line-strong);
+    margin: 30px 0;
+  }
+  .ent-fact { background: var(--bg-elev); padding: 22px 20px 24px; }
+  .ent-fact-val {
+    font-family: var(--mono); font-size: 1.45rem; font-weight: 500;
+    color: var(--teal); margin-bottom: 10px; letter-spacing: -0.01em;
+  }
+  .ent-fact-label {
+    font-family: var(--display); font-size: 0.82rem; line-height: 1.45; color: var(--ink-mute);
+  }
+
+  .ent-services {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 1px; background: var(--line-strong); border: 1px solid var(--line-strong);
+    margin-top: 26px;
+  }
+  .ent-service { background: var(--bg-elev); padding: 28px 26px 30px; }
+  .ent-service h3 {
+    font-family: var(--display); font-weight: 600; font-size: 1.1rem;
+    color: var(--ink); margin: 0 0 12px 0; letter-spacing: -0.005em;
+  }
+  .ent-service p {
+    font-family: var(--display); font-size: 0.92rem; line-height: 1.6;
+    color: var(--ink-mute); margin: 0 0 14px 0;
+  }
+  .ent-deliverable {
+    border-top: 1px solid var(--line); padding-top: 14px; margin-bottom: 0 !important;
+  }
+  .ent-deliverable strong {
+    display: block; font-family: var(--mono); font-size: 9.5px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal);
+    margin-bottom: 6px; font-weight: 500;
+  }
+
+  .ent-principles { list-style: none; padding: 0; margin: 26px 0 0 0; }
+  .ent-principles li {
+    padding: 24px 0; border-top: 1px solid var(--line-strong);
+    display: grid; grid-template-columns: 46px 1fr; gap: 0 18px;
+  }
+  .ent-principles li:last-child { border-bottom: 1px solid var(--line-strong); }
+  .ent-principle-num {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-faint);
+    letter-spacing: 0.08em; padding-top: 3px;
+  }
+  .ent-principles h4 {
+    font-family: var(--display); font-weight: 600; font-size: 1.04rem;
+    color: var(--ink); margin: 0 0 8px 0;
+  }
+  .ent-principles p {
+    font-family: var(--display); font-size: 0.92rem; line-height: 1.6;
+    color: var(--ink-mute); margin: 0; max-width: 560px;
+  }
+
+  .ent-timeline { list-style: none; padding: 0; margin: 26px 0 16px 0; }
+  .ent-timeline li {
+    display: flex; gap: 26px; align-items: baseline;
+    padding: 15px 0; border-top: 1px solid var(--line);
+  }
+  .ent-timeline li:last-child { border-bottom: 1px solid var(--line); }
+  .ent-week {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--teal); min-width: 96px;
+  }
+  .ent-phase { font-family: var(--display); font-size: 1rem; color: var(--ink); }
+  .ent-note {
+    font-family: var(--display); font-style: italic; font-size: 0.88rem;
+    color: var(--ink-faint); margin: 0; max-width: 560px;
+  }
+
+  .ent-cta-block {
+    margin-top: 92px; padding-top: 40px; border-top: 1px solid var(--line-strong);
+  }
+  .ent-cta-block h2 {
+    font-family: var(--display); font-weight: 600;
+    font-size: clamp(1.7rem, 3.2vw, 2.4rem); line-height: 1.1;
+    letter-spacing: -0.015em; color: var(--ink); margin: 0 0 26px 0; max-width: 16ch;
+  }
+
+  @media (max-width: 720px) {
+    .ent-page { padding-left: 32px; padding-right: 32px; }
+    .ent-facts, .ent-services { grid-template-columns: 1fr; }
+  }
 
   .reader-inner { max-width: 720px; margin: 0 auto; padding: 0 0 120px 0; }
   .reader-back {
@@ -682,7 +868,7 @@
 
 <div class="hud">
   <div class="tl"><span class="brand"><span class="brand-mark" aria-hidden="true"></span>OOPUO</span></div>
-  <div class="ent"><a href="#enterprise">Enterprise →</a></div>
+  <div class="ent"><a href="#enterprise" data-ent-open>Enterprise →</a></div>
   <div class="tr counter"><span class="current">01</span> <span class="total">/ 06</span></div>
   <div class="br next">NEXT <em id="next-label">— THE GAP</em> ↓</div>
 </div>
@@ -767,15 +953,15 @@
     <div class="room-inner">
       <h1 class="blog-title">Blog</h1>
       <div class="blog-filters">
-        <button class="blog-pill active" type="button">All</button>
-        <button class="blog-pill" type="button">Guides</button>
-        <button class="blog-pill" type="button">Compliance</button>
-        <button class="blog-pill" type="button">Case Studies</button>
-        <button class="blog-pill" type="button">Studio Notes</button>
+        <button class="blog-pill active" type="button" data-filter="all">All</button>
+        <button class="blog-pill" type="button" data-filter="guides">Guides</button>
+        <button class="blog-pill" type="button" data-filter="automation">Automation</button>
+        <button class="blog-pill" type="button" data-filter="compliance">Compliance</button>
+        <button class="blog-pill" type="button" data-filter="studio">Studio Notes</button>
       </div>
       <hr class="blog-rule">
 
-      <article class="blog-featured" data-post="1">
+      <article class="blog-featured" data-post="1" data-category="guides">
         <span class="blog-eyebrow">EU AI ACT · GUIDE</span>
         <h2 class="blog-featured-title">The EU AI Act for SMBs: a practical guide.</h2>
         <p class="blog-lead">
@@ -787,17 +973,17 @@
       <hr class="blog-rule">
 
       <div class="blog-grid">
-        <article class="blog-card" data-post-open="2">
+        <article class="blog-card" data-post-open="2" data-category="automation">
           <div class="blog-hero" data-category="automation" data-glyph="M.03"></div>
           <div class="blog-card-meta"><span>APR 2026</span><span class="dot">·</span><span class="cat">Automation</span></div>
           <h3 class="blog-card-title">AI automations that save SMBs 20+ hours a week.</h3>
         </article>
-        <article class="blog-card" data-post-open="3">
+        <article class="blog-card" data-post-open="3" data-category="compliance">
           <div class="blog-hero" data-category="compliance" data-glyph="OBS"></div>
           <div class="blog-card-meta"><span>MAR 2026</span><span class="dot">·</span><span class="cat">Compliance</span></div>
           <h3 class="blog-card-title">Agent observability: keeping AI systems compliant.</h3>
         </article>
-        <article class="blog-card" data-post-open="4">
+        <article class="blog-card" data-post-open="4" data-category="studio">
           <div class="blog-hero" data-category="studio" data-glyph="STUDIO"></div>
           <div class="blog-card-meta"><span>FEB 2026</span><span class="dot">·</span><span class="cat">Studio Notes</span></div>
           <h3 class="blog-card-title">Why we cap at five clients. The case for small studios.</h3>
@@ -816,20 +1002,31 @@
         <div class="stat"><div class="stat-val">€0</div><div class="stat-label">on WP licenses</div></div>
       </div>
       <div class="btn-row" style="margin-top:40px">
-        <a class="btn btn-warm" href="#">Book a free call <span class="arrow">→</span></a>
-        <a class="btn btn-ghost" href="#">Send a message <span class="arrow">→</span></a>
+        <a class="btn btn-warm" href="mailto:hello@oopuo.com?subject=Booking%20a%20free%20call">Book a free call <span class="arrow">→</span></a>
+        <a class="btn btn-ghost" href="mailto:hello@oopuo.com">Send a message <span class="arrow">→</span></a>
       </div>
     </div>
   </section>
 
-  <section class="sub-room" data-mod="1" data-sub="1"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>Custom websites & landing pages.</h2><p class="lead">Modern, fast, conversion-focused. Built on frameworks that load in under a second and rank on Google without ongoing SEO retainers. No WordPress bloat.</p><p class="lead"><strong>What's inside:</strong> design system tailored to your brand, copy collaboration, analytics setup, A/B testing scaffolding, performance monitoring after launch.</p><div class="btn-row"><a class="btn btn-primary" href="#">Start a project <span class="arrow">→</span></a></div></div></section>
+  <section class="sub-room" data-mod="1" data-sub="1"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>Custom websites & landing pages.</h2><p class="lead">Modern, fast, conversion-focused. Built on frameworks that load in under a second and rank on Google without ongoing SEO retainers. No WordPress bloat.</p><p class="lead"><strong>What's inside:</strong> design system tailored to your brand, copy collaboration, analytics setup, A/B testing scaffolding, performance monitoring after launch.</p><div class="btn-row"><a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=Starting%20a%20project">Start a project <span class="arrow">→</span></a></div></div></section>
   <section class="sub-room" data-mod="1" data-sub="2"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>Examples of sites we've shipped.</h2><div class="examples-grid"><div class="example"><div class="example-client">B2B SaaS · Amsterdam</div><div class="example-title">Conversion-focused landing relaunch</div><p class="example-outcome"><strong>2.3× signup rate</strong> within 6 weeks. Loaded in 480ms.</p></div><div class="example"><div class="example-client">Logistics · Rotterdam</div><div class="example-title">Multilingual marketing site (EN/NL/DE)</div><p class="example-outcome">Replaced WordPress, cut hosting bill <strong>70%</strong>. Organic +40% in 3 months.</p></div><div class="example"><div class="example-client">Hospitality · Lisbon</div><div class="example-title">Booking-funnel rebuild</div><p class="example-outcome"><strong>Direct bookings 1.6×</strong> first quarter. €0 in OTA commissions on those.</p></div><div class="example"><div class="example-client">Wellness · Porto</div><div class="example-title">Brand site + appointment funnel</div><p class="example-outcome">From Squarespace to a custom build, <strong>3-week delivery.</strong></p></div></div></div></section>
   <section class="sub-room" data-mod="1" data-sub="3"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>How we build it.</h2><p class="lead">A 4-step process. Fixed timeline. No "it depends".</p><ol class="process-list"><li data-step="01"><h4>Discovery</h4><p>30-min call. We map your audience, your competitors, your three core conversion goals.</p></li><li data-step="02"><h4>Design</h4><p>Wireframes + visual direction within a week. You approve before we touch code.</p></li><li data-step="03"><h4>Build</h4><p>Astro + Tailwind, sub-second loads, accessibility baked in. Staging URL day one.</p></li><li data-step="04"><h4>Launch & monitor</h4><p>DNS, analytics, monitoring. We watch the first two weeks of traffic and tune.</p></li></ol></div></section>
-  <section class="sub-room" data-mod="1" data-sub="4"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>Pricing.</h2><p class="lead">Fixed scope, fixed price. No retainers.</p><div class="price-tiers"><div class="tier"><div class="tier-name">Starter</div><div class="tier-price">from €4,500</div><div class="tier-note">Up to 5 pages · 4-week delivery</div><ul><li>Custom design system</li><li>Copywriting collaboration</li><li>Analytics + monitoring</li><li>EU CDN launch</li></ul></div><div class="tier"><div class="tier-name">Premium</div><div class="tier-price">from €11,000</div><div class="tier-note">Up to 20 pages, CMS, i18n · 6–8 weeks</div><ul><li>Everything in Starter</li><li>Headless CMS</li><li>Multi-language routing</li><li>A/B testing harness</li></ul></div></div><div class="btn-row" style="margin-top:24px"><a class="btn btn-primary" href="#">Book a discovery call <span class="arrow">→</span></a></div></div></section>
+  <section class="sub-room" data-mod="1" data-sub="4"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>Pricing.</h2><p class="lead">Fixed scope, fixed price. No retainers.</p><div class="price-tiers"><div class="tier"><div class="tier-name">Starter</div><div class="tier-price">from €4,500</div><div class="tier-note">Up to 5 pages · 4-week delivery</div><ul><li>Custom design system</li><li>Copywriting collaboration</li><li>Analytics + monitoring</li><li>EU CDN launch</li></ul></div><div class="tier"><div class="tier-name">Premium</div><div class="tier-price">from €11,000</div><div class="tier-note">Up to 20 pages, CMS, i18n · 6–8 weeks</div><ul><li>Everything in Starter</li><li>Headless CMS</li><li>Multi-language routing</li><li>A/B testing harness</li></ul></div></div><div class="btn-row" style="margin-top:24px"><a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=Discovery%20call">Book a discovery call <span class="arrow">→</span></a></div></div></section>
 
   <section class="sub-room" data-mod="2" data-sub="1"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>24/7 AI customer<br>assistant.</h2><p class="lead">An assistant trained on your product, your FAQs, your tone of voice. Handles repetitive questions in any language, escalates to humans when intent shifts or sentiment drops.</p><p class="lead"><strong>What's inside:</strong> training pipeline on your docs, channel integrations (web, WhatsApp, email), human handoff flows, monthly performance review.</p></div></section>
+  <section class="sub-room" data-mod="2" data-sub="2"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>AI assistants we've shipped.</h2><div class="examples-grid"><div class="example"><div class="example-client">E-commerce · Amsterdam</div><div class="example-title">Multilingual support assistant</div><p class="example-outcome"><strong>68% of tickets</strong> resolved unassisted. First reply from 4 hours to instant.</p></div><div class="example"><div class="example-client">SaaS · Berlin</div><div class="example-title">Onboarding & billing assistant</div><p class="example-outcome">Support headcount <strong>held flat</strong> through 2× user growth.</p></div><div class="example"><div class="example-client">Travel · Lisbon</div><div class="example-title">WhatsApp booking concierge</div><p class="example-outcome">After-hours enquiries answered 24/7. <strong>1.4× conversion</strong> on late-night traffic.</p></div><div class="example"><div class="example-client">Healthcare admin · Utrecht</div><div class="example-title">Patient FAQ assistant (NL/EN)</div><p class="example-outcome">Phone volume <strong>down 40%</strong>. Staff freed for clinical work.</p></div></div></div></section>
+  <section class="sub-room" data-mod="2" data-sub="3"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>How we train it.</h2><p class="lead">A 4-step process. Live in under three weeks. No "it depends".</p><ol class="process-list"><li data-step="01"><h4>Ingest</h4><p>We feed it your docs, FAQs, and past tickets. It learns how your team actually talks.</p></li><li data-step="02"><h4>Tune</h4><p>We test it on real questions, set escalation rules, and decide what it must never answer alone.</p></li><li data-step="03"><h4>Connect</h4><p>Web, WhatsApp, email — wherever your customers already are. Human handoff built in.</p></li><li data-step="04"><h4>Review</h4><p>A monthly read of every conversation. We catch gaps, retrain, and tighten the answers.</p></li></ol></div></section>
+  <section class="sub-room" data-mod="2" data-sub="4"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>Pricing.</h2><p class="lead">Fixed setup, predictable monthly. No per-conversation surprises.</p><div class="price-tiers"><div class="tier"><div class="tier-name">Starter</div><div class="tier-price">from €2,500 setup</div><div class="tier-note">One channel · €350 / month</div><ul><li>Trained on your docs</li><li>Web chat widget</li><li>Human escalation flow</li><li>Monthly performance review</li></ul></div><div class="tier"><div class="tier-name">Premium</div><div class="tier-price">from €6,000 setup</div><div class="tier-note">Multi-channel · €750 / month</div><ul><li>Everything in Starter</li><li>WhatsApp + email channels</li><li>Multilingual answers</li><li>CRM handoff integration</li></ul></div></div><div class="btn-row" style="margin-top:24px"><a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=Free%20call%20with%20OOPUO">Book a free call <span class="arrow">→</span></a></div></div></section>
+
   <section class="sub-room" data-mod="3" data-sub="1"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>Internal process<br>automation.</h2><p class="lead">Data entry, report generation, invoice processing, lead routing — handled by AI agents that run reliably in the background.</p><p class="lead"><strong>What's inside:</strong> agent design, integration with your existing tools, monitoring dashboard, audit logs for compliance.</p></div></section>
+  <section class="sub-room" data-mod="3" data-sub="2"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>Automations we've shipped.</h2><div class="examples-grid"><div class="example"><div class="example-client">Accounting · Rotterdam</div><div class="example-title">Invoice intake & data entry</div><p class="example-outcome">Manual entry from <strong>15 hours to 1</strong> a week. Zero typos since.</p></div><div class="example"><div class="example-client">Logistics · Antwerp</div><div class="example-title">Order routing agent</div><p class="example-outcome">Orders routed in seconds, not hours. <strong>99.7% accuracy.</strong></p></div><div class="example"><div class="example-client">Recruitment · Amsterdam</div><div class="example-title">Lead qualification & CRM sync</div><p class="example-outcome">Every inbound <strong>scored and logged overnight</strong>. Sales starts the day sorted.</p></div><div class="example"><div class="example-client">Property management · The Hague</div><div class="example-title">Monthly report generation</div><p class="example-outcome">12 reports built and sent automatically. <strong>Two days back</strong>, every month.</p></div></div></div></section>
+  <section class="sub-room" data-mod="3" data-sub="3"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>How we build it.</h2><p class="lead">A 4-step process. Most automations live in two weeks. No "it depends".</p><ol class="process-list"><li data-step="01"><h4>Map</h4><p>We sit with the person doing the task and write down every step. The boring detail is the point.</p></li><li data-step="02"><h4>Build</h4><p>We build the agent against your real tools and real data — not a demo environment.</p></li><li data-step="03"><h4>Shadow</h4><p>It runs alongside your team for a week. We compare every output before it takes over.</p></li><li data-step="04"><h4>Hand off</h4><p>It goes live with a monitoring dashboard and audit logs. You see exactly what it did.</p></li></ol></div></section>
+  <section class="sub-room" data-mod="3" data-sub="4"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>Pricing.</h2><p class="lead">Priced per automation. One scope, one price.</p><div class="price-tiers"><div class="tier"><div class="tier-name">Single automation</div><div class="tier-price">from €3,500</div><div class="tier-note">One process · 2-week delivery</div><ul><li>Process mapping session</li><li>Built on your existing tools</li><li>Monitoring dashboard</li><li>Audit logs for compliance</li></ul></div><div class="tier"><div class="tier-name">Automation suite</div><div class="tier-price">from €9,000</div><div class="tier-note">3–5 processes · 4–6 weeks</div><ul><li>Everything in Single</li><li>Shared monitoring dashboard</li><li>Priority retraining</li><li>Quarterly process review</li></ul></div></div><div class="btn-row" style="margin-top:24px"><a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=Free%20call%20with%20OOPUO">Book a free call <span class="arrow">→</span></a></div></div></section>
+
   <section class="sub-room" data-mod="4" data-sub="1"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>Platform<br>integrations.</h2><p class="lead">Your CRM talks to your invoicing tool talks to your inventory system. We connect the platforms you already use so data flows where it needs to go.</p><p class="lead"><strong>What's inside:</strong> integration mapping, middleware setup, data sync verification, error monitoring, documentation your team can read.</p></div></section>
+  <section class="sub-room" data-mod="4" data-sub="2"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>Integrations we've shipped.</h2><div class="examples-grid"><div class="example"><div class="example-client">Retail · Amsterdam</div><div class="example-title">Shopify ↔ accounting sync</div><p class="example-outcome">Sales, stock, and invoices in <strong>one ledger</strong>. Month-end reconciliation gone.</p></div><div class="example"><div class="example-client">Agency · Ghent</div><div class="example-title">CRM ↔ projects ↔ invoicing</div><p class="example-outcome">A signed deal becomes a project and an invoice <strong>on its own</strong>.</p></div><div class="example"><div class="example-client">Wholesale · Eindhoven</div><div class="example-title">Inventory ↔ webshop ↔ supplier</div><p class="example-outcome">Stock accurate to the minute. Oversells dropped to <strong>zero</strong>.</p></div><div class="example"><div class="example-client">Clinic group · Brussels</div><div class="example-title">Booking ↔ records ↔ billing</div><p class="example-outcome"><strong>One patient record</strong> across three systems. Staff stopped re-typing.</p></div></div></div></section>
+  <section class="sub-room" data-mod="4" data-sub="3"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>How we connect it.</h2><p class="lead">A 4-step process. Fixed timeline. No "it depends".</p><ol class="process-list"><li data-step="01"><h4>Audit</h4><p>We list every tool, every data field, and every place the same number lives twice.</p></li><li data-step="02"><h4>Map</h4><p>We agree the source of truth for each piece of data. One system wins; the rest follow.</p></li><li data-step="03"><h4>Connect</h4><p>We build the middleware, sync the data, and verify every record matches end to end.</p></li><li data-step="04"><h4>Monitor</h4><p>Error alerts, retry logic, and documentation your team can actually read.</p></li></ol></div></section>
+  <section class="sub-room" data-mod="4" data-sub="4"><div class="room-inner"><a class="back-link" data-back>← Modules</a><h2>Pricing.</h2><p class="lead">Fixed scope, fixed price. No retainers.</p><div class="price-tiers"><div class="tier"><div class="tier-name">Connector</div><div class="tier-price">from €3,000</div><div class="tier-note">Two platforms · 2-week delivery</div><ul><li>Integration mapping</li><li>Middleware setup</li><li>Data sync verification</li><li>Error monitoring</li></ul></div><div class="tier"><div class="tier-name">Hub</div><div class="tier-price">from €8,500</div><div class="tier-note">3+ platforms · 4–6 weeks</div><ul><li>Everything in Connector</li><li>Central sync logic</li><li>Conflict resolution rules</li><li>Team documentation</li></ul></div></div><div class="btn-row" style="margin-top:24px"><a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=Free%20call%20with%20OOPUO">Book a free call <span class="arrow">→</span></a></div></div></section>
 
   <section class="sub-room" data-mod-stub>
     <div class="room-inner">
@@ -1003,6 +1200,88 @@
     </div>
   </article>
 
+  <!-- Enterprise — full-page overlay, opened from the HUD "Enterprise →" link -->
+  <article class="ent-page" id="ent-page">
+    <div class="ent-inner">
+      <button class="reader-back" type="button" data-ent-back>← Back to lobby</button>
+
+      <header>
+        <span class="ent-label">For regulated companies</span>
+        <h1 class="ent-h1">Your AI is powerful.<br>Make sure it's also legal.</h1>
+        <p class="ent-sub">EU AI Act compliance, risk assessments, and technical governance — from an engineering team that understands both your systems and the regulation.</p>
+        <div class="btn-row"><a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=Compliance%20Assessment">Request a Compliance Assessment <span class="arrow">→</span></a></div>
+      </header>
+
+      <section class="ent-section">
+        <h2>The EU AI Act isn't coming. It's here.</h2>
+        <p class="ent-body">The regulation entered into force in August 2024. Prohibitions on unacceptable AI practices apply from February 2025. High-risk system requirements hit in August 2026. The compliance clock is already running.</p>
+        <div class="ent-facts">
+          <div class="ent-fact"><div class="ent-fact-val">€35M</div><div class="ent-fact-label">Maximum fine for prohibited AI practices</div></div>
+          <div class="ent-fact"><div class="ent-fact-val">7%</div><div class="ent-fact-label">Of global annual turnover for the most serious violations</div></div>
+          <div class="ent-fact"><div class="ent-fact-val">Art. 6–49</div><div class="ent-fact-label">Obligations that apply to high-risk AI system deployers</div></div>
+        </div>
+        <p class="ent-body">If your company uses AI for hiring, credit scoring, content moderation, customer profiling, or automated decision-making — you're almost certainly in scope. Even off-the-shelf AI tools can trigger deployer obligations under the Act.</p>
+        <p class="ent-body">The question isn't whether you need to comply. It's whether you'll do it proactively or under enforcement pressure.</p>
+      </section>
+
+      <section class="ent-section">
+        <span class="ent-label">How we help</span>
+        <div class="ent-services">
+          <div class="ent-service">
+            <h3>Compliance Audit &amp; Gap Analysis</h3>
+            <p>We map every AI system in your organization against EU AI Act requirements. You get a clear picture of your risk exposure, obligation category (provider, deployer, distributor), and a prioritized remediation roadmap.</p>
+            <p class="ent-deliverable"><strong>Deliverable</strong>A comprehensive audit report with risk classification, gap analysis, and an actionable compliance timeline.</p>
+          </div>
+          <div class="ent-service">
+            <h3>Risk Assessment &amp; Mitigation</h3>
+            <p>For each AI system classified as high-risk, we conduct a structured risk assessment following the regulation's framework. We identify failure modes, bias vectors, and data governance gaps — then build the controls that close them.</p>
+            <p class="ent-deliverable"><strong>Deliverable</strong>Per-system risk assessment documentation, mitigation strategies, and residual risk evaluation.</p>
+          </div>
+          <div class="ent-service">
+            <h3>Agent Observability &amp; Tracing</h3>
+            <p>You can't govern what you can't see. We implement tracing, logging, and monitoring across your AI agents so every decision is recorded, explainable, and auditable. When the regulator asks why a system made a decision — you have the answer.</p>
+            <p class="ent-deliverable"><strong>Deliverable</strong>Observability infrastructure deployed, with dashboards, alerting, and audit-ready log exports.</p>
+          </div>
+          <div class="ent-service">
+            <h3>Technical Documentation &amp; Reporting</h3>
+            <p>The EU AI Act requires extensive documentation: data governance records, system architecture descriptions, performance metrics, and human oversight protocols. We write the documentation that satisfies Article 11 requirements — accurate, structured, and maintainable.</p>
+            <p class="ent-deliverable"><strong>Deliverable</strong>Complete technical documentation package aligned to Annex IV requirements, ready for regulatory review.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ent-section">
+        <span class="ent-label">How we work</span>
+        <h2>Compliance as engineering, not paperwork.</h2>
+        <p class="ent-body">Most compliance firms hand you a checklist and a slide deck. We embed with your engineering team. We read the code, understand the architecture, and build compliance into the system — not around it.</p>
+        <ol class="ent-principles">
+          <li><span class="ent-principle-num">01</span><div><h4>Technical depth over surface audits</h4><p>We don't just ask "do you have documentation?" We verify that the documentation matches the system. Architecture reviews, data flow tracing, model evaluation — the work that actually reduces risk.</p></div></li>
+          <li><span class="ent-principle-num">02</span><div><h4>On-premise when privacy demands it</h4><p>Some data can't leave the building. We deploy observability and governance tooling on your infrastructure — local, private cloud, or air-gapped if needed.</p></div></li>
+          <li><span class="ent-principle-num">03</span><div><h4>Sustainable compliance</h4><p>We build processes your team can maintain after we leave. No vendor lock-in, no proprietary platforms, no dependency on us for ongoing operation.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="ent-section">
+        <span class="ent-label">Typical engagement</span>
+        <ol class="ent-timeline">
+          <li><span class="ent-week">Week 1–2</span><span class="ent-phase">Discovery &amp; system inventory</span></li>
+          <li><span class="ent-week">Week 3–4</span><span class="ent-phase">Deep assessment</span></li>
+          <li><span class="ent-week">Week 5–8</span><span class="ent-phase">Implementation &amp; documentation</span></li>
+          <li><span class="ent-week">Week 9–10</span><span class="ent-phase">Review &amp; handoff</span></li>
+        </ol>
+        <p class="ent-note">Timelines vary by scope. A focused engagement on a single AI system can complete in 2–3 weeks.</p>
+      </section>
+
+      <section class="ent-cta-block">
+        <h2>Don't wait for the audit to find the gaps.</h2>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=Compliance%20Assessment">Request a Compliance Assessment <span class="arrow">→</span></a>
+          <a class="btn btn-ghost" href="mailto:hello@oopuo.com?subject=Enterprise%20questions">Send us your questions <span class="arrow">→</span></a>
+        </div>
+      </section>
+    </div>
+  </article>
+
 </div>
 
 <script>
@@ -1011,9 +1290,9 @@
   const LABELS = ["Arrival", "The Gap", "Modules", "Studio", "Blog", "Invitation"];
   const MODULE_LABELS = ["Websites", "AI Support", "Automation", "Integrations"];
   const SUB_LABELS = ["Overview", "Examples", "Process", "Pricing"];
-  const HAS_CONTENT = { "1-1": true, "1-2": true, "1-3": true, "1-4": true, "2-1": true, "3-1": true, "4-1": true };
+  const HAS_CONTENT = { "1-1": true, "1-2": true, "1-3": true, "1-4": true, "2-1": true, "2-2": true, "2-3": true, "2-4": true, "3-1": true, "3-2": true, "3-3": true, "3-4": true, "4-1": true, "4-2": true, "4-3": true, "4-4": true };
 
-  let current = 1, currentMod = null, currentSub = 1, animating = false;
+  let current = 1, currentMod = null, currentSub = 1, animating = false, entOpen = false;
   let wheelAcc = 0, wheelTimer;
   const WHEEL_THRESHOLD = 60;
 
@@ -1303,6 +1582,7 @@
 
   function go(n) {
     if (animating || n < 1 || n > TOTAL) return;
+    if (entOpen) closeEnterprise();
     if (currentMod === null && currentPost === null && n === current) return;
     if (currentPost !== null) closePost();
     animating = true;
@@ -1334,6 +1614,7 @@
   function enterMod(modNum, subNum = 1) {
     if (animating || modNum < 1 || modNum > 4) return;
     if (currentPost !== null) closePost();
+    if (entOpen) closeEnterprise();
     animating = true;
     currentMod = modNum; currentSub = subNum;
     if (current !== 3) {
@@ -1373,6 +1654,7 @@
   function openPost(n) {
     if (n < 1 || n > TOTAL_POSTS) return;
     if (currentPost === n) return;
+    if (entOpen) closeEnterprise();
     if (current !== 5) {
       current = 5;
       document.body.dataset.room = '5';
@@ -1400,6 +1682,27 @@
     writeHash();
   }
 
+  function openEnterprise() {
+    if (entOpen) return;
+    if (currentPost !== null) closePost();
+    if (currentMod !== null) exitMod();
+    entOpen = true;
+    document.body.classList.add('ent-open');
+    document.body.removeAttribute('data-theme');   // overlay is always light
+    const ep = document.getElementById('ent-page');
+    if (ep) { ep.classList.add('active'); ep.scrollTop = 0; }
+    writeHash();
+  }
+  function closeEnterprise() {
+    if (!entOpen) return;
+    entOpen = false;
+    document.body.classList.remove('ent-open');
+    const ep = document.getElementById('ent-page');
+    if (ep) ep.classList.remove('active');
+    syncBodyTheme();   // restore the underlying room's theme
+    writeHash();
+  }
+
   // —— Bindings ——
   document.querySelectorAll('[data-go]').forEach(el => {
     el.addEventListener('click', e => { e.preventDefault(); go(parseInt(el.dataset.go, 10)); });
@@ -1423,11 +1726,35 @@
   document.querySelectorAll('[data-post-back]').forEach(el => {
     el.addEventListener('click', e => { e.preventDefault(); closePost(); });
   });
+  document.querySelectorAll('[data-ent-open]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); openEnterprise(); });
+  });
+  document.querySelectorAll('[data-ent-back]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); closeEnterprise(); });
+  });
+
+  // —— Blog category filter ————————————————————————————————————————
+  // Pills carry data-filter; posts carry data-category. "all" shows everything.
+  const blogPills = document.querySelectorAll('.blog-pill');
+  const blogPosts = document.querySelectorAll('.blog-featured, .blog-card');
+  const blogMidRule = document.querySelectorAll('.blog-rule')[1];
+  function filterBlog(cat) {
+    blogPills.forEach(p => p.classList.toggle('active', p.dataset.filter === cat));
+    blogPosts.forEach(a => {
+      a.style.display = (cat === 'all' || a.dataset.category === cat) ? '' : 'none';
+    });
+    // The mid rule divides featured from grid — only meaningful when both show.
+    if (blogMidRule) blogMidRule.style.display = (cat === 'all') ? '' : 'none';
+  }
+  blogPills.forEach(pill => {
+    pill.addEventListener('click', () => filterBlog(pill.dataset.filter));
+  });
 
   window.addEventListener('wheel', e => {
     if (animating || currentMod !== null) return;
     // Reader open: the reader handles its own internal scroll. Never use wheel for room nav.
     if (currentPost !== null) return;
+    if (entOpen) return;   // enterprise overlay scrolls itself
     // Blog room: let the room scroll internally. Only treat the wheel as room-nav
     // when the user has scrolled to the top (going up) or the bottom (going down).
     if (current === 5) {
@@ -1446,8 +1773,10 @@
   }, { passive: true });
 
   window.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && entOpen) { e.preventDefault(); closeEnterprise(); return; }
     if (e.key === 'Escape' && currentPost !== null) { e.preventDefault(); closePost(); return; }
     if (e.key === 'Escape' && currentMod !== null) { e.preventDefault(); exitMod(); return; }
+    if (entOpen) return; // enterprise: let the overlay scroll natively
     if (currentPost !== null) return; // reader: let arrows scroll natively
     if (currentMod !== null) {
       if (e.key === 'ArrowDown') { e.preventDefault(); switchSub(currentSub + 1); }
@@ -1477,6 +1806,7 @@
   let restoringHash = false;
 
   function computeHash() {
+    if (entOpen) return '#enterprise';
     let h = '#' + String(current).padStart(2, '0');
     if (currentMod !== null) {
       h += '/M.' + String(currentMod).padStart(2, '0') + '/' + currentSub;
@@ -1494,6 +1824,7 @@
   function parseHash() {
     const raw = location.hash.slice(1);
     if (!raw) return null;
+    if (raw === 'enterprise') return { ent: true };
     const parts = raw.split('/');
     const roomM = parts[0].match(/^0?(\d+)$/);
     if (!roomM) return null;
@@ -1528,9 +1859,12 @@
     } else if (s.post !== undefined) {
       if (currentMod !== null) exitMod();
       openPost(s.post);
+    } else if (s.ent) {
+      openEnterprise();
     } else {
       if (currentMod !== null) exitMod();
       if (currentPost !== null) closePost();
+      if (entOpen) closeEnterprise();
       if (s.room !== current) go(s.room);
     }
     // Release suppression after the animations settle so subsequent navigations write hash
