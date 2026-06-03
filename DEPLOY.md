@@ -1,40 +1,44 @@
-# Deploy OOPUO — static, no build
+# OOPUO — deploy & test (static, no build)
 
-The entire website is plain static files in **`site/`**. No build, no Node, no npm.
+The whole site is plain static HTML in **`public_html/`**. No build, no Node.
+Upload the **contents** of `public_html/` to your Hostinger `public_html`.
 
-## Upload to Hostinger (2 minutes)
+```
+public_html/index.html        ← English (Europe)
+public_html/nl/index.html     ← Dutch
+public_html/fr/index.html     ← French
+public_html/pt-br/index.html  ← Brazil (Portuguese, WhatsApp)
+public_html/favicon.svg, oopuo-logo*.svg, robots.txt, sitemap.xml
+```
 
-1. Open Hostinger → **hPanel → Files → File Manager** (or use FTP).
-2. Go into **`public_html`** (your domain's web root).
-3. Upload **everything inside the `site/` folder** (not the `site` folder itself) so the structure becomes:
-   ```
-   public_html/index.html        ← English (Europe)
-   public_html/nl/index.html     ← Dutch
-   public_html/fr/index.html     ← French
-   public_html/pt-br/index.html  ← Brazil (Portuguese)
-   public_html/favicon.svg, oopuo-logo*.svg, robots.txt, sitemap.xml
-   ```
-   (Easiest: upload `oopuo-site.zip` from the repo root, then **Extract** it in `public_html` and move the contents up if it extracted into a `site/` subfolder.)
-4. Done. Visit your domain — it's live.
+## 3 IDs to set, then everything works (find & replace)
 
-There is nothing to compile. Fonts + 3D engine load from CDN; everything else is local.
+Meta Pixel and the HubSpot form are **already installed** on every page — they just
+carry placeholders. Replace these 3 strings across `public_html/` and you're done:
 
-## One thing to finish: HubSpot meeting link
+| Placeholder | Where | What to paste |
+|---|---|---|
+| `YOUR_META_PIXEL_ID` | `<head>` of all 4 pages | Your Meta Pixel ID (Meta Events Manager) |
+| `YOUR_HUBSPOT_FORM_ID` | EN/NL/FR contact (last room) | A HubSpot Form's ID (create a free form first) |
+| `oopuo` in `meetings-eu1.hubspot.com/oopuo` | EN/NL/FR contact | Your HubSpot Meetings slug |
 
-The Europe "Book a free call" button points to a **placeholder**:
-`https://meetings-eu1.hubspot.com/oopuo`
+HubSpot portal is already wired: **portalId `148607612`, region `eu1`** (your account).
 
-1. In HubSpot (portal **148607612**, EU) → **Library → Meetings** → create your free scheduling page.
-2. Copy its public link (e.g. `https://meetings-eu1.hubspot.com/your-name`).
-3. Find & replace `https://meetings-eu1.hubspot.com/oopuo` in these 3 files:
-   `site/index.html`, `site/nl/index.html`, `site/fr/index.html`.
-4. Re-upload those 3 files.
+## Test it
 
-(Brazil `site/pt-br/` already uses your real WhatsApp: `+55 66 99232-3668`.)
+**Local:** `python3 -m http.server 4330 --directory public_html` → open `http://localhost:4330`.
 
-## Locales
-- **Europe track:** `/` (EN), `/nl/`, `/fr/` — enterprise framing, HubSpot.
-- **Brazil track:** `/pt-br/` — SMB, WhatsApp-first, R$, LGPD.
+- **Meta Pixel:** install the *Meta Pixel Helper* Chrome extension (or Events Manager →
+  Test Events). After setting your Pixel ID, load any page → you should see a `PageView`.
+- **HubSpot form:** create a form in HubSpot → copy its Form ID → paste over
+  `YOUR_HUBSPOT_FORM_ID` → reload `/` and scroll to the last room (Invitation). The form
+  renders; submit it → check HubSpot → Contacts / Form submissions. (Until a real Form ID
+  is set, the form area stays empty — that's expected.)
+- **HubSpot Meetings:** click "Book a free call" → your scheduler opens.
+
+## Tracks (D-018)
+- **Europe** (`/`, `/nl/`, `/fr/`): enterprise framing, HubSpot form + Meetings.
+- **Brazil** (`/pt-br/`): SMB, WhatsApp `+55 66 99232-3668` (brand colors, never green).
 
 ## Updating later
-It's a frozen static site. To change anything, edit the HTML in `site/` and re-upload that file. To add a blog post later, copy a page and edit the content.
+Frozen static site — edit the HTML in `public_html/` and re-upload the changed file.
