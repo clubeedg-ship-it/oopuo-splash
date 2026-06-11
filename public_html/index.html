@@ -3,7 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<!-- Meta Pixel removed (D-025/Phase 0): pre-consent loading of fbevents.js leaked visitor IPs to Meta. Returns consent-gated in Phase 3 (PROJECT.md §C.5) once the real Pixel ID + consent banner exist. -->
+<!-- Meta Pixel — INACTIVE placeholder (D-025/Phase 0). Currently commented out so it loads nothing & logs no console error. TO ACTIVATE: replace both YOUR_META_PIXEL_ID below with your numeric Pixel ID, then uncomment the block by deleting the "PIXEL down" line and the "PIXEL up" line that wrap it. Phase 3 will move this behind the consent gate (PROJECT.md §C.5). -->
+<!-- PIXEL ↓
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','YOUR_META_PIXEL_ID');fbq('track','PageView');</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_META_PIXEL_ID&ev=PageView&noscript=1" alt=""/></noscript>
+PIXEL ↑ -->
 <title>OOPUO — We build your AI systems. You focus on growing.</title>
 <meta name="description" content="AI-powered websites, automation, and customer support for European businesses that want to move faster — without hiring a tech department. An engineering studio in Amsterdam.">
 <link rel="canonical" href="https://oopuo.com/">
