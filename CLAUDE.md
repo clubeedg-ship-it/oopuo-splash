@@ -60,9 +60,9 @@ Then read §3.
     - ⚠️ **New-builder forms do NOT work with the legacy `hbspt.forms.create` v2 API** (it silently renders nothing). Use the new embed only.
     - ⚠️ The new embed renders in an **iframe set to `height:100%`** → collapses to 0 in an auto-height container; give it `min-height`. It is loaded only when the contact room becomes visible so it can size.
     - ⚠️ **The HubSpot form does NOT render on `http://localhost`** — only on the real **https** domain. Test on oopuo.com.
-    - Only on EN so far → **replicate to /nl/ and /fr/** (Brazil keeps WhatsApp, no form).
-  - **Meetings** ("Book a free call", EN/NL/FR): placeholder link `https://meetings-eu1.hubspot.com/oopuo` — operator must create a free Meeting and replace the `oopuo` slug.
-- **Meta Pixel** — base code installed in `<head>` of ALL 4 pages with placeholder **`YOUR_META_PIXEL_ID`** (console shows `Invalid PixelID: null` until replaced). Replace with the real Pixel ID to activate.
+    - EN live (real form). **NL/FR now carry an inert new-builder placeholder** (`YOUR_NL_HUBSPOT_FORM_ID` / `YOUR_FR_HUBSPOT_FORM_ID`) — a guard injects nothing from HubSpot until the placeholder is replaced with a real per-locale form ID; `hello@oopuo.com` mailto is the live fallback meanwhile (Phase 0). Brazil keeps WhatsApp, no form.
+  - **Meetings** ("Book a free call", EN/NL/FR): real Meeting not yet created — Phase 0 **parked the placeholder slug `…/oopuo` in a code comment** and points the live CTA at a `mailto:` (the slug 404'd on click). Set the real slug + restore the button to activate.
+- **Meta Pixel** — base code present in `<head>` of ALL 4 pages but **inert (wrapped in an HTML comment)** since Phase 0 — it loads nothing and logs no error. The placeholder **`YOUR_META_PIXEL_ID`** stays for a quick swap; to activate, set the real ID and uncomment (the in-file "TO ACTIVATE" note explains). Phase 3 gates it behind consent.
 - **WhatsApp (Brazil)** — real number **+55 66 99232-3668** → `https://wa.me/5566992323668`, brand-colored buttons.
 
 ## 7. Execution & write rules
@@ -78,11 +78,11 @@ Then read §3.
 
 - branch: `main` · clean tree · **no build step** · site = `public_html/` (Hostinger-ready).
 - 4 locales LIVE as single-page canvases: `public_html/index.html` (EN), `/nl/`, `/fr/` (Europe), `/pt-br/` (Brazil SMB). All pass rules (no green; pt-br has no EU/enterprise content). hreflang + `sitemap.xml` + `robots.txt` present.
-- Integrations: Meta Pixel on all 4 (placeholder ID); HubSpot form on EN only (real form `2fef7ceb…`); HubSpot Meetings placeholder slug on EN/NL/FR; WhatsApp real on pt-br.
-- **NEXT (D-025):** execute the approved spec in **PROJECT.md §C** (hybrid app-shell, Phases 0–4). Phase 0 = live-defect triage (og:image 404, NL/FR dead form + no mailto, pixel pre-consent removal, CTA repoint). Six-agent audit findings live in §C.1.
-- Operator inputs pending (§C.8): real Meta Pixel ID; real Meeting slug; NL+FR HubSpot form IDs; legal entity details for privacy/mentions-légales pages.
+- Integrations (after Phase 0): **Meta Pixel = inert commented placeholder on all 4** (loads nothing/0 errors until the real ID is set + uncommented — operator preference [[inert placeholders]]); **EN HubSpot form live** (real `2fef7ceb…`, new-builder embed); **NL/FR = inert new-builder form placeholder** (`YOUR_NL/FR_HUBSPOT_FORM_ID`, guarded loader injects nothing until a real ID is set) **+ `hello@oopuo.com` mailto**; "Book a free call" → **mailto** on EN/NL/FR (404 Meetings slug parked in a code comment); **per-track OG images shipped** (`og-default.png` EU / `og-default-br.png` BR, 1200×630); WhatsApp real on pt-br.
+- **NEXT (D-025):** Phase 0 triage **DONE** (2026-06-11, commits `caaa43d`→`a9ad774`, verified inert on all 4 via preview). Execute **Phase 1** (shared foundation: extract `assets/` css+engine, self-host fonts + minified three.js, delete dead code, fix reduced-motion morph, a11y baseline) per **PROJECT.md §C.6**.
+- Operator inputs pending (§C.8): real Meta Pixel ID; real Meeting slug; **NL+FR HubSpot form IDs (new builder)**; legal entity details for privacy/mentions-légales pages. (Each is now a quick swap into the in-place inert placeholders.)
 - Testing note: HubSpot form + Meta Pixel only verify on the **live https** domain (operator deploys to oopuo.com in seconds), not on localhost.
-- last session: 2026-06-11 — six-agent audit (SEO/drift/inventory/compliance/quality/research); D-025 architecture approved (4 forks decided); spec written to PROJECT.md §C.
+- last session: 2026-06-11 — six-agent audit + D-025 spec; **executed Phase 0 triage**: inert Pixel placeholder (was leaking pre-consent), NL/FR contact repair (dead legacy embed → inert new-builder placeholder + mailto), Europe CTA → mailto, branded per-track OG images, `.DS_Store` cleanup. Plan: `docs/superpowers/plans/2026-06-11-phase0-triage.md`.
 
 ## 9. Pointer table — `PROJECT.md` sections
 

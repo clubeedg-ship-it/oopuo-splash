@@ -470,7 +470,7 @@ post: Article JSON-LD, per-post OG banner in `media/blog/`, warm palette.
 
 ### §C.6 Phased roadmap (each phase ends deployable; operator uploads `public_html/`)
 
-**Phase 0 — Triage (live-defect fixes; no restructuring).**
+**Phase 0 — Triage (live-defect fixes; no restructuring). ✅ DONE 2026-06-11** (`caaa43d`→`a9ad774`; one deviation: Pixel kept as an *inert* placeholder rather than removed, per operator).
 `og-default.png` created (per-track variants: Europe + Brazil) and referenced correctly; dead
 legacy HubSpot block deleted from NL/FR; `<noscript>` Pixel beacons deleted everywhere;
 placeholder Pixel snippet fully removed (returns consent-gated in Phase 3); mailto fallback
@@ -642,9 +642,17 @@ Pick one stream per task. Read only the stream you are working in.
 - **Meta Pixel** base code on all 4 pages, placeholder `YOUR_META_PIXEL_ID` → set the real Pixel ID.
 - **WhatsApp** Brazil `+55 66 99232-3668` (brand colors, never green).
 
-**Next direction (D-025, approved 2026-06-11):** execute the design spec in **§C** — hybrid app-shell with real URLs, Phases 0–4, each ending deployable. Start with **Phase 0 triage** (og:image 404 fix, NL/FR dead legacy embed removal + mailto fallback, pre-consent Pixel removal, CTA repoint). The 2026-06-11 six-agent audit (findings in §C.1) is ground truth for current defects; the §C spec supersedes the HANDOFF.md target-tree sketch.
+**Phase 0 triage — DONE (2026-06-11, commits `caaa43d`→`a9ad774`).** Shipped, verified inert on all 4 locales via local preview:
+- Meta Pixel made an **inert commented placeholder** on all 4 (was loading `fbevents.js` pre-consent + logging `Invalid PixelID`); kept in-file for a quick swap (operator preference).
+- NL/FR contact repaired: dead legacy `hbspt.forms.create` embed → **correct new-builder placeholder** with a guard that loads nothing from HubSpot until a real `YOUR_NL/FR_HUBSPOT_FORM_ID` is set, **+ `hello@oopuo.com` mailto** (NL/FR previously had zero working contact).
+- "Book a free call" on EN/NL/FR repointed off the 404 Meetings slug to a working **mailto** (slug parked in a comment).
+- **Branded per-track OG images** shipped (`og-default.png` EU / `og-default-br.png` BR, 1200×630, from `tools/og/`) — fixed the 404'd `og:image` on every share.
+- `.DS_Store` removed from the upload set.
+- Plan: `docs/superpowers/plans/2026-06-11-phase0-triage.md`.
 
-**Blocked on operator (§C.8):** real Meta Pixel ID · real Meeting slug · NL+FR HubSpot form IDs (new builder) · legal entity details for the privacy / mentions-légales pages.
+**Next direction (D-025):** execute **Phase 1** (shared foundation — see §C.6): extract `assets/css/canvas.css` + `assets/js/engine.js` driven by per-page `window.OOPUO`; self-host fonts + minified three.js; delete dead code (`__dead_oldShapes`, EN stub, inert lean-page scaffolding); fix the reduced-motion morph (instant swap); a11y baseline. UX stays identical. Each phase ends deployable.
+
+**Blocked on operator (§C.8):** real Meta Pixel ID · real Meeting slug · NL+FR HubSpot form IDs (new builder) · legal entity details for the privacy / mentions-légales pages. Each is now a quick swap into an in-place inert placeholder; none block Phase 1–2.
 
 **Do not:** reintroduce a build step / Astro / npm. Mix Europe & Brazil framing. Use WhatsApp green `#25D366`. Trust the Astro-era §A/§C/§D over CLAUDE.md.
 
