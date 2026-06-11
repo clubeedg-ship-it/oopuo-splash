@@ -995,21 +995,42 @@ PIXEL ↑ -->
         <div class="stat"><div class="stat-val">€0</div><div class="stat-label">de licences WP</div></div>
       </div>
       <div class="btn-row" style="margin-top:40px">
-        <!-- HubSpot Meetings (free) · portal 148607612 / eu1. Replace "oopuo" with your real meeting slug. -->
-        <a class="btn btn-warm" href="https://meetings-eu1.hubspot.com/oopuo" target="_blank" rel="noopener">Réserver un appel <span class="arrow">→</span></a>
+        <!-- HubSpot Meetings · portal 148607612 / eu1 · slug placeholder https://meetings-eu1.hubspot.com/oopuo — créez votre Meeting gratuit et remettez le vrai lien sur le bouton. En attendant : mailto (ne 404 pas). -->
+        <a class="btn btn-warm" href="mailto:hello@oopuo.com?subject=R%C3%A9server%20un%20appel%20avec%20OOPUO">Réserver un appel <span class="arrow">→</span></a>
       </div>
-      <!-- HubSpot form (free) · portal 148607612 / eu1. Replace YOUR_HUBSPOT_FORM_ID to activate. -->
+      <!-- E-mail direct (toujours fonctionnel) + formulaire HubSpot new-builder en placeholder INERTE.
+           ACTIVER : créez le formulaire FR dans HubSpot (new builder) et remplacez YOUR_FR_HUBSPOT_FORM_ID
+           ci-dessous par le vrai form-ID. Avec le placeholder YOUR_…, RIEN ne se charge depuis HubSpot (aucun appel pré-consentement). -->
+      <p class="lead" style="margin-top:28px">Vous préférez écrire ? <a href="mailto:hello@oopuo.com?subject=Question%20%C3%A0%20OOPUO" style="color:var(--teal)">hello@oopuo.com</a></p>
       <style>
-        .hs-embed{max-width:520px;margin-top:36px}
-        .hs-embed,.hs-embed label,.hs-embed legend,.hs-embed p,.hs-embed .hs-richtext{color:#EAEDF3 !important}
-        .hs-embed input,.hs-embed textarea,.hs-embed select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.22);color:#EAEDF3;padding:11px 12px;border-radius:6px;font-family:inherit;margin-top:6px}
-        .hs-embed .hs-form-field{margin-bottom:16px}
-        .hs-embed input[type=submit],.hs-embed .hs-button{width:auto;background:var(--warm);border:none;color:#fff;font-weight:600;padding:12px 22px;border-radius:4px;cursor:pointer;margin-top:8px}
-        .hs-embed .hs-error-msg,.hs-embed .hs-error-msgs label{color:#ffb4a8 !important}
+        .hs-form-wrap{width:100%;max-width:560px;margin-top:28px}
+        .hs-form-frame{display:block;width:100%}
+        .hs-form-frame iframe{width:100% !important;min-height:520px;border:0;background:transparent;display:block}
       </style>
-      <div id="hs-contact-form" class="hs-embed"></div>
-      <script src="https://js-eu1.hsforms.net/forms/embed/v2.js"></script>
-      <script>hbspt.forms.create({region:"eu1",portalId:"148607612",formId:"YOUR_HUBSPOT_FORM_ID",target:"#hs-contact-form"});</script>
+      <div class="hs-form-wrap">
+        <div class="hs-form-frame" data-region="eu1" data-form-id="YOUR_FR_HUBSPOT_FORM_ID" data-portal-id="148607612"></div>
+      </div>
+      <script>
+        /* INERTE tant qu'un vrai form-ID n'est pas défini : avec le placeholder YOUR_…, ceci ne charge RIEN
+           depuis HubSpot (aucun appel pré-consentement). Mettez le vrai form-ID FR dans la div ci-dessus
+           pour activer ; l'embed se charge alors seulement quand la salle de contact est visible. */
+        (function () {
+          var frame = document.querySelector('.room[data-room="6"] .hs-form-frame');
+          var id = frame ? frame.getAttribute('data-form-id') : '';
+          if (!frame || /^YOUR_/.test(id)) return;
+          var loaded = false;
+          function load() { if (loaded) return; loaded = true;
+            var s = document.createElement('script');
+            s.src = 'https://js-eu1.hsforms.net/forms/embed/148607612.js';
+            document.body.appendChild(s);
+          }
+          var r6 = document.querySelector('.room[data-room="6"]');
+          if (!r6) return;
+          if (r6.classList.contains('active')) load();
+          new MutationObserver(function () { if (r6.classList.contains('active')) load(); })
+            .observe(r6, { attributes: true, attributeFilter: ['class'] });
+        })();
+      </script>
     </div>
   </section>
 
