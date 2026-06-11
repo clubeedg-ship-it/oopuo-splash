@@ -316,87 +316,234 @@ Each entry: date · id · title, then decision / rationale.
 
 ---
 
-## §C — Roadmap & open questions
+### 2026-06-11 · D-025 · D-024 execution architecture: hybrid app-shell with real URLs (+ policy calls)
 
-> ⚠️ **SUPERSEDED below (§C.2 Phases 0–7 are the abandoned Astro plan).** The Astro
-> rebuild was removed (D-020/D-021). Current status is §C.1; the real next plan
-> (multi-page static restructure → deploy, D-024) is the **next agent's assignment** —
-> see `HANDOFF.md` + `PROJECT.md §E`. Kept for history only.
+**Decision:** Execute the D-024 restructure as a **hybrid app-shell**: every room / service / blog post / legal page becomes a complete static HTML file (full content, meta, OG, JSON-LD in the initial HTML), and the canvas experience is preserved by a hand-rolled **fetch + DOM-swap + `history.pushState` router** (~150–180 lines vanilla JS) with the Three.js/ASCII sculpture and HUD mounted **outside the swapped container**, so the 5.2s morph runs as the page transition. The router never soft-navigates across the Europe↔Brazil boundary — D-018 separation becomes architectural. CSS `@view-transition` (cross-document) is a fallback crossfade only. Policy calls approved with the architecture: (1) **blog** = markdown sources (`blog/content/<slug>.md`) rendered by a stdlib-only python3 authoring script in `tools/` — a sanctioned exception to "no build" (zero toolchain, zero deps, output committed as static HTML; supersedes Keystatic/D-019); (2) **per-locale HubSpot forms** for NL/FR (operator creates them in the new builder); (3) EN's "WhatsApp as a support channel" copy (M.02) is **whitelisted** in the D-018 rule; (4) **Satoshi dropped from the font canon** — it was never actually loaded by any page (body renders Instrument Sans); (5) the **compliance layer** (self-built consent gate, legal pages, self-hosted fonts + three.js) is mandatory **before** any real tracking ID ships.
 
-### §C.1 Status (2026-06-03)
+**Rationale:** Grounded in the 2026-06-11 six-agent audit (SEO, code drift, content inventory, GDPR/LGPD compliance, engineering quality, platform research). Key verified facts: the inline engine is 99.95% identical across the 4 locale files (one divergent line), so extraction is near-zero-risk; no major AI crawler executes JavaScript (June 2026), making initial-HTML content a harder requirement than ever; cross-document View Transitions cannot keep a WebGL canvas alive (snapshot-based, Firefox unsupported); Hostinger honors `.htaccess`. The audit also found live defects (NL/FR contact dead-ends, 404ing primary CTA, missing og:image, pre-consent Meta Pixel loads, zero legal pages while pages affirmatively claim GDPR/LGPD compliance) that Phase 0 of the roadmap fixes first.
 
-- **No build.** Static site in `public_html/`, 4 locales live as single-page canvases (EN full; nl/fr/pt-br lean). Deploy = upload to Hostinger (operator, seconds).
-- Integrations: Meta Pixel (placeholder ID, all 4); HubSpot form on EN (real form `2fef7ceb…`, new-builder embed) → replicate to nl/fr; HubSpot Meetings placeholder slug; WhatsApp real on pt-br.
-- **Next:** restructure to multi-page separated static + assets/media/blog content folders (D-024); set the 2 remaining IDs (Pixel, Meeting slug); geo/language auto-routing. Plan owned by the next agent (HANDOFF.md).
+**Consequences:** Full design spec + phased roadmap (Phases 0–4) overwrite §C. OQ-5's Keystatic answer is superseded. CLAUDE.md §5 font canon and WhatsApp rule updated. Operator inputs required for Phase 3: real Meta Pixel ID, real Meeting slug, NL+FR form IDs, legal entity details.
 
-### §C.2 Roadmap to deployment (English-first) — ⚠️ ABANDONED ASTRO PLAN (history)
+---
 
-> Phased plan to a live multi-locale production site shipping **EN, pt-BR, NL, FR at launch** (D-019) on **Hostinger** (static). Europe track = EN/NL/FR (enterprise); Brazil track = pt-BR (SMB) — distinct content, not a translation (D-018). After upload the site is frozen except for new blog posts. Each phase ends in a reviewable, buildable state.
+## §C — Design spec & roadmap (D-024 restructure · architecture D-025)
 
-**Phase 0 — Lock the canvas (design freeze)**
-- Module sub-pages M.02–M.04 content + wiring (AI Support, Automation, Integrations × Examples/Process/Pricing). Optionally Studio (room 04) content.
-- Benchmark canvas perf on low-end mobile (OQ-2) → decide reduced-motion / static fallback strategy. Informs Phases 1 + 5.
-- Decisions only (wiring lands later): contact infra/scheduling (OQ-4), blog CMS approach (OQ-5), hosting target (OQ-6).
-- Exit: the canvas is the complete, locked visual spec. Re-snapshot it in STATE.md.
+> Overwritten 2026-06-11. The previous §C (abandoned Astro Phases 0–7 + old OQ table) lives in
+> git history (`git log -p -- PROJECT.md`). This section is the **approved design spec** for
+> the D-024 multi-page restructure — architecture decision **D-025**, grounded in the
+> 2026-06-11 six-agent audit (SEO · code drift · content inventory · GDPR/LGPD · engineering
+> quality · platform research). Operator approved Approach B + all four forks on 2026-06-11.
 
-**Phase 1 — Astro foundation for the canon**
-- Extract the Three.js / ASCII / bloom engine from `lobby.html` into a reusable module under `src/`.
-- Make the sculpture a **persistent island** that survives navigation (Astro `transition:persist` + View Transitions).
-- Port canvas tokens 1:1 into Tailwind `@theme` + `@property` color vars (palette families, fonts, HUD).
-- Build the shared shell layout: HUD (brand, counter, section title, nav rail) + palette-by-route + View Transitions config.
-- Exit: one Astro route renders the canvas look; the sculpture persists across a test navigation.
+### §C.1 Audit-verified status (2026-06-11)
 
-**Phase 2 — Rooms → real routes**
-- Map rooms to routes: `/` (Arrival), `/why` (The Gap), `/services` + module pages (Modules), `/studio` (Studio), `/blog` (Blog), `/contact` (Invitation).
-- Each route: real server-rendered HTML content, per-route palette + sculpture on entry, room-to-room slide as a View Transition.
-- Nav rail + sub-rail become real links with active states. Retire hash routing.
-- Exit: every section is a crawlable URL; navigation matches the canvas feel.
+**Live defects (Phase 0 fixes):**
+- **NL/FR have zero working contact channels.** Their form block is the legacy `hbspt.forms.create` embed (cannot render new-builder forms) with placeholder `YOUR_HUBSPOT_FORM_ID` — renders nothing, throws console errors, loads HubSpot's script eagerly (pure IP disclosure). No mailto exists anywhere on `/nl/` or `/fr/`.
+- **"Book a free call" 404s** on EN/NL/FR (placeholder Meetings slug `…/oopuo`).
+- **`og:image` 404s on all 4 pages** (`https://oopuo.com/og-default.png` does not exist) — every social/WhatsApp share renders imageless. Brazil's whole motion is WhatsApp sharing.
+- **Meta Pixel loads `fbevents.js` pre-consent on every page view** (even with the placeholder ID = visitor IP disclosure to Meta) plus an ungatable `<noscript>` beacon. No consent banner, no privacy policy, no legal pages anywhere; `/fr/` lacks statutory mentions légales (LCEN Art. 6-III); NL/FR/pt-br **affirmatively claim** AVG/RGPD/LGPD compliance with nothing behind it — falsifiable by any DPO in a 30-second tag scan.
+- Google Fonts from Google's CDN on all 4 (LG München I pattern). Three.js from unpkg: **unminified** ~1.2MB + 9-request module waterfall, no preconnect/SRI/fallback.
 
-**Phase 3 — Blog as real content**
-- Move the 4 posts from canvas markup → MDX content collection (`src/content/blog`); resolve MDX-vs-headless (OQ-5).
-- `/blog` index (featured + grid) and `/blog/[slug]` reading view matching the reader aesthetic, as real pages.
-- Category filter pills → real filtering. Add RSS + per-post OG.
-- Exit: SEO-indexable blog with real per-post URLs.
+**Engine facts:** the inline engine is 99.95% identical across the 4 files (ONE divergent line: localized `LABELS`); all real drift is body-level, from commit 119414a (EN-only HubSpot fix). ~180 lines dead particle code (`__dead_oldShapes`) ×4. `prefers-reduced-motion` stops rotation but NOT the 5.2s morph (the CLAUDE.md §5 invariant is currently false — Phase 1 makes it true). Hidden rooms are `opacity:0` only → a11y-tree/tab-order pollution; blog cards + back-links not keyboard-operable; zero `:focus-visible` styles; `--ink-faint` is 2.7:1 contrast. No `.htaccess`, no 404 page, `.DS_Store` shipped, 38KB favicon.svg, no favicon.ico / apple-touch-icon.
 
-**Phase 4 — Conversion & integrations**
-- Wire contact CTAs to the chosen tool (OQ-4): "Book a free call" + "Send a message". Contact form backend (handler + email).
-- Enterprise page content (`design/03-copy/enterprise.md`). WhatsApp wizard island (`design/05-component-specs/`) if in scope.
-- Exit: leads can convert end-to-end.
+**Verified good:** per-locale title/description/canonical/hreflang/sitemap all consistent; full content in initial HTML (no JS-rendering dependence); track separation intact (zero leakage; EN's 4 "WhatsApp as support channel" mentions whitelisted by D-025); Satoshi/Fontshare never loaded by any page (font canon corrected, D-025); Hostinger honors `.htaccess` (LiteSpeed, hot-reload).
 
-**Phase 5 — SEO / perf / a11y hardening**
-- Per-route meta, canonical, OG/Twitter, JSON-LD (Organization + Article). sitemap.xml, robots.txt, self-referencing hreflang.
-- Perf: code-split Three.js, lazy-init + reduced-motion static fallback (OQ-2), Core Web Vitals tuning. Target Lighthouse ≥ 90 all categories.
-- A11y: keyboard nav, focus management across View Transitions, ARIA on nav rail, contrast, reduced-motion.
-- Exit: launch-quality on every metric.
+### §C.2 Architecture (D-025) — hybrid app-shell, real URLs, still no build
 
-**Phase 6 — Pre-launch & deploy (Hostinger)**
-- Fully static build → operator uploads `dist/` to **Hostinger** manually (no CI; D-019). Domain + DNS + HTTPS. Cache/security headers via `.htaccess`.
-- Wire **HubSpot** embeds (forms + meetings; OQ-4, details TBD) + Brazil WhatsApp deep link. Analytics (privacy-friendly) + cookie/consent. Port privacy/terms/accessibility to canon. 404 page, OG images, hreflang across EN/pt-BR/NL/FR.
-- Final cross-browser/device QA, proofread all 4 locales. Deploy → smoke test → submit sitemap to Search Console.
-- Exit: **LIVE — EN, pt-BR, NL, FR.**
+Every room / service / blog post / legal page becomes a **complete static HTML file** with full
+content, title, meta, canonical, hreflang, OG and JSON-LD in the **initial HTML** — the 2026
+professional bar (Google renders JS, but **no major AI crawler executes JavaScript**:
+GPTBot/ClaudeBot/PerplexityBot read raw HTML only). Real `<a href>` links everywhere — no hash
+routing, no buttons-as-links.
 
-**Phase 7 — Post-launch (only ongoing surface: blog)**
-- Operator posts new blog pages via **Keystatic** → CI rebuild/redeploy. No other changes to the frozen site (D-019).
-- Optional later: extra locales (en-us, rs, zh) if needed; iterate perf/SEO from real RUM data.
+On top, a **hand-rolled fetch + DOM-swap + `history.pushState` router** (~150–180 lines vanilla
+JS in `assets/js/router.js`) preserves the canvas experience: the Three.js/ASCII sculpture + HUD
+are mounted **outside the swapped container** and live for the whole session; on navigation the
+router fetches the next page, swaps `<main>`, runs the existing 5.2s morph + palette switch, and
+updates URL/title/meta. Wheel/touch/keyboard snap-scroll works exactly as today — the URL bar
+follows the rooms. (Verified: this is the standard 2026 pattern for persistent-WebGL sites —
+the swup/taxi.js pattern, hand-rolled to honor no-build. Cross-document View Transitions
+**cannot** keep a WebGL canvas alive — they animate page snapshots; Firefox lacks them.)
 
-### §C.3 Open questions
+**Router contract:**
+- Intercept only same-origin, **same-locale-prefix** links. Crossing the Europe↔Brazil boundary
+  (or any locale switch) is ALWAYS a full page load → D-018 separation becomes architectural.
+- `popstate` handling; `history.scrollRestoration='manual'` with positions in `history.state`;
+  `AbortController` on rapid navigation; hard fallback `location.href` on any error.
+- Per swap: sync `document.title`, `<link rel=canonical>`, meta description; move focus to the
+  new content; fire consent-gated virtual pageviews (Pixel/HubSpot); re-init the HubSpot form
+  when a contact container enters the DOM (iframe `min-height` quirk, CLAUDE.md §6).
+- Prefetch adjacent rooms via `fetch()` on hover/intersection (works in ALL JS browsers incl.
+  iOS Safari — Speculation Rules is Chromium-only; `rel=prefetch` has no Safari support).
+- Progressive enhancement: `@view-transition { navigation: auto }` (CSS at-rule only — the
+  `<meta>` variant is deprecated and silently dead) wrapped in
+  `@media (prefers-reduced-motion: no-preference)` → native crossfade in Chromium 126+ /
+  Safari 18.2+ (~81% global) when JS is off or the router bails. Firefox: normal loads.
+- Legacy deep links: a tiny **hash-redirect shim** on each locale's home page maps the live hash
+  routes (`#02`, `#03/M.01/2`, `#05/POST.01`, `#enterprise`) to the new real URLs. Hash
+  fragments never reach the server — this must be client-side JS, not `.htaccess`.
+
+**Per-page config instead of copy-paste** — each page defines `window.OOPUO` before the shared
+engine loads:
+
+```html
+<script>
+window.OOPUO = {
+  locale: 'nl', track: 'europe',            // 'europe' | 'brazil' — gates integrations
+  rooms: [1, 2], totalRooms: 6,              // rooms on THIS page + global counter
+  palette: 'cyan',                           // 'cyan' | 'warm' — page-level (no longer bound to data-room 5)
+  labels: { rooms: [...], end: 'EINDE', prev: 'VORIGE', next: 'VOLGENDE' },
+  integrations: { metaPixelId: null, hubspotFormId: null, whatsapp: null }
+}
+</script>
+```
+
+Feature presence (sub-rooms, blog reader, enterprise) is **derived from the DOM**, never
+hardcoded maps (`HAS_CONTENT` deleted). The hash-router block (~85 lines) is replaced by the
+fetch router; everything else (room slide, sculpture bridge, HUD painters, wheel/key/touch nav,
+morph engine) ports unchanged.
+
+### §C.3 Target tree & URL map
+
+```
+public_html/
+  index.html                       EN home — rooms 1+2 (Arrival + The Gap)
+  services/index.html              room 3 (modules index)
+  services/websites/index.html     M.01 — Overview+Examples+Process+Pricing merged (one strong page)
+  services/ai-support/  services/automation/  services/integrations/    (M.02–M.04, same shape)
+  studio/index.html                room 4
+  blog/index.html                  room 5 (warm palette via page config)
+  blog/eu-ai-act-smb-guide/        blog/ai-automations-20-hours-week/
+  blog/agent-observability-compliance/   blog/why-we-cap-at-five-clients/
+  blog/content/<slug>.md           post sources (front-matter + body) — source of truth
+  contact/index.html               room 6 (form + meetings + mailto)
+  enterprise/index.html            the overlay as a REAL page (biggest single SEO win)
+  privacy/  terms/
+  nl/{index, diensten, studio, aanpak, contact, privacy}/        lean — no blog/enterprise until translated
+  fr/{index, services, studio, approche, contact, confidentialite, mentions-legales}/
+  pt-br/{index, solucoes, como-funciona, contato, privacidade}/  Brazil track, own IA:
+        / = rooms 1+2 · /solucoes/ = rooms 3+4 (Soluções + Parceria) · NO enterprise/blog/HubSpot
+  assets/css/canvas.css            shared style block (extracted verbatim) + page styles
+  assets/js/engine.js  assets/js/router.js  assets/js/consent.js
+  assets/fonts/                    self-hosted woff2: Instrument Sans, Instrument Serif, JetBrains Mono
+  assets/vendor/three/             self-hosted MINIFIED three@0.160.0 + 5 addons + transitive deps
+  media/og/                        per-track OG images (1200×630)      media/blog/  post banners
+  404.html  .htaccess  robots.txt  sitemap.xml  favicon.svg  favicon.ico  apple-touch-icon.png
+```
+
+Slugs diacritic-free (`solucoes`, `contato`). hreflang per page-equivalent across locales; pages
+without a counterpart (e.g. `/enterprise/`) carry self-referencing EN-only hreflang. sitemap.xml
+lists every page with `lastmod`. The room *journey* is unchanged: a page may hold 1–2 rooms and
+the router carries snap-scroll seamlessly across page boundaries.
+
+### §C.4 Blog pipeline (D-025)
+
+Source of truth: `blog/content/<slug>.md` — front-matter (`title, date, locale, category,
+description, banner, slug`) + markdown body. Rendered by **`tools/render_posts.py`**: a
+~100–150-line **python3 stdlib-only** script (no pip, no npm, nothing to install on macOS), run
+manually per post. It renders a markdown subset (h2/h3, paragraphs, bold/em, links, lists,
+blockquote, code) into `public_html/blog/<slug>/index.html` via `tools/templates/post.html`, and
+regenerates the blog-index cards + sitemap entries between HTML marker comments.
+**Sanctioned exception to "no build" (D-025):** it is an *authoring tool* — zero toolchain, zero
+deps, no watch/bundle; output is committed static HTML; `tools/` never deploys. Canonical post
+metadata fixed during migration (post 1 = Guides · May 2026; reader text is canonical). Each
+post: Article JSON-LD, per-post OG banner in `media/blog/`, warm palette.
+
+### §C.5 Compliance layer (Phase 3 — mandatory before any real tracking ID)
+
+- **Legal pages** (controller identity needed from operator — §C.8): `/privacy/`, `/terms/`,
+  `/nl/privacy/`, `/fr/confidentialite/`, **`/fr/mentions-legales/`** (statutory: éditeur,
+  directeur de la publication, hébergeur), `/pt-br/privacidade/` (LGPD wording, ANPD,
+  encarregado). Each names processors (HubSpot eu1, Meta, Hostinger), transfers (DPF/SCCs),
+  retention, rights, supervisory authority; cookie table (`_fbp`, `hubspotutk`, `__hstc`…)
+  folded in. Linked from a new shared footer on every page + added to sitemap.
+- **Consent module** (`assets/js/consent.js`, ~2–3KB, self-built, no third-party CMP):
+  localStorage `oopuo_consent = {marketing, v, ts}`; first-visit banner with equal-prominence
+  Accept/Decline; site fully functional on Decline; versioned re-prompt. **Per-track wording**
+  (GDPR/cookies on Europe pages; LGPD in Portuguese on pt-br — never mixed, D-018).
+- **Meta Pixel** loads ONLY after consent via `loadMetaPixel()`; `<noscript>` beacons deleted
+  permanently. The real ID ships only behind the gate.
+- **HubSpot form** consent-gated (or click-to-load); in the portal: disable non-essential form
+  cookie tracking, enable the GDPR lawful-basis checkbox, execute the DPA. Meetings link stays a
+  plain link. **Per-locale forms** (operator creates NL + FR forms in the new builder; the form
+  ID is per-page config).
+- The on-page AVG/RGPD/LGPD claims stay only because this layer makes them true.
+
+### §C.6 Phased roadmap (each phase ends deployable; operator uploads `public_html/`)
+
+**Phase 0 — Triage (live-defect fixes; no restructuring).**
+`og-default.png` created (per-track variants: Europe + Brazil) and referenced correctly; dead
+legacy HubSpot block deleted from NL/FR; `<noscript>` Pixel beacons deleted everywhere;
+placeholder Pixel snippet fully removed (returns consent-gated in Phase 3); mailto fallback
+added to NL/FR room 6; "Book a free call" repointed at the contact room until the real Meeting
+slug exists.
+*Exit: zero broken conversion paths, zero console errors, zero pre-consent Meta loads, shares show an image.*
+
+**Phase 1 — Shared foundation (UX unchanged).**
+Extract `assets/css/canvas.css` + `assets/js/engine.js` driven by per-page `window.OOPUO`;
+reconcile NL/FR markup to EN's embed pattern (gated until Phase 3); self-host fonts + minified
+three.js (+ `modulepreload` chain); delete dead code (`__dead_oldShapes`, EN stub, inert
+scaffolding on lean pages); fix reduced-motion (instant sculpture swap + media-query `change`
+listener); render-loop hardening (visibilitychange pause, dirty-check, explicit
+`setPixelRatio(1)`, try/catch WebGL-failure poster fallback); a11y baseline (`inert`/
+`visibility:hidden` on hidden rooms, `:focus-visible` teal outline, real links for blog/back,
+`<main>` + skip link, `--ink-faint` lifted to ≥4.5:1); `<noscript>` stacked-content fallback.
+*Exit: 4 single-page locales visually identical to today on shared assets; pre-consent
+third-party surface = zero.*
+
+**Phase 2 — The split.**
+Build the URL map (§C.3); router + hash-redirect shim + hover-prefetch + `@view-transition`
+fallback; per-page meta/OG/JSON-LD (Organization sitewide; Service on service pages; Article on
+posts; BreadcrumbList); blog pipeline (§C.4) migrates the 4 posts; locale switcher in HUD/footer
++ root geo-suggest (`navigator.language`, suggest-not-force, choice persisted); sitemap +
+hreflang matrix regenerated.
+*Exit: every section/post is a real URL; `curl` of each URL shows full content in raw HTML;
+morph + snap-scroll feel identical; old hash links redirect.*
+
+**Phase 3 — Compliance + conversion (§C.5).**
+Legal pages, shared footer, consent module; THEN the operator inputs land: real Meta Pixel ID,
+per-locale HubSpot forms on NL/FR, real Meeting slug.
+*Exit: pre-consent tag scan clean; NL/FR can convert; compliance claims true; form + pixel +
+meeting tested live on oopuo.com.*
+
+**Phase 4 — Ops polish + launch QA.**
+`.htaccess` (https + single-host 301, HSTS, nosniff, Referrer-Policy, Permissions-Policy,
+`frame-ancestors`/`object-src`/`base-uri` CSP, long-cache `/assets/`+`/media/` with versioned
+filenames, no-cache HTML, `ErrorDocument 404`); branded `404.html` (static aesthetic, no
+Three.js); favicon set (ico + apple-touch + `theme-color`, shrunk SVG, mask-icon color fixed);
+`.DS_Store` excluded from deploys; Lighthouse + keyboard pass + cross-locale proofread; Search
+Console sitemap submit.
+*Exit: §C.7 checklist green on the live domain.*
+
+### §C.7 Verification (on live oopuo.com — HubSpot/Pixel do not render on localhost)
+
+1. `curl` every URL → full room content present in raw HTML (validates Google + AI crawlers + no-JS in one check).
+2. Every CTA on every locale: meeting books, forms submit (EN/NL/FR), WhatsApp opens with prefill (pt-br), mailto works.
+3. Console error-free on all pages; pre-consent network tab shows no Meta/HubSpot/Google origins.
+4. Back/forward + scroll restoration through a full room journey; hash-era URLs redirect.
+5. Keyboard-only journey: every interactive element reachable + operable; focus always visible.
+6. Share-preview debuggers (LinkedIn/WhatsApp) show the correct per-track OG image.
+7. Lighthouse mobile on `/` and one post (expect a large perf jump from self-hosted minified three.js).
+
+### §C.8 Operator inputs needed
+
+| Input | Needed for | Status |
+|---|---|---|
+| Real Meta Pixel ID | Phase 3 | missing |
+| Real HubSpot Meeting slug | Phase 3 (Phase 0 works around) | missing |
+| NL + FR HubSpot forms (new builder) → 2 form IDs | Phase 3 | missing |
+| Legal entity details (name, address, KvK/CNPJ, contact email; FR: directeur de la publication) | Phase 3 legal pages | missing |
+| Spec sign-off | Phase 0 start | requested 2026-06-11 |
+
+### §C.9 Open questions
 
 | ID | Question | Status | Notes |
 |---|---|---|---|
-| OQ-1 | v1/v2 direction — port lobby into Astro, or keep separate? | **RESOLVED (D-017)** | Canvas = design; Astro = product, pixel-accurate. |
-| OQ-2 | Low-end mobile perf — Three.js + bloom + ASCII viable on cheap Android? | OPEN | Benchmark in Phase 0; static/reduced fallback in Phase 5. |
-| OQ-3 | i18n / market strategy at launch? | **RESOLVED (D-019)** | EN, pt-BR, NL, FR at launch. Europe=EN/NL/FR (enterprise); Brazil=pt-BR (SMB). en-us/rs/zh deferred. |
-| OQ-4 | Contact + scheduling? | **TENTATIVE (D-019)** | HubSpot (forms + meetings) embeds — static-friendly. Exact setup still to discuss. Brazil leads with WhatsApp deep link. |
-| OQ-5 | Blog editing? | **RESOLVED (D-019)** | Keystatic **local mode** — operator edits posts locally, rebuilds `dist/`, uploads. No OAuth proxy / CI needed. |
-| OQ-6 | Domain & hosting? | **RESOLVED (D-019)** | Hostinger — static `dist/`, **manual upload** by operator (no CI). |
-| OQ-7 | Brazil track at launch or fast-follow? | **RESOLVED (D-019)** | Ships at launch (pt-BR). |
+| OQ-2 | Low-end mobile perf of Three.js+bloom+ASCII | OPEN — mitigated | Phase 1 hardening (pause, DPR cap, degradation hooks); benchmark on a cheap Android in Phase 4 QA. |
+| OQ-8 | Translate blog + enterprise to NL/FR? | OPEN | EN-only today; add `/nl/blog/` etc. when translated. Not launch-blocking. |
+| OQ-9 | pt-br per-segment outbound landers? | OPEN | Future; the architecture supports it (one page = one file). |
 
-### §C.4 Production gaps (all addressed by the roadmap)
-
-- Hash-only routing / no real URLs → fixed structurally in Phases 2–3 (real routes).
-- No `<meta>`/OpenGraph/Twitter/JSON-LD → Phase 5.
-- No analytics, cookie consent, or 404 page → Phase 6.
-- Favicon wide-aspect letterboxing → FIXED (D-014, `public/favicon.svg`).
+OQ-1/3/4/5/6/7 resolved historically (D-017/D-019/D-020) — see DECISIONS.md. Keystatic (D-019)
+is formally superseded by §C.4 (D-025).
 
 ---
 
@@ -495,9 +642,9 @@ Pick one stream per task. Read only the stream you are working in.
 - **Meta Pixel** base code on all 4 pages, placeholder `YOUR_META_PIXEL_ID` → set the real Pixel ID.
 - **WhatsApp** Brazil `+55 66 99232-3668` (brand colors, never green).
 
-**Next direction (D-024):** restructure to **multi-page separated static** (no build) + `assets/` (shared css+js+fonts) + `media/` (blog banners, OG) + `blog/` content folder (yaml/md per post: title/date/body/banner-image-name). See `HANDOFF.md` for the target tree.
+**Next direction (D-025, approved 2026-06-11):** execute the design spec in **§C** — hybrid app-shell with real URLs, Phases 0–4, each ending deployable. Start with **Phase 0 triage** (og:image 404 fix, NL/FR dead legacy embed removal + mailto fallback, pre-consent Pixel removal, CTA repoint). The 2026-06-11 six-agent audit (findings in §C.1) is ground truth for current defects; the §C spec supersedes the HANDOFF.md target-tree sketch.
 
-**Assignment for the next agent (per `HANDOFF.md`):** (1) write a verified **state snapshot** here in §E; (2) write a **plan to deployment** in §C for the D-024 structure; then execute. Also build **geo/language auto-routing** at the root (client-side, no build).
+**Blocked on operator (§C.8):** real Meta Pixel ID · real Meeting slug · NL+FR HubSpot form IDs (new builder) · legal entity details for the privacy / mentions-légales pages.
 
 **Do not:** reintroduce a build step / Astro / npm. Mix Europe & Brazil framing. Use WhatsApp green `#25D366`. Trust the Astro-era §A/§C/§D over CLAUDE.md.
 
