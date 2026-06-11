@@ -1,157 +1,104 @@
 # oopuo-splash — agent memory (always loaded)
 
-Short snapshot + rules. Long-form lives in `PROJECT.md` and is retrieved by section anchor.
+Short snapshot + rules. Long-form lives in `PROJECT.md` (retrieved by `## §X` anchor)
+and `DECISIONS.md` (append-only log). **This file is the source of truth for current
+state** — if anything below contradicts older notes, this wins.
 
 ## 1. Identity
 
-- Working title: OOPUO Splash
-- What: Marketing website for OOPUO — an AI systems consultancy running TWO market strategies (D-018): **Europe** (English; enterprise / EU AI Act / Amsterdam credibility) and **Brazil** (pt-BR; SMB — WhatsApp-first automated service, partnership model, R$ pricing, LGPD, Goiás PMEs). The two audiences never see each other's framing.
-- Repo: `/Users/ottogen/oopuo-splash`
-- GitHub: `ottogen/oopuo-splash`
-- One product, two artifacts (D-017): the **design canvas** (`public/lobby.html`, a non-shipping Three.js/ASCII sketch that defines the look) and the **production site** (Astro in `src/pages/`, rebuilt pixel-accurate to the canvas — this is what ships).
+- Working title: OOPUO Splash. Marketing website for OOPUO, an AI systems consultancy.
+- **TWO market strategies (D-018), never mixed:**
+  - **Europe** (`en`, `nl`, `fr`) — English/Dutch/French, enterprise framing, EU AI Act, Amsterdam credibility, HubSpot + email contact, € pricing.
+  - **Brazil** (`pt-br`) — Portuguese, SMB strategy: WhatsApp-first automated service, "parceria não produto", R$ pricing, LGPD, Goiás PMEs. Outbound motion (WhatsApp/prospecting), low SEO dependence.
+  - Enterprise/EU content never shown to Brazil; WhatsApp/LGPD/partnership never shown to Europe.
+- Repo: `/Users/ottogen/oopuo-splash` · GitHub: `ottogen/oopuo-splash` · Domain: **oopuo.com** (operator deploys to Hostinger `public_html` instantly — testing of live integrations happens on the real domain, not locally).
 
 ## 2. Session start
 
-First thing every session, in order:
-
 ```bash
-pwd
-git branch --show-current
-git status --porcelain
-npm run build          # confirm clean state
+pwd && git branch --show-current && git status --porcelain
 ```
-
+There is **NO build step** (D-020/D-021). No Node, no npm, no Astro. The site is plain
+static HTML/CSS/JS in **`public_html/`**. To preview: `Static Site` launch config
+(`python3 -m http.server 4330 --directory public_html`) → `http://localhost:4330/`.
 Then read §3.
 
 ## 3. First reads
 
-1. `PROJECT.md §E` — current handoff / next-step
-2. `design/08-v2-lobby/STATE.md` — lobby prototype canonical state (if working on v2)
-3. `PROJECT.md §B` — only if the task touches a settled decision
-4. `PROJECT.md §D` — workstream section, only the stream you are working in
-5. `PROJECT.md §A` — only if the task touches design system / architecture
+1. `PROJECT.md §E` — current handoff / next-step.
+2. `PROJECT.md §B` / `DECISIONS.md` — only if the task touches a settled decision.
+3. `PROJECT.md §C` — roadmap to deployment (target = multi-page restructure, D-024).
+4. `design/08-v2-lobby/STATE.md` — the canvas (visual design) reference, only for look/feel.
 
-Prefer CLI retrieval (`PROJECT.md §G`) over repo-wide grep.
+## 4. Vocabulary
 
-## 4. Workstream rule
+- `canvas` = the visual aesthetic (Three.js + AsciiEffect sculpture, dark-first hero, HUD, cyan/warm palette). The original single-file design lives in `design/08-v2-lobby/` history; the live pages embed the same engine inline.
+- `site` = the shipped static files in **`public_html/`** (what uploads to Hostinger).
+- `room` = one full-viewport section (6: Arrival/Gap/Modules/Studio/Blog|Approach/Invitation). In the CURRENT pages all 6 live in one scroll page per locale; the TARGET (D-024) splits them into separate pages.
+- `sculpture` = Three.js ASCII shape (one per room). `morph` = 5.2s transition between two. `HUD` = brand mark + counter + section title + nav rail overlay. `palette family` = `--grad-*` + `--teal` (cyan default, warm for blog/room-5).
 
-Pick exactly one workstream per task: `lobby`, `astro`, `content`, or `production`. Do not mix streams unless the task is explicitly cross-cutting. Stream memory lives in `PROJECT.md §D`.
+## 5. Invariants
 
-## 5. Locked vocabulary
+### Visual canon (keep across any restructure)
+- Dark-first hero, full-viewport ASCII sculpture per section; cyan family default, warm family for blog. No card shadows — glow/HUD instead.
+- Fonts: **Instrument Sans** (display) + **Satoshi** (body) + **JetBrains Mono** (mono) + **Instrument Serif** (blog titles). Loaded from Google Fonts/Fontshare CDN. No substitutes.
+- Three.js via CDN importmap (unpkg). `prefers-reduced-motion` disables rotation/morph.
+- WhatsApp CTAs use **brand colors (cyan/teal/warm), NEVER WhatsApp green `#25D366`**.
 
-- `lobby` / `canvas` = the design canvas at `public/lobby.html` (Three.js + AsciiEffect + bloom). Non-shipping sketch; source of truth for the visual design.
-- `astro site` = the production site in `src/pages/` (static, Tailwind, i18n). Rebuilt pixel-accurate to the canvas; this is what deploys.
-- `room` = one full-viewport section in the lobby (6 main rooms)
-- `sub-room` = nested page within Modules room (4 modules × 4 sub-pages)
-- `sculpture` = Three.js ASCII-rendered 3D shape, one per room
-- `morph` = animated transition between two sculptures (5.2s easeInOutSine)
-- `palette family` = coordinated set of `--grad-*` + `--teal` CSS properties (cyan default, warm for blog)
-- `HUD` = persistent overlay elements (brand mark, counter, section title, nav rail)
-- `nav rail` = vertical column of balls (COL 0 main, COL 1 sub-rail for modules)
-- `design doc` = any file in `design/` — source of truth for intent
+### Structure (current → target)
+- **CURRENT:** one self-contained HTML file per locale in `public_html/` (`index.html`, `nl/`, `fr/`, `pt-br/`), each the full 6-room snap-scroll canvas with inline CSS+JS. Works; deployed-ready.
+- **TARGET (D-024):** **multi-page separated static, still no build** — pages split into separate `.html` files, shared assets extracted (`assets/` css+js+fonts), organized **media** folder (blog banners, og images), and a **blog** folder where each post is a content file (yaml/markdown: title, date, body, banner image name) + its rendered page. The next agent plans + executes this (see PROJECT.md §C, §E).
 
-## 6. Invariants
+### Content/SEO
+- Each section/post should become a REAL crawlable URL (no hash-only routing) once split.
+- Strings are currently hardcoded per locale page; the restructure may centralize them.
 
-> The canvas aesthetic is canonical for the whole product (D-017). The production
-> Astro site is rebuilt to match it pixel-accurate. The old conventional v1 page
-> design is SUPERSEDED — do not extend it; rebuild to the canon.
+## 6. Integrations (wired this session — IDs are real)
 
-### Canonical design invariants (from the canvas; govern the production site)
-- Dark-first hero / full-viewport sculpture composition.
-- ASCII-rendered Three.js sculpture per section; cyan family default, warm family for blog only.
-- No card shadows — glow / HUD treatment instead.
-- Logo switches on context (white on dark, black on light).
-- `prefers-reduced-motion: reduce` disables sculpture rotation + morph.
+- **HubSpot** portal **`148607612`**, region **`eu1`**, owner `clubeedg@gmail.com`.
+  - **Form** (EN contact / room 6): `data-form-id="2fef7ceb-b34c-4792-9a0d-1a2d618767b9"`, **NEW form-builder** embed (`<script src="https://js-eu1.hsforms.net/forms/embed/148607612.js">` + `<div class="hs-form-frame" data-region data-form-id data-portal-id>`).
+    - ⚠️ **New-builder forms do NOT work with the legacy `hbspt.forms.create` v2 API** (it silently renders nothing). Use the new embed only.
+    - ⚠️ The new embed renders in an **iframe set to `height:100%`** → collapses to 0 in an auto-height container; give it `min-height`. It is loaded only when the contact room becomes visible so it can size.
+    - ⚠️ **The HubSpot form does NOT render on `http://localhost`** — only on the real **https** domain. Test on oopuo.com.
+    - Only on EN so far → **replicate to /nl/ and /fr/** (Brazil keeps WhatsApp, no form).
+  - **Meetings** ("Book a free call", EN/NL/FR): placeholder link `https://meetings-eu1.hubspot.com/oopuo` — operator must create a free Meeting and replace the `oopuo` slug.
+- **Meta Pixel** — base code installed in `<head>` of ALL 4 pages with placeholder **`YOUR_META_PIXEL_ID`** (console shows `Invalid PixelID: null` until replaced). Replace with the real Pixel ID to activate.
+- **WhatsApp (Brazil)** — real number **+55 66 99232-3668** → `https://wa.me/5566992323668`, brand-colored buttons.
 
-### Production-foundation invariants (Astro site)
-- Every section / post / module is a REAL crawlable route — NO hash-only routing. SEO requires it.
-- The sculpture is a PERSISTENT island that survives route changes (View Transitions), not re-initialized per page.
-- Strings live in locale JSON files (`src/i18n/`), never hardcoded in components.
-- Body text max-width: ~720px.
-- Launch English-first; other 6 locales are a post-launch phase (D-017, OQ-3).
+## 7. Execution & write rules
 
-### Design-canvas (lobby) invariants
-- All canvas edits go in `public/lobby.html` — single file, inline everything. Non-shipping.
-- The canvas defines intent; when the Astro site disagrees with the canvas, match the canvas.
+- One bounded task at a time. **No build step** — never reintroduce Astro/npm (tried + removed, D-020/D-021).
+- `DECISIONS.md` is the append-only log (next id: **D-025**).
+- PROJECT.md section cadence: §A stable · §B/§F append-only · §C/§D/§E/§G overwrite. Update `CLAUDE.md §8` (snapshot below) at session close.
+- Don't create new top-level planning files when CLAUDE.md / PROJECT.md can hold it (HANDOFF.md + DEPLOY.md are the sanctioned extras).
 
-### Shared invariants
-- Fonts: Instrument Sans (display) + Satoshi (body) + JetBrains Mono (code/labels). No exceptions.
-- Teal accent: `#1E7A6E` on light, `#2D8A7E` on dark.
-- Warm highlight: `#C4814A` — max 1× per page.
-- Mobile-first responsive design.
-
-## 7. Design tokens (use these class/token names consistently)
-
-- `bg-primary` / `bg-elevated` / `bg-surface` — light context surfaces
-- `bg-dark` / `bg-dark-elevated` / `bg-dark-surface` — dark context surfaces
-- `data-theme="dark"` — applied to dark sections
-- `accent-primary` (#1E7A6E) — teal on light
-- `accent-on-dark` (#2D8A7E) — teal on dark
-- `highlight-warm` (#C4814A) — warm CTA accent
-- `font-display` — Instrument Sans (headings)
-- `font-body` — Satoshi (body text)
-- `font-mono` — JetBrains Mono (code, labels)
-- `shadow-card` / `shadow-card-hover` — card elevation on light
-- `accent-glow` / `accent-glow-lg` — glow effects on dark
-
-## 8. Execution & write rules
-
-- One bounded task at a time. Review delegated work before accepting.
-- Design docs in `design/` are source of truth for intent — if code disagrees, fix the code. Never edit a design doc without operator approval.
-- The lobby prototype (`public/lobby.html`) is a single self-contained file (~2000 lines). Inline CSS + JS + Three.js module. No external deps except CDN Three.js.
-- `DECISIONS.md` at repo root is the append-only decision log (next id: D-018).
-- Per-section write rules:
-  - `PROJECT.md §A` — design system / architecture. Stable; update with care.
-  - `PROJECT.md §B` — decisions. Append-only; next id `D-NNN`.
-  - `PROJECT.md §C` — roadmap & OQs. Overwrite freely.
-  - `PROJECT.md §D` — workstreams. Overwrite freely.
-  - `PROJECT.md §E` — handoff. Overwrite per session.
-  - `PROJECT.md §F` — history. Append-only.
-  - `PROJECT.md §G` — retrieval. Overwrite as commands evolve.
-  - `CLAUDE.md §9` (below) — overwrite at session close.
-
-Do not create new top-level planning files when `CLAUDE.md` or `PROJECT.md` can hold the truth.
-
-## 9. Current snapshot
+## 8. Current snapshot
 
 > Overwritten at session close. Mirrors current hot state.
 
-- branch: `main`
-- active stream: `static` (no-build production site in `site/`)
-- direction: PIVOTED (D-020, supersedes D-017/D-019 Astro build) — ship a hand-authored **static, no-build** site. Core = the canvas single-page (snap-scroll + morph + scrim) per locale; real static blog pages for SEO. Deploy = upload `site/` to Hostinger.
-- positioning: TWO tracks (D-018) — Europe/English (enterprise, EU AI Act) + Brazil/pt-BR (SMB: WhatsApp-first, partnership, R$, LGPD, Goiás). Locales ≠ 1:1 translations; pt-BR is its own strategy. Enterprise/EU never shown to Brazil; WhatsApp/LGPD/partnership never shown to Europe.
-- astro: **REMOVED entirely (D-021)** — repo is now pure static, **no build step, no Node/npm**. `src/`, `public/`, `astro.config.mjs`, `package.json`, `node_modules` all deleted. The canvas/design source is now `site/index.html` itself (single source of truth; no separate lobby.html).
-- static structure: 4 locales LIVE — `site/index.html` (EN), `site/nl/` (NL), `site/fr/` (FR) = Europe track; `site/pt-br/` = Brazil SMB. Self-contained: CDN Three.js (importmap) + Google Fonts; logos/favicon + robots.txt + sitemap.xml in `site/`. Deploy = upload `site/` to Hostinger.
-- preview: `Static Site` config → `http://localhost:4330/` (python http.server on `site/`). Only config.
-- NL/FR are lean Europe pages (6 rooms): module sub-rooms, blog posts, and the enterprise overlay are **EN-only at launch** (deferred for secondary locales).
-- HubSpot (D-022): portal **148607612**, region **eu1**, owner clubeedg@gmail.com. Europe contact "Book a free call" → HubSpot Meetings. **ACTION NEEDED:** replace placeholder slug in `https://meetings-eu1.hubspot.com/oopuo` (EN/NL/FR room 6) with the real meeting link (create a free Meeting in HubSpot). "Send a message" = mailto (can swap to a HubSpot form share link later).
-- TODO: set real HubSpot meeting slug; (optional) static `/blog/<slug>.html`; (optional) translated NL/FR blog + enterprise; optional shared `assets/` extraction.
-- blockers: none
-- resolved: OQ-1/D-020 (static no-build), OQ-3 (EN+pt-BR+NL+FR built), OQ-5 (blog = plain static HTML), OQ-6 (Hostinger static, manual upload), OQ-7 (Brazil at launch).
-- open: OQ-2 (perf — reduced-motion fallback present), OQ-4 (HubSpot — just needs the real meeting slug; portal wired).
-- WhatsApp (Brazil): **+55 66 99232-3668** → `https://wa.me/5566992323668`. RULE: WhatsApp CTAs use BRAND colors (cyan/teal/warm), NEVER WhatsApp green (#25D366).
-- last session: 2026-06-02 — NL + FR Europe pages built; HubSpot Meetings wired (D-022); 4 locales live.
+- branch: `main` · clean tree · **no build step** · site = `public_html/` (Hostinger-ready).
+- 4 locales LIVE as single-page canvases: `public_html/index.html` (EN), `/nl/`, `/fr/` (Europe), `/pt-br/` (Brazil SMB). All pass rules (no green; pt-br has no EU/enterprise content). hreflang + `sitemap.xml` + `robots.txt` present.
+- Integrations: Meta Pixel on all 4 (placeholder ID); HubSpot form on EN only (real form `2fef7ceb…`); HubSpot Meetings placeholder slug on EN/NL/FR; WhatsApp real on pt-br.
+- **NEXT DIRECTION (D-024):** restructure to **multi-page separated static** (no build) + `assets/` + `media/` (blog banners) + `blog/` content folder (yaml/md per post + image name). See PROJECT.md §C + `HANDOFF.md`.
+- Open TODOs: replicate HubSpot form to /nl/ + /fr/; real Meeting slug; real Meta Pixel ID; **geo/language auto-routing** (root should detect locale/region and route — requested, not built); the D-024 restructure; (optional) translated NL/FR blog + enterprise.
+- Testing note: HubSpot form + Meta Pixel only verify on the **live https** domain (operator deploys to oopuo.com in seconds), not on localhost.
+- last session: 2026-06-03 — Meta Pixel installed (all 4); HubSpot form embedded on EN (D-024); learned new-form/localhost constraints; docs refreshed + handoff written for the multi-page restructure (D-024).
 
-## 10. Pointer table — `PROJECT.md` sections
+## 9. Pointer table — `PROJECT.md` sections
 
 | Anchor | Content | Cadence |
 |---|---|---|
-| `§A` | Design system + architecture | Stable |
-| `§B` | Decisions log (D-001…D-NNN) | append-only |
-| `§C` | Roadmap & open questions | overwrite |
-| `§D` | Workstreams (stream memory) | overwrite |
-| `§E` | Handoff (current next-step) | overwrite |
-| `§F` | History (durable lessons + milestone log) | append-only |
-| `§G` | Retrieval (CLI snippets, artifact map) | overwrite |
+| `§A` | Architecture + design system | stable |
+| `§B` | Decisions (D-001…) | append-only |
+| `§C` | Roadmap to deployment | overwrite |
+| `§D` | Workstreams | overwrite |
+| `§E` | Handoff (next-step) | overwrite |
+| `§F` | History + durable lessons | append-only |
+| `§G` | Retrieval (CLI/artifact map) | overwrite |
 
-Extract a section: `sed -n '/^## §B/,/^## §C/p' PROJECT.md`. See §G for the full kit.
+## 10. Session close ritual
 
-## 11. Session close ritual
-
-Before ending:
-
-1. Did a decision land? → append to `PROJECT.md §B` with next `D-NNN` AND to `DECISIONS.md`.
-2. Did a durable lesson surface? → append a bullet to `PROJECT.md §F`.
-3. Did next-step change? → overwrite `PROJECT.md §E`.
-4. Update the **§9 Current snapshot** block above.
-5. Commit on `main`.
+1. Decision landed? → append to `PROJECT.md §B` + `DECISIONS.md` (next `D-NNN`).
+2. Durable lesson? → append to `PROJECT.md §F`.
+3. Next-step changed? → overwrite `PROJECT.md §E`.
+4. Update **§8 snapshot** above. 5. Commit on `main`.

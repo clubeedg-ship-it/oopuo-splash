@@ -1,8 +1,13 @@
 # Lobby v2 — Current Canvas State
 
-**Last updated:** 2026-05-18 · Direction locked (D-017).
+**Last updated:** 2026-05-18 · ⚠️ paths/role below are pre-pivot (see banner).
 
-> **Role (D-017):** this lobby is the **design canvas** — a non-shipping sketch that defines the look. It never deploys. The production site is Astro, rebuilt pixel-accurate to this canvas. See `PROJECT.md §C.2` for the deployment roadmap. This file remains the canonical visual spec the Astro rebuild must match.
+> ⚠️ **OUTDATED PATHS (2026-06-03):** Astro was removed (D-021) and `public/lobby.html`
+> no longer exists. The **live site is plain static HTML in `public_html/`** (the canvas
+> engine is embedded inline in each locale page). This doc is still a useful **visual-design
+> reference** — the sculpture pipeline, palette, morph, HUD, and nav descriptions below are
+> accurate for the look. Ignore the "Astro rebuild / lobby.html / npm" references.
+> Current state = `CLAUDE.md`; next-phase target = multi-page static (D-024, `HANDOFF.md`).
 
 This is the canonical state doc for the design canvas. If anything contradicts code, **the code wins** — update this file. Pulled together so a fresh session can resume in 5 minutes instead of 30.
 

@@ -9,6 +9,12 @@ Cadence per section:
 
 ## §A — Design system & architecture
 
+> ⚠️ **§A.2–§A.3 + §A.10 describe the removed Astro/v1 stack (D-021) — IGNORE them.**
+> Current architecture: hand-authored static HTML in `public_html/`, no build, Three.js
+> via CDN importmap. The **visual canon** (§A.4–§A.9: sculpture pipeline, morph, colour,
+> nav, sculptures, fonts) is STILL accurate and is what the live pages embed. Authoritative
+> current state = `CLAUDE.md`. Target structure = multi-page static (D-024, `HANDOFF.md`).
+
 ### §A.1 Overview
 
 OOPUO Splash is the marketing website for OOPUO, an AI systems consultancy that runs **two market strategies** (D-018): **Europe** (English — enterprise, EU AI Act, Amsterdam credibility) and **Brazil** (pt-BR — SMB: WhatsApp-first automated service, partnership model, R$ pricing, LGPD, Goiás PMEs). The two audiences never see each other's framing. Technically it is **one product** expressed as two artifacts in one repo (direction locked in D-017):
@@ -312,14 +318,18 @@ Each entry: date · id · title, then decision / rationale.
 
 ## §C — Roadmap & open questions
 
-### §C.1 Status
+> ⚠️ **SUPERSEDED below (§C.2 Phases 0–7 are the abandoned Astro plan).** The Astro
+> rebuild was removed (D-020/D-021). Current status is §C.1; the real next plan
+> (multi-page static restructure → deploy, D-024) is the **next agent's assignment** —
+> see `HANDOFF.md` + `PROJECT.md §E`. Kept for history only.
 
-- **Direction locked (D-017):** canvas = design; Astro = product, pixel-accurate to the canvas; English-first launch.
-- Canvas (`public/lobby.html`): 6 rooms + blog reader. Module M.01 complete; M.02–M.04 stubs.
-- Astro site: 12 pages, EN, builds clean — conventional design superseded, awaiting rebuild to canon.
-- Nothing deployed. Hosting not chosen (OQ-6).
+### §C.1 Status (2026-06-03)
 
-### §C.2 Roadmap to deployment (English-first)
+- **No build.** Static site in `public_html/`, 4 locales live as single-page canvases (EN full; nl/fr/pt-br lean). Deploy = upload to Hostinger (operator, seconds).
+- Integrations: Meta Pixel (placeholder ID, all 4); HubSpot form on EN (real form `2fef7ceb…`, new-builder embed) → replicate to nl/fr; HubSpot Meetings placeholder slug; WhatsApp real on pt-br.
+- **Next:** restructure to multi-page separated static + assets/media/blog content folders (D-024); set the 2 remaining IDs (Pixel, Meeting slug); geo/language auto-routing. Plan owned by the next agent (HANDOFF.md).
+
+### §C.2 Roadmap to deployment (English-first) — ⚠️ ABANDONED ASTRO PLAN (history)
 
 > Phased plan to a live multi-locale production site shipping **EN, pt-BR, NL, FR at launch** (D-019) on **Hostinger** (static). Europe track = EN/NL/FR (enterprise); Brazil track = pt-BR (SMB) — distinct content, not a translation (D-018). After upload the site is frozen except for new blog posts. Each phase ends in a reviewable, buildable state.
 
@@ -391,6 +401,10 @@ Each entry: date · id · title, then decision / rationale.
 ---
 
 ## §D — Workstreams (stream memory)
+
+> ⚠️ The "Lobby" / "Astro" streams below are obsolete (Astro removed, D-021). Current
+> streams: **content** (per-locale copy), **structure** (the D-024 multi-page static build),
+> **integrations** (HubSpot/Pixel/WhatsApp), **deploy** (Hostinger upload). See `HANDOFF.md`.
 
 Pick one stream per task. Read only the stream you are working in.
 
@@ -468,34 +482,24 @@ Pick one stream per task. Read only the stream you are working in.
 
 ## §E — Handoff (current next-step)
 
-> Overwrite per session. As of 2026-05-18.
+> Overwrite per session. As of 2026-06-03. **Full next-agent brief = `HANDOFF.md` (repo root). Current hot state = `CLAUDE.md §8`. §A/§C/§D below still contain Astro-era detail — trust CLAUDE.md + this section over them.**
 
 **Current mode:**
-- Solo operator (user + Claude agents).
-- Direction LOCKED (D-017): canvas = design, Astro = product (pixel-accurate to canvas), English-first.
-- Canvas LIVE at `http://localhost:4321/lobby.html` via `npm run dev`. Astro site builds clean (`npm run build`).
-- Full deployment roadmap (Phases 0–7) written in §C.2.
+- Solo operator + Claude. **NO build step** — pure static HTML/CSS/JS in `public_html/` (Astro removed entirely, D-021). Deploy = upload `public_html/` contents to Hostinger `public_html`; operator does this in seconds, so live integrations are tested on **oopuo.com**, not localhost.
+- Preview: `Static Site` launch config → `http://localhost:4330/`.
 
-**What just landed (2026-05-18):**
-1. **Blog post reading view** — 4 posts, slide overlay, prev/next nav, Esc/back/nav-ball close, hash `#05/POST.NN` (D-016).
-2. **Direction resolved (D-017)** — canvas/Astro relationship locked; OQ-1 + OQ-3 closed; deployment roadmap written.
-3. Docs made coherent with D-017 (CLAUDE.md §1/§5/§6/§9, PROJECT.md §A/§C/§D, STATE.md, DECISIONS.md).
-4. **Two-market positioning locked (D-018)** — Europe/English enterprise track + Brazil/pt-BR SMB track (WhatsApp-first, partnership, R$, LGPD, Goiás), from the operator's strategy guide. Locales ≠ translations. The "basic starting point" = Brazil track (still to be built).
-5. **Launch scope locked (D-019)** — EN/pt-BR/NL/FR at launch on Hostinger; HubSpot for contact/scheduling (details TBD); Keystatic for blog; static set-and-forget. OQ-3/5/6/7 resolved, OQ-4 tentative.
+**Live state:** 4 locales, each a single-page canvas — `public_html/index.html` (EN, full 6 rooms + sub-rooms + blog + enterprise overlay), `nl/` + `fr/` (lean Europe, 6 rooms), `pt-br/` (Brazil SMB, lean). hreflang + `sitemap.xml` + `robots.txt` present. All pass rules (no WhatsApp green; no EU/enterprise content on pt-br).
 
-**Recommended next actions (follow §C.2 roadmap):**
+**Integrations wired (real IDs — D-023):**
+- **HubSpot** portal `148607612` / `eu1`. Form `2fef7ceb-b34c-4792-9a0d-1a2d618767b9` embedded on **EN** room 6 via the **new form-builder embed** (legacy v2 API does NOT work for it; renders only on live https, NOT localhost; iframe needs `min-height`). → **replicate the form to `nl/` + `fr/`**. Meetings "Book a free call" placeholder slug `meetings-eu1.hubspot.com/oopuo` → set the real slug.
+- **Meta Pixel** base code on all 4 pages, placeholder `YOUR_META_PIXEL_ID` → set the real Pixel ID.
+- **WhatsApp** Brazil `+55 66 99232-3668` (brand colors, never green).
 
-1. **Phase 0 — lock the canvas:** module sub-pages M.02–M.04 (AI Support, Automation, Integrations × Examples/Process/Pricing); benchmark low-end mobile perf (OQ-2); decide contact infra/scheduling (OQ-4), blog CMS (OQ-5), hosting (OQ-6).
-2. **Phase 1 — Astro foundation:** extract the sculpture engine into a persistent island (View Transitions); port tokens + HUD shell to match the canvas.
-3. **Phase 2 — rooms → real routes:** every section becomes a crawlable URL with View Transition navigation.
-4. Then Phases 3–6: blog content collection → conversion wiring → SEO/perf/a11y hardening → deploy (English live).
+**Next direction (D-024):** restructure to **multi-page separated static** (no build) + `assets/` (shared css+js+fonts) + `media/` (blog banners, OG) + `blog/` content folder (yaml/md per post: title/date/body/banner-image-name). See `HANDOFF.md` for the target tree.
 
-**Decisions still needed from operator:** finalize **HubSpot** setup (OQ-4 — forms/meetings specifics + portal ID); plus these assets when ready: Hostinger deploy access (FTP/SSH), domain, Brazil WhatsApp number, HubSpot meeting link. Perf fallback (OQ-2) I'm defaulting to reduced-motion + static poster. Everything else locked (D-019).
+**Assignment for the next agent (per `HANDOFF.md`):** (1) write a verified **state snapshot** here in §E; (2) write a **plan to deployment** in §C for the D-024 structure; then execute. Also build **geo/language auto-routing** at the root (client-side, no build).
 
-**Do not:**
-- Enforce v1 invariants on v2 lobby work without checking `design/08-v2-lobby/STATE.md`.
-- Create new top-level planning files — use `CLAUDE.md` or `PROJECT.md`.
-- Edit design docs without operator approval.
+**Do not:** reintroduce a build step / Astro / npm. Mix Europe & Brazil framing. Use WhatsApp green `#25D366`. Trust the Astro-era §A/§C/§D over CLAUDE.md.
 
 ---
 
@@ -532,6 +536,10 @@ Pick one stream per task. Read only the stream you are working in.
 - **2026-05-18 — D-017** — Direction locked: canvas = design sketch (never ships), Astro = product rebuilt pixel-accurate to it. OQ-1 + OQ-3 resolved. Full deployment roadmap (Phases 0–7) written into §C.2.
 - **2026-05-18 — D-018** — Two markets, two strategies locked from the operator's strategy guide: Europe/English (enterprise, EU AI Act) + Brazil/pt-BR (SMB: WhatsApp-first, partnership, R$, LGPD, Goiás). Locale = strategy, not translation. Added OQ-7 (Brazil launch sequencing).
 - **2026-06-01 — D-019** — Launch scope locked: EN/pt-BR/NL/FR at launch on Hostinger; HubSpot (contact/scheduling, TBD); Keystatic (blog); static set-and-forget. OQ-3/5/6/7 resolved, OQ-4 tentative.
+- **2026-06-02 — D-020/D-021** — Pivot to **static, no build**; Astro removed entirely (src/public/config/node_modules deleted). Built the canvas single-page per locale.
+- **2026-06-02 — D-022** — NL + FR Europe pages shipped; HubSpot Meetings wired (placeholder slug).
+- **2026-06-03 — D-023** — Meta Pixel installed (all 4); `site/`→`public_html/`; HubSpot **form** embedded on EN via the new form-builder embed (real form `2fef7ceb…`); learned new-form/localhost constraints.
+- **2026-06-03 — D-024** — Target architecture set: multi-page separated static (no build) + media/blog content folders. Wrote `HANDOFF.md` for the next agent (state snapshot → deployment plan).
 
 ### §F.4 Durable lessons
 
@@ -541,6 +549,9 @@ Pick one stream per task. Read only the stream you are working in.
 - **Palette transitions need `@property` registration.** CSS custom properties don't animate by default. Registering each `--grad-*` as `@property <color>` enables smooth 4s transitions. Without registration, colors snap.
 - **Design docs are source of truth, code follows.** Enforced from day one. If code and design doc disagree, fix the code. This prevents design drift and keeps the `design/` tree reliable.
 - **A locale can be a different strategy, not a translation (D-018).** OOPUO's pt-BR is a separate market (Brazil SMB) with its own offers, pricing (R$), trust signals (LGPD), and tone — distinct from the English enterprise track. Don't assume i18n = same copy translated. Check which *market* a locale serves before writing or porting its content; never leak one track's framing into the other.
+- **Astro/SSG was the wrong tool here (D-020/D-021).** A heavy framework rebuild lost the loved snap-scroll/scrim/polish and added build friction for a site that's outbound-led (Brazil) and deployed by FTP. Static no-build matched the real constraints. Match tooling to the deploy reality + what already works — not to "best practice".
+- **No build can still be multi-page (D-024).** The 2,500-line single file per locale is the duplication ceiling again. Without a build: extract shared `assets/` (css+js) and split sections into separate static pages that include them; keep blog content as data files (yaml/md) the operator maintains, page either hand-kept or rendered by a tiny runtime `fetch()` — no SSG.
+- **HubSpot new-builder forms ≠ legacy forms.** A form built in HubSpot's new form builder ONLY renders via the new embed (`forms/embed/<portalId>.js` + `<div class="hs-form-frame">`); `hbspt.forms.create` (v2) silently renders nothing for it. The new-embed iframe is `height:100%` (collapses to 0 → give it `min-height`) and **does not render on `http://localhost`** — only the live https domain. Test HubSpot + Meta Pixel on the real domain, not locally.
 
 ---
 

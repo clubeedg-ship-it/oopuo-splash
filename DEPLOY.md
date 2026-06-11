@@ -11,30 +11,32 @@ public_html/pt-br/index.html  ← Brazil (Portuguese, WhatsApp)
 public_html/favicon.svg, oopuo-logo*.svg, robots.txt, sitemap.xml
 ```
 
-## 3 IDs to set, then everything works (find & replace)
+## To go fully live: 2 IDs to set + 1 form to replicate
 
-Meta Pixel and the HubSpot form are **already installed** on every page — they just
-carry placeholders. Replace these 3 strings across `public_html/` and you're done:
+HubSpot is wired: **portalId `148607612`, region `eu1`**. The EN contact already has your
+real form `2fef7ceb-b34c-4792-9a0d-1a2d618767b9` embedded. Remaining:
 
-| Placeholder | Where | What to paste |
+| Item | Where | What to do |
 |---|---|---|
-| `YOUR_META_PIXEL_ID` | `<head>` of all 4 pages | Your Meta Pixel ID (Meta Events Manager) |
-| `YOUR_HUBSPOT_FORM_ID` | EN/NL/FR contact (last room) | A HubSpot Form's ID (create a free form first) |
-| `oopuo` in `meetings-eu1.hubspot.com/oopuo` | EN/NL/FR contact | Your HubSpot Meetings slug |
+| `YOUR_META_PIXEL_ID` | `<head>` of all 4 pages | Replace with your Meta Pixel ID (Meta Events Manager). Until then the console logs `Invalid PixelID: null`. |
+| `oopuo` in `meetings-eu1.hubspot.com/oopuo` | EN/NL/FR contact | Replace with your real HubSpot Meetings slug (create a free Meeting). |
+| HubSpot **form** | currently EN only | Copy the same `hs-form-frame` embed block into `nl/index.html` + `fr/index.html` (room 6). (Brazil keeps WhatsApp — no form.) |
 
-HubSpot portal is already wired: **portalId `148607612`, region `eu1`** (your account).
+## Test it — on the LIVE site, not localhost
 
-## Test it
+⚠️ **The HubSpot form and Meta Pixel only work on the real https domain.** HubSpot's new
+form embed refuses to render on `http://localhost`, and the Pixel needs a real ID. Since
+you deploy to oopuo.com in seconds, test there:
 
-**Local:** `python3 -m http.server 4330 --directory public_html` → open `http://localhost:4330`.
+- **HubSpot form:** open `https://oopuo.com/` → scroll to the last room (Invitation) → the
+  form renders → submit → check **HubSpot → Contacts / Form submissions**. (Make sure the
+  form has fields and is **Published** in HubSpot, or it shows empty.)
+- **HubSpot Meetings:** click "Book a free call" → your scheduler opens (after you set the slug).
+- **Meta Pixel:** install *Meta Pixel Helper* (Chrome) or use Events Manager → Test Events →
+  load any page → you should see a `PageView` (after you set the Pixel ID).
 
-- **Meta Pixel:** install the *Meta Pixel Helper* Chrome extension (or Events Manager →
-  Test Events). After setting your Pixel ID, load any page → you should see a `PageView`.
-- **HubSpot form:** create a form in HubSpot → copy its Form ID → paste over
-  `YOUR_HUBSPOT_FORM_ID` → reload `/` and scroll to the last room (Invitation). The form
-  renders; submit it → check HubSpot → Contacts / Form submissions. (Until a real Form ID
-  is set, the form area stays empty — that's expected.)
-- **HubSpot Meetings:** click "Book a free call" → your scheduler opens.
+Note: the EN form uses HubSpot's **new form-builder** embed — do not switch it to the old
+`hbspt.forms.create` v2 API (it renders nothing for new-builder forms).
 
 ## Tracks (D-018)
 - **Europe** (`/`, `/nl/`, `/fr/`): enterprise framing, HubSpot form + Meetings.
