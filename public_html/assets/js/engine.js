@@ -1,4 +1,9 @@
 (function () {
+  // Phase 2: split pages declare window.OOPUO.journey → ROUTER MODE — the persistent shell drives the
+  // sculpture + HUD and hands page-to-page navigation to assets/js/router.js. Pages without a journey
+  // fall through to the legacy single-page engine below (current home / nl / fr / pt-br, unchanged).
+  if (window.OOPUO && Array.isArray(window.OOPUO.journey)) return initRouterMode(window.OOPUO);
+
   const TOTAL = 6;
   var __cfg = (window.OOPUO || {}), __cfgL = (__cfg.labels || {});
   const LABELS = __cfgL.rooms || ["Arrival", "The Gap", "Modules", "Studio", "Blog", "Invitation"];
@@ -417,5 +422,85 @@
   // Restore state from URL if present (e.g., Cmd+R, shared link, bookmark)
   if (location.hash) {
     setTimeout(restoreFromHash, 160);
+  }
+
+  // ——— ROUTER MODE (Phase 2) ———————————————————————————————————————————
+  // Self-contained: drives the persistent shell's sculpture + HUD and delegates page
+  // navigation to assets/js/router.js. The legacy code above never runs in this mode.
+  function initRouterMode(cfg) {
+    const sculpt = (n) => { if (window.__sculpt3D) window.__sculpt3D(n); };
+    const currentEl = document.querySelector('.counter .current');
+    const totalEl = document.querySelector('.counter .total');
+    const nextEl = document.getElementById('next-label');
+    const sectionName = document.getElementById('section-name');
+    const TOTAL_ROOMS = cfg.totalRooms || 6;
+    let journey = cfg.journey, idx = cfg.index || 0, animating = false;
+
+    function paint(c) {
+      journey = c.journey || journey;
+      idx = c.index || 0;
+      const stop = journey[idx] || {};
+      const roomNo = (c.rooms && c.rooms[0]) || (idx + 1);
+      const label = (stop.label || '').toUpperCase();
+      const num = String(roomNo).padStart(2, '0');
+      if (currentEl) currentEl.textContent = num;
+      if (totalEl) totalEl.textContent = '/ ' + String(TOTAL_ROOMS).padStart(2, '0');
+      if (sectionName) { sectionName.textContent = label; sectionName.setAttribute('data-num', num); }
+      const end = (c.labels && c.labels.end) || '— END';
+      if (nextEl) nextEl.textContent = (idx + 1 < journey.length) ? '— ' + (journey[idx + 1].label || '').toUpperCase() : end;
+      document.body.dataset.room = String(roomNo);
+      document.body.dataset.palette = c.palette || 'cyan';
+      const ar = document.querySelector('main#main .room');
+      if (ar && ar.getAttribute('data-theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
+      else document.body.removeAttribute('data-theme');
+    }
+
+    function navTo(dir) {
+      const n = idx + dir;
+      if (animating || n < 0 || n >= journey.length) return;
+      if (!window.__oopuoRouter) return;
+      animating = true;
+      Promise.resolve(window.__oopuoRouter.navigate(journey[n].path)).finally(() => { animating = false; });
+    }
+
+    // router.js calls this after it swaps <main> — repaint shell for the new page
+    window.__oopuoOnRoute = function (c) {
+      c = c || cfg;
+      paint(c);
+      sculpt(c.sculpture || (c.rooms && c.rooms[0]) || 1);
+      document.querySelectorAll('main#main .room').forEach((r) => { r.classList.add('active'); r.inert = false; });
+      const m = document.getElementById('main');
+      if (m) m.focus({ preventScroll: true });
+    };
+
+    // nav-rail nodes → journey routes (real navigation via router)
+    document.querySelectorAll('.nav-node').forEach((node, i) => {
+      node.addEventListener('click', (e) => {
+        e.preventDefault();
+        const j = Math.min(i, journey.length - 1);
+        if (window.__oopuoRouter) window.__oopuoRouter.navigate(journey[j].path);
+      });
+    });
+
+    // wheel / keyboard / touch → adjacent journey stop (single-room pages; debounced)
+    let wAcc = 0, wT;
+    window.addEventListener('wheel', (e) => {
+      wAcc += e.deltaY; clearTimeout(wT); wT = setTimeout(() => { wAcc = 0; }, 220);
+      if (Math.abs(wAcc) >= 60) { navTo(wAcc > 0 ? 1 : -1); wAcc = 0; }
+    }, { passive: true });
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); navTo(1); }
+      else if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); navTo(-1); }
+    });
+    let tY = 0;
+    window.addEventListener('touchstart', (e) => { tY = e.touches[0].clientY; }, { passive: true });
+    window.addEventListener('touchend', (e) => {
+      const dy = tY - e.changedTouches[0].clientY;
+      if (Math.abs(dy) > 50) navTo(dy > 0 ? 1 : -1);
+    }, { passive: true });
+
+    // first (non-router) load: paint + raise the sculpture for this page
+    paint(cfg);
+    setTimeout(() => sculpt(cfg.sculpture || (cfg.rooms && cfg.rooms[0]) || 1), 120);
   }
 })();
