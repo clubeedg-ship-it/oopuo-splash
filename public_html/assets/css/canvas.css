@@ -880,3 +880,12 @@
   :focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:2px}
   .skip-link{position:fixed;left:12px;top:-48px;z-index:200;background:var(--teal);color:#06121a;padding:8px 14px;border-radius:6px;font:600 13px/1 'Instrument Sans',sans-serif;text-decoration:none;transition:top .15s}
   .skip-link:focus{top:12px}
+
+  /* ── Phase 2 router: cross-document View Transitions fallback (CSS at-rule only — the <meta> form is dead).
+     Chromium 126+/Safari 18.2+ get a native crossfade when JS is off or the fetch/swap router bails;
+     Firefox + older browsers just hard-load. The persistent-sculpture router (assets/js/router.js) is the
+     primary mechanism — this only fires on real document navigations. ── */
+  @view-transition { navigation: auto; }
+  @media (prefers-reduced-motion: reduce){
+    ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*){ animation: none !important; }
+  }
