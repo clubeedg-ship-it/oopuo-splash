@@ -33,8 +33,6 @@ PIXEL ↑ -->
 <meta name="twitter:image" content="https://oopuo.com/og-default.png">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
-<link rel="preload" href="/assets/fonts/instrumentsans-700-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/jetbrainsmono-500-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/canvas.css">
 </head>
 <body data-room="1" data-contact="form">
@@ -493,11 +491,13 @@ PIXEL ↑ -->
   };
 </script>
 <script src="/assets/js/engine.js"></script>
+<link rel="modulepreload" href="/assets/vendor/three/build/three.module.min.js">
+<link rel="modulepreload" href="/assets/vendor/three/examples/jsm/effects/AsciiEffect.js">
 <script type="importmap">
 {
   "imports": {
-    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    "three": "/assets/vendor/three/build/three.module.min.js",
+    "three/addons/": "/assets/vendor/three/examples/jsm/"
   }
 }
 </script>
