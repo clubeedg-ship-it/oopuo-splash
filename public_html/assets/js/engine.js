@@ -12,6 +12,7 @@
   const WHEEL_THRESHOLD = 60;
 
   const rooms = document.querySelectorAll('.room');
+  rooms.forEach(r => { r.inert = !r.classList.contains('active'); }); // a11y: keep inactive rooms out of tab order + SR tree
   const subRooms = document.querySelectorAll('.sub-room');
   const blogReaders = document.querySelectorAll('.blog-reader');
   const TOTAL_POSTS = blogReaders.length;
@@ -138,7 +139,7 @@
     }
     current = n;
     document.body.dataset.room = String(current);
-    rooms.forEach(r => r.classList.toggle('active', Number(r.dataset.room) === current));
+    rooms.forEach(r => { const a = Number(r.dataset.room) === current; r.classList.toggle('active', a); r.inert = !a; });
     updateNavDist();
     paintTop();
     setSculpture(current);
@@ -156,7 +157,7 @@
     if (current !== 3) {
       current = 3;
       document.body.dataset.room = '3';
-      rooms.forEach(r => r.classList.toggle('active', Number(r.dataset.room) === 3));
+      rooms.forEach(r => { const a = Number(r.dataset.room) === 3; r.classList.toggle('active', a); r.inert = !a; });
     }
     document.body.classList.add('col1-open');
     updateNavDist(); updateCol1Dist();
@@ -194,7 +195,7 @@
     if (current !== 5) {
       current = 5;
       document.body.dataset.room = '5';
-      rooms.forEach(r => r.classList.toggle('active', Number(r.dataset.room) === 5));
+      rooms.forEach(r => { const a = Number(r.dataset.room) === 5; r.classList.toggle('active', a); r.inert = !a; });
       updateNavDist();
       setSculpture(5);
     }
