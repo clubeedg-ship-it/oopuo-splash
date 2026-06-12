@@ -25,7 +25,14 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
   rim.position.set(-2, 1, -6);
   scene.add(rim);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: false });
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ antialias: false });
+  } catch (e) {
+    console.warn('[sculpture] WebGL unavailable — page content stays readable, sculpture skipped.', e);
+    return;
+  }
+  renderer.setPixelRatio(1); // explicit DPR cap: the ASCII grid is resolution-independent → avoid retina overdraw
   renderer.setSize(W, H);
   renderer.setClearColor(0x000000, 1);
 
@@ -380,6 +387,10 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
   let incoming = null;
   let morphing = false;
   let morphRAF = null;
+  let needsRender = true;            // dirty flag — render only when the scene actually changes
+  const rmq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let reducedMotion = rmq.matches;   // live (updated on change), not read-once
+  rmq.addEventListener('change', (e) => { reducedMotion = e.matches; needsRender = true; });
 
   function gatherPos() {
     // Tight cluster — pieces converge into a compact blob, not a spread constellation.
@@ -531,6 +542,20 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
       scene.add(next);
       current = next;
       dom.style.opacity = '1';
+      needsRender = true;
+      return;
+    }
+
+    if (reducedMotion) {
+      // reduced-motion: swap shapes instantly, skip the 5.2s scatter morph
+      scene.remove(current);
+      resetShape(current);
+      resetShape(next);
+      next.position.set(0, 0, 0);
+      scene.add(next);
+      current = next;
+      incoming = null;
+      needsRender = true;
       return;
     }
 
@@ -590,14 +615,20 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
   window.__sculpt3D(1);
   setTimeout(() => { dom.style.opacity = '1'; }, 250);
 
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function animate() {
     requestAnimationFrame(animate);
+    if (document.hidden) return;        // pause the per-frame ASCII DOM rewrite while the tab is hidden
     if (!reducedMotion) {
       if (current) { current.rotation.y += 0.0055; current.rotation.x += 0.0017; }
       if (incoming) { incoming.rotation.y += 0.0055; incoming.rotation.x += 0.0017; }
+      needsRender = true;               // continuous rotation → render every frame (unchanged behaviour)
     }
-    effect.render(scene, camera);
+    if (morphing) needsRender = true;   // morph animates the scene → render every frame
+    if (needsRender) {
+      effect.render(scene, camera);
+      if (reducedMotion && !morphing) needsRender = false; // static under reduced-motion → render once, then idle
+    }
   }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) needsRender = true; });
   animate();
 })();
