@@ -41,8 +41,9 @@ Then read §3.
 
 ### Visual canon (keep across any restructure)
 - Dark-first hero, full-viewport ASCII sculpture per section; cyan family default, warm family for blog. No card shadows — glow/HUD instead.
-- Fonts: **Instrument Sans** (display + body) + **JetBrains Mono** (mono) + **Instrument Serif** (blog titles). Satoshi dropped from canon (D-025 — was never actually loaded). Currently Google Fonts CDN; target = self-hosted `assets/fonts/` (D-025, GDPR). No substitutes.
-- Three.js via CDN importmap (unpkg) today; target = self-hosted `assets/vendor/three/` minified (D-025). `prefers-reduced-motion` disables rotation/morph (⚠️ morph half not yet implemented — Phase 1 of §C fixes it).
+- Fonts: **Instrument Sans** (display + body) + **JetBrains Mono** (mono) + **Instrument Serif** (blog titles). Satoshi dropped from canon (D-025). **Self-hosted** at `assets/fonts/` (16 woff2, latin+latin-ext, `@font-face` in `canvas.css`; Phase 1 — no Google CDN, GDPR). No substitutes.
+- Three.js **self-hosted minified** at `assets/vendor/three/` via importmap (Phase 1 — no unpkg). `prefers-reduced-motion` disables rotation **and** morph (instant shape-swap; Phase 1 made the §5 invariant true). Render loop pauses when tab hidden + dirty-checks.
+- **Engine is shared (Phase 1):** `assets/css/canvas.css` + `assets/js/engine.js` (boot/nav, reads per-page `window.OOPUO`) + `assets/js/sculpture.js` (Three.js module). Each page is now content DOM + a `window.OOPUO` config block + `<link>`/`<script>` to the shared assets (no more ~2,000-line inline copies).
 - WhatsApp CTAs use **brand colors (cyan/teal/warm), NEVER WhatsApp green `#25D366`**. Whitelisted (D-025): EN service copy may name WhatsApp as a support *channel capability* (M.02); Brazil GTM framing (wa.me/LGPD/R$/parceria) stays Brazil-only.
 
 ### Structure (current → target)
@@ -79,10 +80,10 @@ Then read §3.
 - branch: `main` · clean tree · **no build step** · site = `public_html/` (Hostinger-ready).
 - 4 locales LIVE as single-page canvases: `public_html/index.html` (EN), `/nl/`, `/fr/` (Europe), `/pt-br/` (Brazil SMB). All pass rules (no green; pt-br has no EU/enterprise content). hreflang + `sitemap.xml` + `robots.txt` present.
 - Integrations (after Phase 0): **Meta Pixel = inert commented placeholder on all 4** (loads nothing/0 errors until the real ID is set + uncommented — operator preference [[inert placeholders]]); **EN HubSpot form live** (real `2fef7ceb…`, new-builder embed); **NL/FR = inert new-builder form placeholder** (`YOUR_NL/FR_HUBSPOT_FORM_ID`, guarded loader injects nothing until a real ID is set) **+ `hello@oopuo.com` mailto**; "Book a free call" → **mailto** on EN/NL/FR (404 Meetings slug parked in a code comment); **per-track OG images shipped** (`og-default.png` EU / `og-default-br.png` BR, 1200×630); WhatsApp real on pt-br.
-- **NEXT (D-025):** Phase 0 triage **DONE** (2026-06-11, commits `caaa43d`→`a9ad774`, verified inert on all 4 via preview). Execute **Phase 1** (shared foundation: extract `assets/` css+engine, self-host fonts + minified three.js, delete dead code, fix reduced-motion morph, a11y baseline) per **PROJECT.md §C.6**.
-- Operator inputs pending (§C.8): real Meta Pixel ID; real Meeting slug; **NL+FR HubSpot form IDs (new builder)**; legal entity details for privacy/mentions-légales pages. (Each is now a quick swap into the in-place inert placeholders.)
-- Testing note: HubSpot form + Meta Pixel only verify on the **live https** domain (operator deploys to oopuo.com in seconds), not on localhost.
-- last session: 2026-06-11 — six-agent audit + D-025 spec; **executed Phase 0 triage**: inert Pixel placeholder (was leaking pre-consent), NL/FR contact repair (dead legacy embed → inert new-builder placeholder + mailto), Europe CTA → mailto, branded per-track OG images, `.DS_Store` cleanup. Plan: `docs/superpowers/plans/2026-06-11-phase0-triage.md`.
+- **NEXT (D-025):** Phase 0 triage **DONE** + Phase 1 shared foundation **DONE** (2026-06-12, commits `c594e41`→`a7f9c96`, all verified on fresh preview — 0 cross-origin requests, sculpture renders+morphs, fonts incl. accents, console clean). Execute **Phase 2** (the split: rooms → real crawlable URLs + the fetch/swap router + JSON-LD + blog pipeline) per **PROJECT.md §C.6**.
+- Operator inputs pending (§C.8): real Meta Pixel ID; real Meeting slug; **NL+FR HubSpot form IDs (new builder)**; legal entity details for privacy/mentions-légales pages. (Each is a quick swap into the in-place inert placeholders. None block Phase 2.)
+- Testing note: HubSpot form + Meta Pixel only verify on the **live https** domain (operator deploys to oopuo.com in seconds), not on localhost. JS changes can be browser-cached on localhost — verify in a fresh context (Playwright) not the warm preview tab.
+- last session: 2026-06-12 — **executed Phase 1 (shared foundation), 8 tasks**: extracted canvas.css + sculpture.js + engine.js (per-page `window.OOPUO`), self-hosted 16 fonts + minified three.js (0 third-party origins), dropped ~178 dead lines, fixed reduced-motion morph + render-loop, a11y baseline (inert rooms, focus ring, contrast, role=main + skip-link, no-JS fallback), localized HUD end-label. Pages 2557/2263→508/216. Plan: `docs/superpowers/plans/2026-06-11-phase1-foundation.md`.
 
 ## 9. Pointer table — `PROJECT.md` sections
 

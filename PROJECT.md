@@ -478,7 +478,7 @@ added to NL/FR room 6; "Book a free call" repointed at the contact room until th
 slug exists.
 *Exit: zero broken conversion paths, zero console errors, zero pre-consent Meta loads, shares show an image.*
 
-**Phase 1 — Shared foundation (UX unchanged).**
+**Phase 1 — Shared foundation (UX unchanged). ✅ DONE 2026-06-12** (`c594e41`→`a7f9c96`; 0 cross-origin requests, pages 2557/2263→508/216, verified on fresh preview).
 Extract `assets/css/canvas.css` + `assets/js/engine.js` driven by per-page `window.OOPUO`;
 reconcile NL/FR markup to EN's embed pattern (gated until Phase 3); self-host fonts + minified
 three.js (+ `modulepreload` chain); delete dead code (`__dead_oldShapes`, EN stub, inert
@@ -650,9 +650,17 @@ Pick one stream per task. Read only the stream you are working in.
 - `.DS_Store` removed from the upload set.
 - Plan: `docs/superpowers/plans/2026-06-11-phase0-triage.md`.
 
-**Next direction (D-025):** execute **Phase 1** (shared foundation — see §C.6): extract `assets/css/canvas.css` + `assets/js/engine.js` driven by per-page `window.OOPUO`; self-host fonts + minified three.js; delete dead code (`__dead_oldShapes`, EN stub, inert lean-page scaffolding); fix the reduced-motion morph (instant swap); a11y baseline. UX stays identical. Each phase ends deployable.
+**Phase 1 shared foundation — DONE (2026-06-12, commits `c594e41`→`a7f9c96`).** 8 tasks, each verified on a fresh preview context (UX held identical):
+- Extracted the engine to shared assets: `assets/css/canvas.css` (847-line style block + room-6 rules, room-6 top-align scoped to `[data-contact="form"]`), `assets/js/sculpture.js` (Three.js module), `assets/js/engine.js` (boot/nav). Each page now = content DOM + a `window.OOPUO` config (localized room labels + `track`) + `<link>`/`<script>` to the shared assets. Pages went **2557/2263 → 508/216 lines**.
+- **Self-hosted** 16 woff2 (latin+latin-ext) + minified three.js (10 files) → **0 cross-origin requests** (no Google Fonts CDN, no unpkg; GDPR + SPOF gone).
+- Dropped ~178 lines of dead `__dead_oldShapes`; localized the HUD end-label (— EINDE/FIN/FIM, fixes the audit bug).
+- Fixed `prefers-reduced-motion` (instant shape-swap, was only stopping rotation — §5 invariant now true) + render-loop hardening (visibilitychange pause, dirty-check, `setPixelRatio(1)`, WebGL try/catch fallback).
+- a11y baseline: `inert` inactive rooms (out of tab/SR tree, doesn't block nav), `:focus-visible` ring, AA `--ink-faint`, `role=main` + localized skip-link, `<noscript>` stacked fallback.
+- Plan: `docs/superpowers/plans/2026-06-11-phase1-foundation.md`.
 
-**Blocked on operator (§C.8):** real Meta Pixel ID · real Meeting slug · NL+FR HubSpot form IDs (new builder) · legal entity details for the privacy / mentions-légales pages. Each is now a quick swap into an in-place inert placeholder; none block Phase 1–2.
+**Next direction (D-025):** execute **Phase 2** (the split — see §C.6): rooms/services/posts → real crawlable URLs; hand-rolled fetch + DOM-swap + `pushState` router (sculpture/HUD outside the swap container, morph as the transition; never soft-navigate across the Europe↔Brazil boundary); per-page meta/OG/JSON-LD; blog markdown pipeline; hash-redirect shim; locale switcher + root geo-suggest. The shared assets from Phase 1 are the foundation it builds on.
+
+**Blocked on operator (§C.8):** real Meta Pixel ID · real Meeting slug · NL+FR HubSpot form IDs (new builder) · legal entity details for the privacy / mentions-légales pages. Each is a quick swap into an in-place inert placeholder; none block Phase 2.
 
 **Do not:** reintroduce a build step / Astro / npm. Mix Europe & Brazil framing. Use WhatsApp green `#25D366`. Trust the Astro-era §A/§C/§D over CLAUDE.md.
 
