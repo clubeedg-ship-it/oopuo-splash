@@ -876,10 +876,8 @@
   .hs-form-frame{display:block;width:100%}
   .hs-form-frame iframe{width:100% !important;min-height:520px;border:0;background:transparent;display:block}
 
-  /* ── a11y (D-025/Phase 1): visible focus ring (none existed) + skip-link ── */
+  /* ── a11y (D-025/Phase 1): visible focus ring (none existed) ── */
   :focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:2px}
-  .skip-link{position:fixed;left:12px;top:-48px;z-index:200;background:var(--teal);color:#06121a;padding:8px 14px;border-radius:6px;font:600 13px/1 'Instrument Sans',sans-serif;text-decoration:none;transition:top .15s}
-  .skip-link:focus{top:12px}
 
   /* ── Phase 2 router: cross-document View Transitions fallback (CSS at-rule only — the <meta> form is dead).
      Chromium 126+/Safari 18.2+ get a native crossfade when JS is off or the fetch/swap router bails;

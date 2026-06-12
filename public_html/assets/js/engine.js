@@ -499,8 +499,9 @@
       if (Math.abs(dy) > 50) navTo(dy > 0 ? 1 : -1);
     }, { passive: true });
 
-    // first (non-router) load: paint + raise the sculpture for this page
+    // first load: paint the HUD only. The sculpture module places this page's configured
+    // shape itself (window.OOPUO.sculpture) — instantly, no morph. Soft navigations morph
+    // via __oopuoOnRoute above.
     paint(cfg);
-    setTimeout(() => sculpt(cfg.sculpture || (cfg.rooms && cfg.rooms[0]) || 1), 120);
   }
 })();

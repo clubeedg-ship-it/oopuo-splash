@@ -612,7 +612,10 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
   };
 
   // Initial placement
-  window.__sculpt3D(1);
+  // Place this page's configured shape instantly (cold-start, no morph). Router pages set
+  // window.OOPUO.sculpture; the single-page legacy home has none → shape 1. Avoids a spurious
+  // 5.2s morph (1 → page shape) that read as a blank canvas on load.
+  window.__sculpt3D((window.OOPUO && window.OOPUO.sculpture) || 1);
   setTimeout(() => { dom.style.opacity = '1'; }, 250);
 
   function animate() {
