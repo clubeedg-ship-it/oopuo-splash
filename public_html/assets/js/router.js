@@ -5,6 +5,8 @@
   const mainEl = () => document.querySelector('main#main');
   const localePrefix = (location.pathname.match(/^\/(nl|fr|pt-br)\//) || [, ''])[1]; // '' for EN root
   let aborter = null;
+  let currentRoute = location.pathname; // the route whose content is in <main> — NOT location.pathname,
+                                        // which the browser already updates before popstate fires
 
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
@@ -59,7 +61,7 @@
     const push = !opts || opts.push !== false;
     const dest = new URL(url, location.href);
     if (!sameLocale(dest)) { location.href = dest.href; return; }   // hard load across tracks
-    if (dest.pathname === location.pathname && !dest.hash) return;  // already here
+    if (dest.pathname === currentRoute && !dest.hash) return;       // content already shown
     if (aborter) aborter.abort();
     aborter = new AbortController();
     document.body.setAttribute('data-routing', '');
@@ -72,6 +74,7 @@
       history.replaceState({ ...(history.state || {}), scroll: window.scrollY }, '');
       mainEl().replaceWith(nextMain);            // swap content only — shell + sculpture persist
       swapHead(doc);
+      currentRoute = dest.pathname;              // remember what's now rendered (for the guard + popstate)
       if (push) history.pushState({ route: dest.pathname }, '', dest.href);
       if (window.__oopuoOnRoute) window.__oopuoOnRoute(nextCfg); // engine: morph sculpture, set palette, repaint HUD, focus
       window.scrollTo(0, 0);
