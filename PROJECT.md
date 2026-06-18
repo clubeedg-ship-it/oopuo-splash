@@ -510,7 +510,8 @@ per-track later — OQ-8/§D structure stream).
 - **Locale switcher** (EN·NL·FR·PT → each locale home) + **root geo-suggest** (dismissible, `navigator.languages`, persisted in localStorage) injected by the shared engine into the HUD — so every page (incl. legacy locales) gets it with zero per-file edits.
 - `sitemap.xml` regenerated with all EN URLs; hreflang matrix on home + locale homes.
 - Verified end-to-end on fresh Playwright (in-page snap, boundary soft-nav, nav-rail jumps, side pages, warm-palette blog, direct deep-load, 0 console errors).
-*Remaining: blog markdown authoring pipeline (§C.4 — pages exist, hand-authored; the python3 renderer is operator-convenience, deferred); BreadcrumbList/Service JSON-LD; the NL/FR/pt-br track splits.*
+JSON-LD: Organization (home) + Service & BreadcrumbList (4 service pages) + Article & BreadcrumbList (3 posts) — 11 blocks, all valid.
+*Remaining: blog markdown authoring pipeline (§C.4 — pages exist, hand-authored; the python3 renderer is operator-convenience, deferred); the NL/FR/pt-br track splits (gated on OQ-8 — a content/translation decision, not just effort: NL/FR are lean 6-room pages with no service-detail/blog/enterprise content to split yet, and pt-br is a separate Brazil page set).*
 *Exit (EN): every section/post is a real URL with full raw-HTML content; morph + snap-scroll feel identical; old hash links redirect. ✅*
 
 **Phase 3 — Compliance + conversion (§C.5).**
