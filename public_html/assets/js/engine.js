@@ -440,24 +440,26 @@
       journey = c.journey || journey;
       idx = c.index || 0;
       const stop = journey[idx] || {};
-      const roomNo = (c.rooms && c.rooms[0]) || (idx + 1);
-      const label = (stop.label || '').toUpperCase();
-      const num = String(roomNo).padStart(2, '0');
+      // Side pages (enterprise, legal) declare their own label and aren't journey stops — no room number.
+      const sidePage = !!c.label;
+      const roomNo = (c.rooms && c.rooms[0]) || (sidePage ? null : idx + 1);
+      const label = (c.label || stop.label || '').toUpperCase();
+      const num = roomNo ? String(roomNo).padStart(2, '0') : (c.counter || '');
       if (currentEl) currentEl.textContent = num;
-      if (totalEl) totalEl.textContent = '/ ' + String(TOTAL_ROOMS).padStart(2, '0');
+      if (totalEl) totalEl.textContent = roomNo ? '/ ' + String(TOTAL_ROOMS).padStart(2, '0') : '';
       if (sectionName) { sectionName.textContent = label; sectionName.setAttribute('data-num', num); }
       const end = (c.labels && c.labels.end) || '— END';
-      if (nextEl) nextEl.textContent = (idx + 1 < journey.length) ? '— ' + (journey[idx + 1].label || '').toUpperCase() : end;
-      document.body.dataset.room = String(roomNo);
+      if (nextEl) nextEl.textContent = sidePage ? (c.next || '') : ((idx + 1 < journey.length) ? '— ' + (journey[idx + 1].label || '').toUpperCase() : end);
+      document.body.dataset.room = roomNo ? String(roomNo) : '';
       document.body.dataset.palette = c.palette || 'cyan';
       const ar = document.querySelector('main#main .room');
       if (ar && ar.getAttribute('data-theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
       else document.body.removeAttribute('data-theme');
-      // reflect position on the nav rail (distance ramp + current marker)
+      // reflect position on the nav rail (distance ramp + current marker; side pages have no current room)
       document.querySelectorAll('.nav-node').forEach((node) => {
         const go = Number(node.dataset.go);
-        node.dataset.dist = String(Math.min(3, Math.abs(go - roomNo)));
-        if ((stop.rooms || []).includes(go)) node.setAttribute('aria-current', 'true');
+        node.dataset.dist = roomNo ? String(Math.min(3, Math.abs(go - roomNo))) : '3';
+        if (roomNo && (stop.rooms || []).includes(go)) node.setAttribute('aria-current', 'true');
         else node.removeAttribute('aria-current');
       });
     }

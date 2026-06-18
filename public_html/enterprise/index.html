@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Meta Pixel — INACTIVE placeholder (D-025/Phase 0). Currently commented out so it loads nothing & logs no console error. TO ACTIVATE: replace both YOUR_META_PIXEL_ID below with your numeric Pixel ID, then uncomment the block by deleting the "PIXEL down" line and the "PIXEL up" line that wrap it. Phase 3 will move this behind the consent gate (PROJECT.md §C.5). -->
+<!-- PIXEL ↓
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','YOUR_META_PIXEL_ID');fbq('track','PageView');</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_META_PIXEL_ID&ev=PageView&noscript=1" alt=""/></noscript>
+PIXEL ↑ -->
+<title>EU AI Act compliance for regulated companies · OOPUO</title>
+<meta name="description" content="EU AI Act compliance, risk assessments, agent observability, and technical documentation — from an engineering team that understands both your AI systems and the regulation. Amsterdam.">
+<link rel="canonical" href="https://oopuo.com/enterprise/">
+<meta name="robots" content="index, follow">
+<link rel="alternate" hreflang="en" href="https://oopuo.com/enterprise/">
+<link rel="alternate" hreflang="x-default" href="https://oopuo.com/enterprise/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://oopuo.com/enterprise/">
+<meta property="og:title" content="Your AI is powerful. Make sure it's also legal.">
+<meta property="og:description" content="EU AI Act compliance, risk assessments, and technical governance — compliance as engineering, not paperwork.">
+<meta property="og:site_name" content="OOPUO">
+<meta property="og:image" content="https://oopuo.com/og-default.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OOPUO — we build your AI systems.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Your AI is powerful. Make sure it's also legal.">
+<meta name="twitter:description" content="EU AI Act compliance, risk assessments, and technical governance — compliance as engineering, not paperwork.">
+<meta name="twitter:image" content="https://oopuo.com/og-default.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
+<link rel="stylesheet" href="/assets/css/canvas.css">
+<noscript><style>.room,.ent-page{opacity:1!important;visibility:visible!important;position:relative!important;transform:none!important;height:auto!important}.hud,.scroll-hint,.nav-rail,.col1-rail,.sub-nav{display:none!important}</style></noscript>
+</head>
+<body data-palette="cyan">
+<div class="section-title" aria-hidden="true">
+  <span class="tick"></span>
+  <span class="name" id="section-name" data-num="EN">ENTERPRISE</span>
+</div>
+
+<div class="hud">
+  <div class="tl"><span class="brand"><span class="brand-mark" aria-hidden="true"></span>OOPUO</span></div>
+  <div class="ent"></div>
+  <div class="tr counter"><span class="current">EN</span> <span class="total"></span></div>
+  <div class="br next">NEXT <em id="next-label"></em></div>
+</div>
+
+<nav class="nav-rail" aria-label="Main sections">
+  <button class="nav-node" data-go="1" data-dist="3" aria-label="Arrival"></button>
+  <button class="nav-node" data-go="2" data-dist="3" aria-label="The Gap"></button>
+  <button class="nav-node" data-go="3" data-dist="3" aria-label="Modules"></button>
+  <button class="nav-node" data-go="4" data-dist="3" aria-label="Studio"></button>
+  <button class="nav-node" data-go="5" data-dist="3" aria-label="Blog"></button>
+  <button class="nav-node" data-go="6" data-dist="3" aria-label="Invitation"></button>
+</nav>
+
+<nav class="col1-rail" aria-label="Module sub-pages">
+  <button class="col1-node" data-sub="1" aria-label="Overview"></button>
+  <button class="col1-node" data-sub="2" aria-label="Examples"></button>
+  <button class="col1-node" data-sub="3" aria-label="Process"></button>
+  <button class="col1-node" data-sub="4" aria-label="Pricing"></button>
+</nav>
+
+<div class="sculpture" id="sculpture" aria-hidden="true"></div>
+<div class="scroll-hint"></div>
+
+<nav class="sub-nav" aria-label="Sub-page navigation">
+  <button class="sub-nav-btn sub-nav-prev" id="sub-nav-prev" type="button">
+    <span class="sub-nav-arrow" aria-hidden="true">←</span>
+    <span class="sub-nav-label" id="sub-nav-prev-label"><span class="sub-nav-step">PREV</span><span class="sub-nav-name">—</span></span>
+  </button>
+  <button class="sub-nav-btn sub-nav-next" id="sub-nav-next" type="button">
+    <span class="sub-nav-label" id="sub-nav-next-label"><span class="sub-nav-step">NEXT</span><span class="sub-nav-name">—</span></span>
+    <span class="sub-nav-arrow" aria-hidden="true">→</span>
+  </button>
+</nav>
+
+<main class="stage" id="main" tabindex="-1">
+
+  <article class="ent-page active" id="ent-page">
+    <div class="ent-inner">
+      <a class="reader-back" href="/">← Back to OOPUO</a>
+
+      <header>
+        <span class="ent-label">For regulated companies</span>
+        <h1 class="ent-h1">Your AI is powerful.<br>Make sure it's also legal.</h1>
+        <p class="ent-sub">EU AI Act compliance, risk assessments, and technical governance — from an engineering team that understands both your systems and the regulation.</p>
+        <div class="btn-row"><a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=Compliance%20Assessment">Request a Compliance Assessment <span class="arrow">→</span></a></div>
+      </header>
+
+      <section class="ent-section">
+        <h2>The EU AI Act isn't coming. It's here.</h2>
+        <p class="ent-body">The regulation entered into force in August 2024. Prohibitions on unacceptable AI practices apply from February 2025. High-risk system requirements hit in August 2026. The compliance clock is already running.</p>
+        <div class="ent-facts">
+          <div class="ent-fact"><div class="ent-fact-val">€35M</div><div class="ent-fact-label">Maximum fine for prohibited AI practices</div></div>
+          <div class="ent-fact"><div class="ent-fact-val">7%</div><div class="ent-fact-label">Of global annual turnover for the most serious violations</div></div>
+          <div class="ent-fact"><div class="ent-fact-val">Art. 6–49</div><div class="ent-fact-label">Obligations that apply to high-risk AI system deployers</div></div>
+        </div>
+        <p class="ent-body">If your company uses AI for hiring, credit scoring, content moderation, customer profiling, or automated decision-making — you're almost certainly in scope. Even off-the-shelf AI tools can trigger deployer obligations under the Act.</p>
+        <p class="ent-body">The question isn't whether you need to comply. It's whether you'll do it proactively or under enforcement pressure.</p>
+      </section>
+
+      <section class="ent-section">
+        <span class="ent-label">How we help</span>
+        <div class="ent-services">
+          <div class="ent-service">
+            <h3>Compliance Audit &amp; Gap Analysis</h3>
+            <p>We map every AI system in your organization against EU AI Act requirements. You get a clear picture of your risk exposure, obligation category (provider, deployer, distributor), and a prioritized remediation roadmap.</p>
+            <p class="ent-deliverable"><strong>Deliverable</strong>A comprehensive audit report with risk classification, gap analysis, and an actionable compliance timeline.</p>
+          </div>
+          <div class="ent-service">
+            <h3>Risk Assessment &amp; Mitigation</h3>
+            <p>For each AI system classified as high-risk, we conduct a structured risk assessment following the regulation's framework. We identify failure modes, bias vectors, and data governance gaps — then build the controls that close them.</p>
+            <p class="ent-deliverable"><strong>Deliverable</strong>Per-system risk assessment documentation, mitigation strategies, and residual risk evaluation.</p>
+          </div>
+          <div class="ent-service">
+            <h3>Agent Observability &amp; Tracing</h3>
+            <p>You can't govern what you can't see. We implement tracing, logging, and monitoring across your AI agents so every decision is recorded, explainable, and auditable. When the regulator asks why a system made a decision — you have the answer.</p>
+            <p class="ent-deliverable"><strong>Deliverable</strong>Observability infrastructure deployed, with dashboards, alerting, and audit-ready log exports.</p>
+          </div>
+          <div class="ent-service">
+            <h3>Technical Documentation &amp; Reporting</h3>
+            <p>The EU AI Act requires extensive documentation: data governance records, system architecture descriptions, performance metrics, and human oversight protocols. We write the documentation that satisfies Article 11 requirements — accurate, structured, and maintainable.</p>
+            <p class="ent-deliverable"><strong>Deliverable</strong>Complete technical documentation package aligned to Annex IV requirements, ready for regulatory review.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ent-section">
+        <span class="ent-label">How we work</span>
+        <h2>Compliance as engineering, not paperwork.</h2>
+        <p class="ent-body">Most compliance firms hand you a checklist and a slide deck. We embed with your engineering team. We read the code, understand the architecture, and build compliance into the system — not around it.</p>
+        <ol class="ent-principles">
+          <li><span class="ent-principle-num">01</span><div><h4>Technical depth over surface audits</h4><p>We don't just ask "do you have documentation?" We verify that the documentation matches the system. Architecture reviews, data flow tracing, model evaluation — the work that actually reduces risk.</p></div></li>
+          <li><span class="ent-principle-num">02</span><div><h4>On-premise when privacy demands it</h4><p>Some data can't leave the building. We deploy observability and governance tooling on your infrastructure — local, private cloud, or air-gapped if needed.</p></div></li>
+          <li><span class="ent-principle-num">03</span><div><h4>Sustainable compliance</h4><p>We build processes your team can maintain after we leave. No vendor lock-in, no proprietary platforms, no dependency on us for ongoing operation.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="ent-section">
+        <span class="ent-label">Typical engagement</span>
+        <ol class="ent-timeline">
+          <li><span class="ent-week">Week 1–2</span><span class="ent-phase">Discovery &amp; system inventory</span></li>
+          <li><span class="ent-week">Week 3–4</span><span class="ent-phase">Deep assessment</span></li>
+          <li><span class="ent-week">Week 5–8</span><span class="ent-phase">Implementation &amp; documentation</span></li>
+          <li><span class="ent-week">Week 9–10</span><span class="ent-phase">Review &amp; handoff</span></li>
+        </ol>
+        <p class="ent-note">Timelines vary by scope. A focused engagement on a single AI system can complete in 2–3 weeks.</p>
+      </section>
+
+      <section class="ent-cta-block">
+        <h2>Don't wait for the audit to find the gaps.</h2>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=Compliance%20Assessment">Request a Compliance Assessment <span class="arrow">→</span></a>
+          <a class="btn btn-ghost" href="mailto:hello@oopuo.com?subject=Enterprise%20questions">Send us your questions <span class="arrow">→</span></a>
+        </div>
+      </section>
+    </div>
+  </article>
+
+</main>
+
+<script>
+  /* Phase 2 router-mode SIDE page (not a journey stop) — declares its own `label`. */
+  window.OOPUO = {
+    locale: 'en', track: 'europe',
+    route: '/enterprise/', label: 'Enterprise', counter: 'EN', sculpture: 1, palette: 'cyan', totalRooms: 6,
+    journey: [
+      { path: '/',          label: 'Arrival',    sculpture: 1, rooms: [1, 2] },
+      { path: '/services/', label: 'Modules',    sculpture: 3, rooms: [3] },
+      { path: '/studio/',   label: 'Studio',     sculpture: 4, rooms: [4] },
+      { path: '/contact/',  label: 'Invitation', sculpture: 6, rooms: [6] }
+    ],
+    labels: { rooms: ["Arrival","The Gap","Modules","Studio","Blog","Invitation"], end: "— END" }
+  };
+</script>
+<script src="/assets/js/engine.js"></script>
+<link rel="modulepreload" href="/assets/vendor/three/build/three.module.min.js">
+<link rel="modulepreload" href="/assets/vendor/three/examples/jsm/effects/AsciiEffect.js">
+<script type="importmap">
+{
+  "imports": {
+    "three": "/assets/vendor/three/build/three.module.min.js",
+    "three/addons/": "/assets/vendor/three/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="/assets/js/sculpture.js"></script>
+<script src="/assets/js/router.js"></script>
+</body>
+</html>
