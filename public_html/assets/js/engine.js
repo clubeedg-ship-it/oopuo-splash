@@ -453,6 +453,13 @@
       const ar = document.querySelector('main#main .room');
       if (ar && ar.getAttribute('data-theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
       else document.body.removeAttribute('data-theme');
+      // reflect position on the nav rail (distance ramp + current marker)
+      document.querySelectorAll('.nav-node').forEach((node) => {
+        const go = Number(node.dataset.go);
+        node.dataset.dist = String(Math.min(3, Math.abs(go - roomNo)));
+        if ((stop.rooms || []).includes(go)) node.setAttribute('aria-current', 'true');
+        else node.removeAttribute('aria-current');
+      });
     }
 
     function navTo(dir) {
@@ -463,22 +470,39 @@
       Promise.resolve(window.__oopuoRouter.navigate(journey[n].path)).finally(() => { animating = false; });
     }
 
+    // load the HubSpot form embed if the current page has a real (non-placeholder) form frame.
+    // Needed because inline <script> inside a swapped <main> never executes (router-mode contact page).
+    let hsLoaded = false;
+    function loadContactForm() {
+      if (hsLoaded) return;
+      const frame = document.querySelector('main#main .hs-form-frame');
+      if (!frame) return;
+      const id = frame.getAttribute('data-form-id') || '';
+      if (/^YOUR_/.test(id)) return; // inert placeholder (NL/FR) — load nothing
+      hsLoaded = true;
+      const s = document.createElement('script');
+      s.src = 'https://js-eu1.hsforms.net/forms/embed/148607612.js';
+      document.body.appendChild(s);
+    }
+
     // router.js calls this after it swaps <main> — repaint shell for the new page
     window.__oopuoOnRoute = function (c) {
       c = c || cfg;
       paint(c);
       sculpt(c.sculpture || (c.rooms && c.rooms[0]) || 1);
       document.querySelectorAll('main#main .room').forEach((r) => { r.classList.add('active'); r.inert = false; });
+      loadContactForm();
       const m = document.getElementById('main');
       if (m) m.focus({ preventScroll: true });
     };
 
-    // nav-rail nodes → journey routes (real navigation via router)
-    document.querySelectorAll('.nav-node').forEach((node, i) => {
+    // nav-rail nodes → journey routes by room (each dot maps to the stop that owns its room)
+    document.querySelectorAll('.nav-node').forEach((node) => {
       node.addEventListener('click', (e) => {
         e.preventDefault();
-        const j = Math.min(i, journey.length - 1);
-        if (window.__oopuoRouter) window.__oopuoRouter.navigate(journey[j].path);
+        const go = Number(node.dataset.go);
+        const stop = journey.find((s) => (s.rooms || []).includes(go));
+        if (stop && window.__oopuoRouter) window.__oopuoRouter.navigate(stop.path);
       });
     });
 
@@ -499,9 +523,10 @@
       if (Math.abs(dy) > 50) navTo(dy > 0 ? 1 : -1);
     }, { passive: true });
 
-    // first load: paint the HUD only. The sculpture module places this page's configured
-    // shape itself (window.OOPUO.sculpture) — instantly, no morph. Soft navigations morph
-    // via __oopuoOnRoute above.
+    // first load: paint the HUD + (if this is a contact page) load the form. The sculpture
+    // module places this page's configured shape itself (window.OOPUO.sculpture) — instantly,
+    // no morph. Soft navigations morph via __oopuoOnRoute above.
     paint(cfg);
+    loadContactForm();
   }
 })();

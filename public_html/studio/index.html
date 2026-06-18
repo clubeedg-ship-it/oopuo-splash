@@ -41,7 +41,7 @@ PIXEL ↑ -->
 
 <div class="hud">
   <div class="tl"><span class="brand"><span class="brand-mark" aria-hidden="true"></span>OOPUO</span></div>
-  <div class="ent"><a href="/enterprise/">Enterprise →</a></div>
+  <div class="ent"></div>
   <div class="tr counter"><span class="current">04</span> <span class="total">/ 06</span></div>
   <div class="br next">NEXT <em id="next-label">— END</em> ↓</div>
 </div>
@@ -96,10 +96,12 @@ PIXEL ↑ -->
   /* Phase 2 router-mode page config. journey = ordered routes the shell navigates between. */
   window.OOPUO = {
     locale: 'en', track: 'europe',
-    route: '/studio/', rooms: [4], sculpture: 4, palette: 'cyan', index: 1, totalRooms: 6,
+    route: '/studio/', rooms: [4], sculpture: 4, palette: 'cyan', index: 2, totalRooms: 6,
     journey: [
-      { path: '/services/', label: 'Modules', sculpture: 3 },
-      { path: '/studio/',   label: 'Studio',  sculpture: 4 }
+      { path: '/',          label: 'Arrival',    sculpture: 1, rooms: [1, 2] },
+      { path: '/services/', label: 'Modules',    sculpture: 3, rooms: [3] },
+      { path: '/studio/',   label: 'Studio',     sculpture: 4, rooms: [4] },
+      { path: '/contact/',  label: 'Invitation', sculpture: 6, rooms: [6] }
     ],
     labels: { rooms: ["Arrival","The Gap","Modules","Studio","Blog","Invitation"], end: "— END" }
   };
