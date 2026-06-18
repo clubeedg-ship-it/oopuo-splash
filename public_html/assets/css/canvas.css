@@ -83,7 +83,7 @@
   }
   /* Blog: warm sepia-orange family — fades in over 4s when entering room 5.
      The nav rail's --teal also shifts to warm so the whole room speaks one color. */
-  body[data-room="5"] {
+  body[data-room="5"], body[data-palette="warm"] {
     --grad-0: #F7E8D6;
     --grad-1: #E0B080;
     --grad-2: #C4814A;
