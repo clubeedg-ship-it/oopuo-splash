@@ -189,6 +189,28 @@
   .hud .counter .total { color: var(--ink-faint); }
   .hud .next em { font-style: normal; color: var(--ink); }
 
+  /* Locale switcher — injected by engine.js into the HUD, bottom-left (row 3 / col 1) */
+  .hud .locale { grid-row: 3; grid-column: 1; justify-self: start; align-self: end; display: flex; gap: 10px; align-items: center; }
+  .hud .locale a { color: var(--ink-faint); text-decoration: none; transition: color 0.15s ease; }
+  .hud .locale a:hover { color: var(--ink); }
+  .hud .locale a[aria-current] { color: var(--ink); font-weight: 600; }
+  .hud .locale .sep { color: var(--ink-faint); opacity: 0.5; }
+
+  /* Geo-suggest banner — dismissible, shown only on the EN root when the visitor's browser
+     language points at another locale. Lives outside .hud so it can sit centered at the top. */
+  .geo-suggest {
+    position: fixed; top: 0; left: 50%; transform: translateX(-50%) translateY(-120%);
+    z-index: 60; margin-top: 14px; max-width: calc(100vw - 32px);
+    display: flex; gap: 16px; align-items: center;
+    padding: 10px 14px 10px 18px; background: var(--bg-elev); border: 1px solid var(--line-strong);
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-mute);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.18); transition: transform 0.4s cubic-bezier(.2,.8,.2,1);
+  }
+  .geo-suggest.in { transform: translateX(-50%) translateY(0); }
+  .geo-suggest a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--teal); white-space: nowrap; }
+  .geo-suggest button { background: none; border: 0; color: var(--ink-faint); cursor: pointer; font: inherit; padding: 0 2px; line-height: 1; }
+  .geo-suggest button:hover { color: var(--ink); }
+
   /* Section title */
   .section-title { position: fixed; top: 28px; left: 50%; transform: translateX(-50%); z-index: 31; display: flex; flex-direction: column; align-items: center; gap: 10px; pointer-events: none; }
   .section-title .tick { width: 28px; height: 1px; background: var(--teal); box-shadow: 0 0 6px var(--teal-glow); }

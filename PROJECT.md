@@ -326,6 +326,16 @@ Each entry: date · id · title, then decision / rationale.
 
 ---
 
+### 2026-06-18 · D-026 · Phase 2 EN split shipped; locale chrome injected by the shared engine
+
+**Decision:** The EN (Europe) track is fully split into real crawlable router pages (executes D-024/D-025 for EN). `index.html` is converted to a **router-mode home** carrying only rooms 1+2 (Arrival + The Gap) with **in-page snap**, where a boundary scroll soft-navigates to the next journey stop. The engine gains two router-mode capabilities beyond the original journey model: **side pages** (declare their own `label`/`counter`, are not nav-rail stops — enterprise, the 4 service-detail pages, blog posts, future legal pages) and **multi-room in-page snap** (`pageRooms`/`localIdx`/`goLocal`). The **locale switcher** (EN·NL·FR·PT → each locale home, cross-track `data-no-router` hard-load) and the **root geo-suggest** banner (dismissible, `navigator.languages`, persisted in `localStorage`) are injected by the shared `engine.js` into the HUD on *every* page — chosen over editing all 16 HTML files so legacy NL/FR/pt-br get the switcher for free. An old-hash **redirect shim** lives in the EN home `<head>` (runs before render).
+
+**Rationale:** The home conversion was the keystone — it had to be last because gutting its rooms 3–6 / sub-rooms / blog readers / enterprise overlay (all now their own pages) would orphan the in-page links until the destination pages existed. Injecting locale chrome from the one shared engine keeps the no-build site DRY and avoids 16 near-identical edits. The shim resolves all pre-split bookmarked/shared `#NN…` links against `/`, which is now the router home.
+
+**Consequences:** §C.6 Phase 2 marked EN-DONE; §E next-step is now the per-track NL/FR/pt-br splits + blog pipeline + JSON-LD breadth, then Phase 3. NL/FR/pt-br still single-page (they fall through to the legacy engine — unchanged except they now also get the injected switcher). Verified end-to-end on fresh Playwright; 0 console errors. Next decision id: **D-027**.
+
+---
+
 ## §C — Design spec & roadmap (D-024 restructure · architecture D-025)
 
 > Overwritten 2026-06-11. The previous §C (abandoned Astro Phases 0–7 + old OQ table) lives in
@@ -490,14 +500,18 @@ listener); render-loop hardening (visibilitychange pause, dirty-check, explicit
 *Exit: 4 single-page locales visually identical to today on shared assets; pre-consent
 third-party surface = zero.*
 
-**Phase 2 — The split.**
-Build the URL map (§C.3); router + hash-redirect shim + hover-prefetch + `@view-transition`
-fallback; per-page meta/OG/JSON-LD (Organization sitewide; Service on service pages; Article on
-posts; BreadcrumbList); blog pipeline (§C.4) migrates the 4 posts; locale switcher in HUD/footer
-+ root geo-suggest (`navigator.language`, suggest-not-force, choice persisted); sitemap +
-hreflang matrix regenerated.
-*Exit: every section/post is a real URL; `curl` of each URL shows full content in raw HTML;
-morph + snap-scroll feel identical; old hash links redirect.*
+**Phase 2 — The split. ✅ EN DONE 2026-06-18** (D-026). The EN (Europe) track is fully split into
+real crawlable pages on the persistent-sculpture router; NL/FR/pt-br remain single-page (split
+per-track later — OQ-8/§D structure stream).
+- Router (`assets/js/router.js`): fetch + DOMParser + swap `<main#main>` only (sculpture/HUD persist) + pushState/popstate + manual scrollRestoration + hover/focus prefetch; **hard-loads across the Europe↔Brazil boundary** (D-018) and on any failure.
+- Engine (`assets/js/engine.js`) dual-mode: legacy single-page (no `journey`) vs **router-mode** (`initRouterMode`) supporting journey stops, **side pages** (own `label`/`counter`, not nav stops — enterprise / service-detail / blog-post / legal), and **multi-room in-page snap** (home = Arrival↔The Gap on one URL, boundary scroll soft-navs).
+- EN pages live: `/` (rooms 1+2), `/services/` + 4 details (`websites|ai-support|automation|integrations`), `/studio/`, `/enterprise/`, `/blog/` + 3 posts, `/contact/`. Each = full content + meta/OG (+ Article JSON-LD on posts) in initial HTML.
+- Hash-redirect shim (EN home `<head>`): `#03/M.01/2`→`/services/websites/`, `#05/POST.NN`→post, `#enterprise`→`/enterprise/`, `#01/#02` stay on `/`. Verified.
+- **Locale switcher** (EN·NL·FR·PT → each locale home) + **root geo-suggest** (dismissible, `navigator.languages`, persisted in localStorage) injected by the shared engine into the HUD — so every page (incl. legacy locales) gets it with zero per-file edits.
+- `sitemap.xml` regenerated with all EN URLs; hreflang matrix on home + locale homes.
+- Verified end-to-end on fresh Playwright (in-page snap, boundary soft-nav, nav-rail jumps, side pages, warm-palette blog, direct deep-load, 0 console errors).
+*Remaining: blog markdown authoring pipeline (§C.4 — pages exist, hand-authored; the python3 renderer is operator-convenience, deferred); BreadcrumbList/Service JSON-LD; the NL/FR/pt-br track splits.*
+*Exit (EN): every section/post is a real URL with full raw-HTML content; morph + snap-scroll feel identical; old hash links redirect. ✅*
 
 **Phase 3 — Compliance + conversion (§C.5).**
 Legal pages, shared footer, consent module; THEN the operator inputs land: real Meta Pixel ID,
@@ -635,7 +649,7 @@ Pick one stream per task. Read only the stream you are working in.
 - Solo operator + Claude. **NO build step** — pure static HTML/CSS/JS in `public_html/` (Astro removed entirely, D-021). Deploy = upload `public_html/` contents to Hostinger `public_html`; operator does this in seconds, so live integrations are tested on **oopuo.com**, not localhost.
 - Preview: `Static Site` launch config → `http://localhost:4330/`.
 
-**Live state:** 4 locales, each a single-page canvas — `public_html/index.html` (EN, full 6 rooms + sub-rooms + blog + enterprise overlay), `nl/` + `fr/` (lean Europe, 6 rooms), `pt-br/` (Brazil SMB, lean). hreflang + `sitemap.xml` + `robots.txt` present. All pass rules (no WhatsApp green; no EU/enterprise content on pt-br).
+**Live state (2026-06-18):** **EN (Europe) is now SPLIT** into real crawlable router pages (D-026): `/` (Arrival+The Gap, in-page snap), `/services/` + 4 detail pages, `/studio/`, `/enterprise/`, `/blog/` + 3 posts, `/contact/` — the persistent sculpture/HUD survive soft-nav; each URL is a full static HTML file. **NL/FR (lean Europe) + pt-br (Brazil SMB) remain single-page canvases** (split per-track later). `robots.txt` + regenerated `sitemap.xml` (all EN URLs + hreflang on locale homes) present. Locale switcher + root geo-suggest live on every page. All pass rules (no WhatsApp green; no EU/enterprise content on pt-br).
 
 **Integrations wired (real IDs — D-023):**
 - **HubSpot** portal `148607612` / `eu1`. Form `2fef7ceb-b34c-4792-9a0d-1a2d618767b9` embedded on **EN** room 6 via the **new form-builder embed** (legacy v2 API does NOT work for it; renders only on live https, NOT localhost; iframe needs `min-height`). → **replicate the form to `nl/` + `fr/`**. Meetings "Book a free call" placeholder slug `meetings-eu1.hubspot.com/oopuo` → set the real slug.
@@ -658,7 +672,11 @@ Pick one stream per task. Read only the stream you are working in.
 - a11y baseline: `inert` inactive rooms (out of tab/SR tree, doesn't block nav), `:focus-visible` ring, AA `--ink-faint`, `role=main` + localized skip-link, `<noscript>` stacked fallback.
 - Plan: `docs/superpowers/plans/2026-06-11-phase1-foundation.md`.
 
-**Next direction (D-025):** execute **Phase 2** (the split — see §C.6): rooms/services/posts → real crawlable URLs; hand-rolled fetch + DOM-swap + `pushState` router (sculpture/HUD outside the swap container, morph as the transition; never soft-navigate across the Europe↔Brazil boundary); per-page meta/OG/JSON-LD; blog markdown pipeline; hash-redirect shim; locale switcher + root geo-suggest. The shared assets from Phase 1 are the foundation it builds on.
+**Next direction:** **Phase 2 EN split is DONE (D-026).** Remaining before Phase 3:
+1. **Split NL/FR/pt-br per-track** the same way (each currently one single-page canvas; reuse the EN page set as the template + the shared router/engine — they already run router-mode when given a `journey`). pt-br stays Brazil-only framing (D-018); the router already hard-loads across the boundary.
+2. **Blog authoring pipeline** (§C.4): the 3 EN posts are hand-authored HTML; build the stdlib-only `tools/render_posts.py` so the operator adds posts from markdown (deferred, operator-convenience — not launch-blocking).
+3. **JSON-LD breadth**: add Organization (sitewide) + Service (service pages) + BreadcrumbList.
+Then **Phase 3** (compliance + conversion) once operator inputs land (§C.8). The shared assets + router are the foundation.
 
 **Blocked on operator (§C.8):** real Meta Pixel ID · real Meeting slug · NL+FR HubSpot form IDs (new builder) · legal entity details for the privacy / mentions-légales pages. Each is a quick swap into an in-place inert placeholder; none block Phase 2.
 

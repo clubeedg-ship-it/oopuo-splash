@@ -1,4 +1,8 @@
 (function () {
+  // Locale chrome (switcher + geo-suggest) is shared across BOTH modes and all locales — inject it
+  // before branching so legacy single-page locales get it too. Runs once per full page load.
+  initLocaleChrome();
+
   // Phase 2: split pages declare window.OOPUO.journey → ROUTER MODE — the persistent shell drives the
   // sculpture + HUD and hands page-to-page navigation to assets/js/router.js. Pages without a journey
   // fall through to the legacy single-page engine below (current home / nl / fr / pt-br, unchanged).
@@ -435,41 +439,82 @@
     const sectionName = document.getElementById('section-name');
     const TOTAL_ROOMS = cfg.totalRooms || 6;
     let journey = cfg.journey, idx = cfg.index || 0, animating = false;
+    let pageRooms = [], localIdx = 0; // rooms shown on THIS page (multi for home: Arrival + The Gap)
 
     function paint(c) {
       journey = c.journey || journey;
       idx = c.index || 0;
-      const stop = journey[idx] || {};
-      // Side pages (enterprise, legal) declare their own label and aren't journey stops — no room number.
-      const sidePage = !!c.label;
-      const roomNo = (c.rooms && c.rooms[0]) || (sidePage ? null : idx + 1);
-      const label = (c.label || stop.label || '').toUpperCase();
-      const num = roomNo ? String(roomNo).padStart(2, '0') : (c.counter || '');
-      if (currentEl) currentEl.textContent = num;
-      if (totalEl) totalEl.textContent = roomNo ? '/ ' + String(TOTAL_ROOMS).padStart(2, '0') : '';
-      if (sectionName) { sectionName.textContent = label; sectionName.setAttribute('data-num', num); }
-      const end = (c.labels && c.labels.end) || '— END';
-      if (nextEl) nextEl.textContent = sidePage ? (c.next || '') : ((idx + 1 < journey.length) ? '— ' + (journey[idx + 1].label || '').toUpperCase() : end);
-      document.body.dataset.room = roomNo ? String(roomNo) : '';
+      pageRooms = (c.rooms && c.rooms.length) ? c.rooms.slice() : [];
+      localIdx = 0;
       document.body.dataset.palette = c.palette || 'cyan';
-      const ar = document.querySelector('main#main .room');
+      if (c.label) paintSide(c);                      // side page (enterprise, service detail, blog post, legal)
+      else if (pageRooms.length) paintHUD(pageRooms[0]); // journey page — HUD for its first room
+    }
+
+    function paintSide(c) {
+      if (currentEl) currentEl.textContent = c.counter || '';
+      if (totalEl) totalEl.textContent = '';
+      if (sectionName) { sectionName.textContent = (c.label || '').toUpperCase(); sectionName.setAttribute('data-num', c.counter || ''); }
+      if (nextEl) nextEl.textContent = c.next || '';
+      document.body.dataset.room = '';
+      document.body.removeAttribute('data-theme');
+      document.querySelectorAll('.nav-node').forEach((node) => { node.dataset.dist = '3'; node.removeAttribute('aria-current'); });
+    }
+
+    function paintHUD(rn) {
+      const labels = (cfg.labels && cfg.labels.rooms) || [];
+      const num = String(rn).padStart(2, '0');
+      if (currentEl) currentEl.textContent = num;
+      if (totalEl) totalEl.textContent = '/ ' + String(TOTAL_ROOMS).padStart(2, '0');
+      if (sectionName) { sectionName.textContent = (labels[rn - 1] || '').toUpperCase(); sectionName.setAttribute('data-num', num); }
+      const end = (cfg.labels && cfg.labels.end) || '— END';
+      let nx;
+      if (localIdx + 1 < pageRooms.length) nx = '— ' + (labels[pageRooms[localIdx + 1] - 1] || '').toUpperCase();
+      else if (idx + 1 < journey.length) nx = '— ' + (journey[idx + 1].label || '').toUpperCase();
+      else nx = end;
+      if (nextEl) nextEl.textContent = nx;
+      document.body.dataset.room = String(rn);
+      const ar = document.querySelector('main#main .room.active') || document.querySelector('main#main .room');
       if (ar && ar.getAttribute('data-theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
       else document.body.removeAttribute('data-theme');
-      // reflect position on the nav rail (distance ramp + current marker; side pages have no current room)
       document.querySelectorAll('.nav-node').forEach((node) => {
         const go = Number(node.dataset.go);
-        node.dataset.dist = roomNo ? String(Math.min(3, Math.abs(go - roomNo))) : '3';
-        if (roomNo && (stop.rooms || []).includes(go)) node.setAttribute('aria-current', 'true');
-        else node.removeAttribute('aria-current');
+        node.dataset.dist = String(Math.min(3, Math.abs(go - rn)));
+        if (go === rn) node.setAttribute('aria-current', 'true'); else node.removeAttribute('aria-current');
       });
     }
 
+    // in-page room snap (multi-room pages, e.g. home Arrival <-> The Gap)
+    function goLocal(li, dir) {
+      localIdx = li;
+      const rn = pageRooms[li];
+      document.body.dataset.direction = dir > 0 ? 'down' : 'up';
+      document.querySelectorAll('main#main .room').forEach((r) => {
+        const a = Number(r.dataset.room) === rn;
+        r.classList.toggle('active', a); r.inert = !a;
+      });
+      paintHUD(rn);
+      sculpt(rn);
+    }
+
     function navTo(dir) {
-      const n = idx + dir;
-      if (animating || n < 0 || n >= journey.length) return;
-      if (!window.__oopuoRouter) return;
+      if (animating) return;
+      const nl = localIdx + dir;
+      if (pageRooms.length > 1 && nl >= 0 && nl < pageRooms.length) { // snap between rooms on this page
+        animating = true; goLocal(nl, dir);
+        setTimeout(() => { animating = false; }, 720); return;
+      }
+      const n = idx + dir;                                           // boundary → adjacent journey stop
+      if (n < 0 || n >= journey.length || !window.__oopuoRouter) return;
       animating = true;
       Promise.resolve(window.__oopuoRouter.navigate(journey[n].path)).finally(() => { animating = false; });
+    }
+
+    // activate the first room of the current page (or, for a side page, just reveal its content)
+    function activateInitialRoom() {
+      const rs = document.querySelectorAll('main#main .room');
+      if (pageRooms.length) rs.forEach((r) => { const a = Number(r.dataset.room) === pageRooms[0]; r.classList.toggle('active', a); r.inert = !a; });
+      else rs.forEach((r) => { r.classList.add('active'); r.inert = false; });
     }
 
     // load the HubSpot form embed if the current page has a real (non-placeholder) form frame.
@@ -491,8 +536,8 @@
     window.__oopuoOnRoute = function (c) {
       c = c || cfg;
       paint(c);
+      activateInitialRoom();
       sculpt(c.sculpture || (c.rooms && c.rooms[0]) || 1);
-      document.querySelectorAll('main#main .room').forEach((r) => { r.classList.add('active'); r.inert = false; });
       loadContactForm();
       const m = document.getElementById('main');
       if (m) m.focus({ preventScroll: true });
@@ -525,10 +570,72 @@
       if (Math.abs(dy) > 50) navTo(dy > 0 ? 1 : -1);
     }, { passive: true });
 
-    // first load: paint the HUD + (if this is a contact page) load the form. The sculpture
-    // module places this page's configured shape itself (window.OOPUO.sculpture) — instantly,
-    // no morph. Soft navigations morph via __oopuoOnRoute above.
+    // first load: paint the HUD + activate the first room + (if contact) load the form. The
+    // sculpture module places this page's configured shape itself — instantly, no morph.
     paint(cfg);
+    activateInitialRoom();
     loadContactForm();
+  }
+
+  // ——— LOCALE CHROME (switcher + geo-suggest) ——————————————————————————
+  // Self-hosted, no build. The switcher always points at each locale's HOME (NL/FR/pt-br are not
+  // split yet); EN deep pages therefore switch to a locale home, which is the expected behaviour.
+  function initLocaleChrome() {
+    const LOCALES = [
+      { code: 'en',    label: 'EN', home: '/' },
+      { code: 'nl',    label: 'NL', home: '/nl/' },
+      { code: 'fr',    label: 'FR', home: '/fr/' },
+      { code: 'pt-br', label: 'PT', home: '/pt-br/' }
+    ];
+    const m = location.pathname.match(/^\/(nl|fr|pt-br)\//);
+    const current = m ? m[1] : 'en';
+    const hud = document.querySelector('.hud');
+    if (hud && !hud.querySelector('.locale')) {
+      const nav = document.createElement('nav');
+      nav.className = 'locale';
+      nav.setAttribute('aria-label', 'Language');
+      LOCALES.forEach((loc, i) => {
+        if (i) { const s = document.createElement('span'); s.className = 'sep'; s.textContent = '·'; nav.appendChild(s); }
+        const a = document.createElement('a');
+        a.href = loc.home; a.textContent = loc.label;
+        a.setAttribute('hreflang', loc.code);
+        a.setAttribute('data-no-router', '');                 // cross-track switch must hard-load (D-018)
+        if (loc.code === current) a.setAttribute('aria-current', 'true');
+        nav.appendChild(a);
+      });
+      hud.appendChild(nav);
+    }
+
+    // Geo-suggest: only on the EN root, only when the browser's preferred language points elsewhere.
+    if (current !== 'en' || location.pathname !== '/' || location.hash) return;
+    try { if (localStorage.getItem('oopuo-geo-dismissed')) return; } catch (e) {}
+    const pref = (navigator.languages || [navigator.language || '']).map((l) => l.toLowerCase());
+    const COPY = {
+      nl:    { home: '/nl/',    msg: 'Deze site is ook in het Nederlands beschikbaar.', cta: 'Bekijken →' },
+      fr:    { home: '/fr/',    msg: 'Ce site est aussi disponible en français.',        cta: 'Ouvrir →'   },
+      'pt-br': { home: '/pt-br/', msg: 'Este site também está disponível em português.', cta: 'Abrir →'    }
+    };
+    let hit = null;
+    for (const l of pref) {
+      if (l.startsWith('nl')) { hit = COPY.nl; break; }
+      if (l.startsWith('fr')) { hit = COPY.fr; break; }
+      if (l.startsWith('pt')) { hit = COPY['pt-br']; break; }
+    }
+    if (!hit) return;
+    const bar = document.createElement('div');
+    bar.className = 'geo-suggest';
+    bar.setAttribute('role', 'region');
+    bar.setAttribute('aria-label', 'Language suggestion');
+    bar.innerHTML = '<span>' + hit.msg + '</span> <a href="' + hit.home + '" data-no-router>' + hit.cta + '</a>';
+    const close = document.createElement('button');
+    close.type = 'button'; close.setAttribute('aria-label', 'Dismiss'); close.textContent = '✕';
+    close.addEventListener('click', () => {
+      bar.classList.remove('in');
+      try { localStorage.setItem('oopuo-geo-dismissed', '1'); } catch (e) {}
+      setTimeout(() => bar.remove(), 400);
+    });
+    bar.appendChild(close);
+    document.body.appendChild(bar);
+    requestAnimationFrame(() => requestAnimationFrame(() => bar.classList.add('in')));
   }
 })();
