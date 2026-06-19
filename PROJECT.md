@@ -336,6 +336,16 @@ Each entry: date · id · title, then decision / rationale.
 
 ---
 
+### 2026-06-19 · D-027 · NL + FR full content parity (resolves OQ-8 for NL/FR)
+
+**Decision:** NL and FR are split into the same 13-page router tree as EN (router-mode home with rooms 1+2 + locale-aware hash shim, `/services/` + 4 detail pages, `/studio/`, `/enterprise/`, `/blog/` + 3 posts, `/contact/`), with all content translated (NL informal "je/jij"; FR formal "vous"). € pricing and EU-AI-Act/Amsterdam/enterprise framing are kept — NL and FR are the Europe track (D-018), so EU content is correct for them. Contact pages use the inert `YOUR_NL/FR_HUBSPOT_FORM_ID` placeholders + `hello@oopuo.com` mailto fallback. EN deep pages gained the full en/nl/fr/x-default hreflang matrix; `sitemap.xml` was regenerated to 40 URLs (13 EN + 13 NL + 13 FR + the pt-br home) with each shared path cross-linking its language versions; the shared engine's locale switcher now targets the **equivalent page** per locale (`/services/websites/` → `/nl/services/websites/`), with pt-br always → its home; mobile-responsive CSS was added for the switcher + geo-suggest.
+
+**Rationale:** Operator directive — "all languages should have all content." The router/engine already supported any locale (the EN split proved it); the work was translation + locale-prefixed scaffolding, delegated to two parallel agents (one per locale) against the EN page set as the template.
+
+**Consequences:** OQ-8 resolved for NL/FR. **pt-br is intentionally excluded** from translation: D-018 forbids showing enterprise/EU-AI-Act/€ material to Brazil, so its deep pages (blog/services/enterprise-equivalent) must be **authored Brazil-native** (Brazil offers, R$ pricing, WhatsApp, "parceria não produto") — a content task, not a translation. That is the remaining locale gap. Verified on fresh Playwright (NL/FR journeys, cross-locale hard-load, inert form placeholders, 0 console errors). Next decision id: **D-028**.
+
+---
+
 ## §C — Design spec & roadmap (D-024 restructure · architecture D-025)
 
 > Overwritten 2026-06-11. The previous §C (abandoned Astro Phases 0–7 + old OQ table) lives in
@@ -511,7 +521,8 @@ per-track later — OQ-8/§D structure stream).
 - `sitemap.xml` regenerated with all EN URLs; hreflang matrix on home + locale homes.
 - Verified end-to-end on fresh Playwright (in-page snap, boundary soft-nav, nav-rail jumps, side pages, warm-palette blog, direct deep-load, 0 console errors).
 JSON-LD: Organization (home) + Service & BreadcrumbList (4 service pages) + Article & BreadcrumbList (3 posts) — 11 blocks, all valid.
-*Remaining: blog markdown authoring pipeline (§C.4 — pages exist, hand-authored; the python3 renderer is operator-convenience, deferred); the NL/FR/pt-br track splits (gated on OQ-8 — a content/translation decision, not just effort: NL/FR are lean 6-room pages with no service-detail/blog/enterprise content to split yet, and pt-br is a separate Brazil page set).*
+**NL + FR now have FULL parity (D-027, 2026-06-19)** — both split into the same 13-page router tree as EN, all content translated, hreflang matrix + sitemap (40 URLs) regenerated, switcher maps to the equivalent page per locale.
+*Remaining: blog markdown authoring pipeline (§C.4 — pages exist, hand-authored; the python3 renderer is operator-convenience, deferred); **pt-br deep content** — it stays Brazil-native (D-018), so its blog/service/enterprise-equivalent pages must be authored in the Brazil strategy (offers, R$ pricing, WhatsApp, parceria), not translated from EU material.*
 *Exit (EN): every section/post is a real URL with full raw-HTML content; morph + snap-scroll feel identical; old hash links redirect. ✅*
 
 **Phase 3 — Compliance + conversion (§C.5).**
@@ -554,7 +565,7 @@ Console sitemap submit.
 | ID | Question | Status | Notes |
 |---|---|---|---|
 | OQ-2 | Low-end mobile perf of Three.js+bloom+ASCII | OPEN — mitigated | Phase 1 hardening (pause, DPR cap, degradation hooks); benchmark on a cheap Android in Phase 4 QA. |
-| OQ-8 | Translate blog + enterprise to NL/FR? | OPEN | EN-only today; add `/nl/blog/` etc. when translated. Not launch-blocking. |
+| OQ-8 | Translate blog + enterprise to NL/FR? | RESOLVED (D-027, 2026-06-19) | NL + FR now carry the full EN tree (services details, blog + posts, enterprise) translated. pt-br stays Brazil-native (separate deep content to author, not translate). |
 | OQ-9 | pt-br per-segment outbound landers? | OPEN | Future; the architecture supports it (one page = one file). |
 
 OQ-1/3/4/5/6/7 resolved historically (D-017/D-019/D-020) — see DECISIONS.md. Keystatic (D-019)
@@ -650,7 +661,7 @@ Pick one stream per task. Read only the stream you are working in.
 - Solo operator + Claude. **NO build step** — pure static HTML/CSS/JS in `public_html/` (Astro removed entirely, D-021). Deploy = upload `public_html/` contents to Hostinger `public_html`; operator does this in seconds, so live integrations are tested on **oopuo.com**, not localhost.
 - Preview: `Static Site` launch config → `http://localhost:4330/`.
 
-**Live state (2026-06-18):** **EN (Europe) is now SPLIT** into real crawlable router pages (D-026): `/` (Arrival+The Gap, in-page snap), `/services/` + 4 detail pages, `/studio/`, `/enterprise/`, `/blog/` + 3 posts, `/contact/` — the persistent sculpture/HUD survive soft-nav; each URL is a full static HTML file. **NL/FR (lean Europe) + pt-br (Brazil SMB) remain single-page canvases** (split per-track later). `robots.txt` + regenerated `sitemap.xml` (all EN URLs + hreflang on locale homes) present. Locale switcher + root geo-suggest live on every page. All pass rules (no WhatsApp green; no EU/enterprise content on pt-br).
+**Live state (2026-06-19):** **EN, NL, and FR (Europe) are all fully SPLIT** into the same 13-page router tree (D-026 EN, D-027 NL/FR): `/` (Arrival+The Gap, in-page snap), `/services/` + 4 detail pages, `/studio/`, `/enterprise/`, `/blog/` + 3 posts, `/contact/` — persistent sculpture/HUD survive soft-nav; each URL is a full static HTML file with translated content. **pt-br (Brazil SMB) is still a single-page canvas** — kept Brazil-native (D-018), needs its own deep content authored, NOT translated from EU. `robots.txt` + regenerated `sitemap.xml` (40 URLs, full hreflang cross-links) present. Locale switcher (maps to equivalent page per locale) + root geo-suggest live on every page. All pass rules (no WhatsApp green; no EU/enterprise content on pt-br).
 
 **Integrations wired (real IDs — D-023):**
 - **HubSpot** portal `148607612` / `eu1`. Form `2fef7ceb-b34c-4792-9a0d-1a2d618767b9` embedded on **EN** room 6 via the **new form-builder embed** (legacy v2 API does NOT work for it; renders only on live https, NOT localhost; iframe needs `min-height`). → **replicate the form to `nl/` + `fr/`**. Meetings "Book a free call" placeholder slug `meetings-eu1.hubspot.com/oopuo` → set the real slug.
@@ -673,10 +684,9 @@ Pick one stream per task. Read only the stream you are working in.
 - a11y baseline: `inert` inactive rooms (out of tab/SR tree, doesn't block nav), `:focus-visible` ring, AA `--ink-faint`, `role=main` + localized skip-link, `<noscript>` stacked fallback.
 - Plan: `docs/superpowers/plans/2026-06-11-phase1-foundation.md`.
 
-**Next direction:** **Phase 2 EN split is DONE (D-026).** Remaining before Phase 3:
-1. **Split NL/FR/pt-br per-track** the same way (each currently one single-page canvas; reuse the EN page set as the template + the shared router/engine — they already run router-mode when given a `journey`). pt-br stays Brazil-only framing (D-018); the router already hard-loads across the boundary.
-2. **Blog authoring pipeline** (§C.4): the 3 EN posts are hand-authored HTML; build the stdlib-only `tools/render_posts.py` so the operator adds posts from markdown (deferred, operator-convenience — not launch-blocking).
-3. **JSON-LD breadth**: add Organization (sitewide) + Service (service pages) + BreadcrumbList.
+**Next direction:** **Phase 2 split is DONE for EN + NL + FR (D-026, D-027); JSON-LD breadth DONE.** Remaining before Phase 3:
+1. **pt-br deep content** — split pt-br into the router tree like the others, BUT its blog/service-detail/enterprise-equivalent pages must be **authored Brazil-native** (Brazil offers, R$ pricing, WhatsApp, parceria) — D-018 forbids reusing/translating the EU material. This is a content task; needs operator direction on the Brazil offer set (partly in the internal guide referenced by D-018).
+2. **Blog authoring pipeline** (§C.4): the posts are hand-authored HTML; build the stdlib-only `tools/render_posts.py` so the operator adds posts from markdown (deferred, operator-convenience — not launch-blocking).
 Then **Phase 3** (compliance + conversion) once operator inputs land (§C.8). The shared assets + router are the foundation.
 
 **Blocked on operator (§C.8):** real Meta Pixel ID · real Meeting slug · NL+FR HubSpot form IDs (new builder) · legal entity details for the privacy / mentions-légales pages. Each is a quick swap into an in-place inert placeholder; none block Phase 2.

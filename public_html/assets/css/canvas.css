@@ -889,15 +889,16 @@
     .hud .brand { font-size: 26px; gap: 12px; }
     .hud .brand-mark { width: 92px; height: 50px; }
     /* Mobile: the floating geo-suggest pill wraps into a tall block that buries the
-       counter + badge. Dock it as a single full-width notification bar at the very top. */
+       counter + badge. Dock it as a single full-width notification bar at the very top.
+       Keep the base translateX(-50%) centering (shared by both states) and just widen it
+       to full-bleed so we don't fight the cascade on the .in transform. */
     .geo-suggest {
-      left: 0; right: 0; margin: 0; max-width: none;
-      transform: translateY(-110%);
+      left: 50%; right: auto; width: 100%; max-width: none; margin: 0;
+      transform: translateX(-50%) translateY(-120%);
       justify-content: space-between; gap: 12px;
       padding: 10px 16px; border-left: 0; border-right: 0;
       font-size: 10.5px;
     }
-    .geo-suggest.in { transform: translateY(0); }
     .geo-suggest span { flex: 1 1 auto; line-height: 1.35; }
     .geo-suggest a { flex: 0 0 auto; }
     /* Mobile: the centered scroll/drag hint collides with the locale switcher and the
