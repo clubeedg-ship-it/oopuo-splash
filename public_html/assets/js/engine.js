@@ -578,17 +578,20 @@
   }
 
   // ——— LOCALE CHROME (switcher + geo-suggest) ——————————————————————————
-  // Self-hosted, no build. The switcher always points at each locale's HOME (NL/FR/pt-br are not
-  // split yet); EN deep pages therefore switch to a locale home, which is the expected behaviour.
+  // Self-hosted, no build. EN/NL/FR have full page parity, so the switcher maps to the EQUIVALENT
+  // page in the target locale (e.g. /services/websites/ -> /nl/services/websites/). pt-br is a
+  // single Brazil page (different strategy, D-018) so it always targets its home.
   function initLocaleChrome() {
     const LOCALES = [
-      { code: 'en',    label: 'EN', home: '/' },
-      { code: 'nl',    label: 'NL', home: '/nl/' },
-      { code: 'fr',    label: 'FR', home: '/fr/' },
-      { code: 'pt-br', label: 'PT', home: '/pt-br/' }
+      { code: 'en',    label: 'EN', prefix: '' },
+      { code: 'nl',    label: 'NL', prefix: '/nl' },
+      { code: 'fr',    label: 'FR', prefix: '/fr' },
+      { code: 'pt-br', label: 'PT', prefix: '/pt-br' }
     ];
     const m = location.pathname.match(/^\/(nl|fr|pt-br)\//);
     const current = m ? m[1] : 'en';
+    // EN-equivalent ("bare") path of the page we're on, e.g. /nl/services/ -> /services/ , /fr/ -> /
+    const bare = location.pathname.replace(/^\/(nl|fr|pt-br)(?=\/)/, '') || '/';
     const hud = document.querySelector('.hud');
     if (hud && !hud.querySelector('.locale')) {
       const nav = document.createElement('nav');
@@ -597,9 +600,11 @@
       LOCALES.forEach((loc, i) => {
         if (i) { const s = document.createElement('span'); s.className = 'sep'; s.textContent = '·'; nav.appendChild(s); }
         const a = document.createElement('a');
-        a.href = loc.home; a.textContent = loc.label;
+        // pt-br has only its home; EN/NL/FR keep the same path across locales
+        a.href = (loc.code === 'pt-br') ? '/pt-br/' : (loc.prefix + bare);
+        a.textContent = loc.label;
         a.setAttribute('hreflang', loc.code);
-        a.setAttribute('data-no-router', '');                 // cross-track switch must hard-load (D-018)
+        a.setAttribute('data-no-router', '');                 // cross-locale switch must hard-load (D-018)
         if (loc.code === current) a.setAttribute('aria-current', 'true');
         nav.appendChild(a);
       });

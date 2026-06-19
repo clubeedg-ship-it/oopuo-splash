@@ -3,41 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<script>
-/* Phase 2 hash-redirect shim (NL) — oude single-page links (#03/M.01/2, #05/POST.01, #enterprise…)
-   resolveerden tegen "/nl/", nu router-mode HOME. Map ze naar hun echte split-URL's vóór render.
-   Kamers 1/2 blijven op "/nl/" (geen redirect). */
-(function () {
-  var h = location.hash.slice(1); if (!h) return;
-  var ROOM = { 1: null, 2: null, 3: '/nl/services/', 4: '/nl/studio/', 5: '/nl/blog/', 6: '/nl/contact/' };
-  var MOD  = { 1: '/nl/services/websites/', 2: '/nl/services/ai-support/', 3: '/nl/services/automation/', 4: '/nl/services/integrations/' };
-  var POST = { 1: '/nl/blog/eu-ai-act-smb-guide/', 2: '/nl/blog/ai-automations-20-hours-week/', 3: '/nl/blog/agent-observability-compliance/' };
-  var p = h.split('/'), dest = null;
-  if (p[0] === 'enterprise') dest = '/nl/enterprise/';
-  else if (parseInt(p[0], 10) === 3 && p[1] && p[1].indexOf('M.') === 0) dest = MOD[parseInt(p[1].slice(2), 10)] || '/nl/services/';
-  else if (parseInt(p[0], 10) === 5 && p[1] && p[1].indexOf('POST.') === 0) dest = POST[parseInt(p[1].slice(5), 10)] || '/nl/blog/';
-  else dest = ROOM[parseInt(p[0], 10)];
-  if (dest) location.replace(dest);
-})();
-</script>
 <!-- Meta Pixel — INACTIVE placeholder (D-025/Phase 0). Currently commented out so it loads nothing & logs no console error. TO ACTIVATE: replace both YOUR_META_PIXEL_ID below with your numeric Pixel ID, then uncomment the block by deleting the "PIXEL down" line and the "PIXEL up" line that wrap it. Phase 3 will move this behind the consent gate (PROJECT.md §C.5). -->
 <!-- PIXEL ↓
 <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','YOUR_META_PIXEL_ID');fbq('track','PageView');</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_META_PIXEL_ID&ev=PageView&noscript=1" alt=""/></noscript>
 PIXEL ↑ -->
-<title>OOPUO — Wij bouwen je AI-systemen. Jij focust op groei.</title>
-<meta name="description" content="AI-gedreven websites, automatisering en klantenservice voor Europese bedrijven die sneller willen — zonder een eigen tech-afdeling. Een engineering studio in Amsterdam.">
-<link rel="canonical" href="https://oopuo.com/nl/">
+<title>Vier modules — AI-websites, support, automatisering, koppelingen · OOPUO</title>
+<meta name="description" content="Vier installeerbare modules voor Europese bedrijven: razendsnelle websites op maat, een 24/7 AI-klantassistent, interne procesautomatisering en platformkoppelingen. Een engineering studio in Amsterdam.">
+<link rel="canonical" href="https://oopuo.com/nl/services/">
 <meta name="robots" content="index, follow">
-<link rel="alternate" hreflang="en" href="https://oopuo.com/">
-<link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/">
-<link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/">
-<link rel="alternate" hreflang="pt-BR" href="https://oopuo.com/pt-br/">
-<link rel="alternate" hreflang="x-default" href="https://oopuo.com/">
+<link rel="alternate" hreflang="en" href="https://oopuo.com/services/">
+<link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/">
+<link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/">
+<link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://oopuo.com/nl/">
-<meta property="og:title" content="OOPUO — Wij bouwen je AI-systemen. Jij focust op groei.">
-<meta property="og:description" content="AI-gedreven websites, automatisering en klantenservice voor Europese bedrijven — zonder een eigen tech-afdeling.">
+<meta property="og:url" content="https://oopuo.com/nl/services/">
+<meta property="og:title" content="Vier modules — AI-websites, support, automatisering, koppelingen · OOPUO">
+<meta property="og:description" content="Razendsnelle websites op maat, een 24/7 AI-klantassistent, procesautomatisering en platformkoppelingen — voor Europese bedrijven.">
 <meta property="og:site_name" content="OOPUO">
 <meta property="og:image" content="https://oopuo.com/og-default.png">
 <meta property="og:image:type" content="image/png">
@@ -45,34 +27,33 @@ PIXEL ↑ -->
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="OOPUO — wij bouwen je AI-systemen.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="OOPUO — Wij bouwen je AI-systemen. Jij focust op groei.">
-<meta name="twitter:description" content="AI-gedreven websites, automatisering en klantenservice voor Europese bedrijven — zonder een eigen tech-afdeling.">
+<meta name="twitter:title" content="Vier modules — AI-websites, support, automatisering, koppelingen · OOPUO">
+<meta name="twitter:description" content="Razendsnelle websites op maat, een 24/7 AI-klantassistent, procesautomatisering en platformkoppelingen.">
 <meta name="twitter:image" content="https://oopuo.com/og-default.png">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
 <link rel="stylesheet" href="/assets/css/canvas.css">
 <noscript><style>.room{opacity:1!important;visibility:visible!important;position:relative!important;transform:none!important;height:auto!important;min-height:100vh}.hud,.scroll-hint,.nav-rail,.col1-rail,.sub-nav{display:none!important}</style></noscript>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"OOPUO","url":"https://oopuo.com/","logo":"https://oopuo.com/oopuo-logo.svg","email":"hello@oopuo.com","description":"Een engineering studio in Amsterdam die AI-gedreven websites, automatisering en klantenservice bouwt voor Europese bedrijven.","address":{"@type":"PostalAddress","addressLocality":"Amsterdam","addressCountry":"NL"},"areaServed":"EU"}</script>
 </head>
-<body data-room="1" data-palette="cyan">
+<body data-room="3" data-palette="cyan">
 <div class="section-title" aria-hidden="true">
   <span class="tick"></span>
-  <span class="name" id="section-name" data-num="01">AANKOMST</span>
+  <span class="name" id="section-name" data-num="03">MODULES</span>
 </div>
 
 <div class="hud">
   <div class="tl"><span class="brand"><span class="brand-mark" aria-hidden="true"></span>OOPUO</span></div>
   <div class="ent"><a href="/nl/enterprise/">Enterprise →</a></div>
-  <div class="tr counter"><span class="current">01</span> <span class="total">/ 06</span></div>
-  <div class="br next">NEXT <em id="next-label">— DE KLOOF</em> ↓</div>
+  <div class="tr counter"><span class="current">03</span> <span class="total">/ 06</span></div>
+  <div class="br next">NEXT <em id="next-label">— STUDIO</em> ↓</div>
 </div>
 
 <nav class="nav-rail" aria-label="Main sections">
-  <button class="nav-node" data-go="1" data-dist="0" aria-label="Aankomst"></button>
+  <button class="nav-node" data-go="1" data-dist="2" aria-label="Aankomst"></button>
   <button class="nav-node" data-go="2" data-dist="1" aria-label="De Kloof"></button>
-  <button class="nav-node" data-go="3" data-dist="2" aria-label="Modules"></button>
-  <button class="nav-node" data-go="4" data-dist="3" aria-label="Studio"></button>
-  <button class="nav-node" data-go="5" data-dist="3" aria-label="Blog"></button>
+  <button class="nav-node" data-go="3" data-dist="0" aria-label="Modules"></button>
+  <button class="nav-node" data-go="4" data-dist="1" aria-label="Studio"></button>
+  <button class="nav-node" data-go="5" data-dist="2" aria-label="Blog"></button>
   <button class="nav-node" data-go="6" data-dist="3" aria-label="Uitnodiging"></button>
 </nav>
 
@@ -99,36 +80,25 @@ PIXEL ↑ -->
 
 <main class="stage" id="main" tabindex="-1">
 
-  <section class="room active" data-room="1" data-theme="dark">
+  <section class="room active" data-room="3">
     <div class="room-inner">
-      <span class="label">Een engineering studio · Amsterdam</span>
-      <h1>Wij bouwen je AI-systemen. Jij focust op groei.</h1>
-      <p class="lead">AI-gedreven websites, automatisering en klantenservice voor Europese bedrijven die sneller willen — <strong>zonder een eigen tech-afdeling.</strong></p>
-      <div class="btn-row">
-        <a class="btn btn-primary" href="/nl/services/">Bekijk wat we bouwen <span class="arrow">→</span></a>
-        <a class="btn btn-ghost" href="/nl/contact/">Plan een gesprek <span class="arrow">→</span></a>
+      <h2>Vier modules. Geïnstalleerd.</h2>
+      <div class="modules">
+        <a class="module" href="/nl/services/websites/"><span class="corner">M.01</span><div class="module-tag">Websites</div><div class="module-title">Websites & landingspagina's op maat</div><p class="module-desc">Modern, snel, conversiegericht. Laadt in onder een seconde, geen WordPress-ballast.</p><span class="more">Ontdek →</span></a>
+        <a class="module" href="/nl/services/ai-support/"><span class="corner">M.02</span><div class="module-tag">AI Support</div><div class="module-title">24/7 klantassistent</div><p class="module-desc">Getraind op jouw product en toon. Schakelt door naar een mens wanneer het ertoe doet.</p><span class="more">Ontdek →</span></a>
+        <a class="module" href="/nl/services/automation/"><span class="corner">M.03</span><div class="module-tag">Automatisering</div><div class="module-title">Interne procesagents</div><p class="module-desc">Data-invoer, rapporten, facturen, leadrouting — afgehandeld op de achtergrond.</p><span class="more">Ontdek →</span></a>
+        <a class="module" href="/nl/services/integrations/"><span class="corner">M.04</span><div class="module-tag">Koppelingen</div><div class="module-title">Platformkoppelingen</div><p class="module-desc">Je CRM, facturatie en voorraad — met elkaar in gesprek.</p><span class="more">Ontdek →</span></a>
       </div>
     </div>
   </section>
 
-  <section class="room" data-room="2">
-    <div class="room-inner">
-      <h2>Je groeit.<br>Je tools niet.</h2>
-      <p class="lead">Voor de derde keer vandaag dezelfde klantvraag beantwoorden. Een website die twee jaar geleden "tijdelijk" was. Data die tussen systemen wordt overgetypt omdat niemand tijd had ze te koppelen.</p>
-      <p class="lead">Je hebt geen digitale transformatie nodig. Je hebt <strong>de drie of vier automatiseringen nodig die je je week teruggeven.</strong></p>
-    </div>
-  </section>
-
-
 </main>
 
-
 <script>
-  /* Phase 2 router-mode HOME (NL) — kamers 1+2 (Aankomst + De Kloof) met in-page snap; journey =
-     geordende routes waartussen de persistente shell navigeert. */
+  /* Phase 2 router-mode pagina-config. journey = geordende routes waartussen de shell navigeert. */
   window.OOPUO = {
     locale: 'nl', track: 'europe',
-    route: '/nl/', rooms: [1, 2], sculpture: 1, palette: 'cyan', index: 0, totalRooms: 6,
+    route: '/nl/services/', rooms: [3], sculpture: 3, palette: 'cyan', index: 1, totalRooms: 6,
     journey: [
       { path: '/nl/',          label: 'Aankomst',    sculpture: 1, rooms: [1, 2] },
       { path: '/nl/services/', label: 'Modules',     sculpture: 3, rooms: [3] },

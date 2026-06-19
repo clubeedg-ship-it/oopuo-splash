@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Meta Pixel — INACTIVE placeholder (D-025/Phase 0). Currently commented out so it loads nothing & logs no console error. TO ACTIVATE: replace both YOUR_META_PIXEL_ID below with your numeric Pixel ID, then uncomment the block by deleting the "PIXEL down" line and the "PIXEL up" line that wrap it. Phase 3 will move this behind the consent gate (PROJECT.md §C.5). -->
+<!-- PIXEL ↓
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','YOUR_META_PIXEL_ID');fbq('track','PageView');</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_META_PIXEL_ID&ev=PageView&noscript=1" alt=""/></noscript>
+PIXEL ↑ -->
+<title>Conformité au règlement européen sur l'IA pour les entreprises régulées · OOPUO</title>
+<meta name="description" content="Conformité au règlement européen sur l'IA (EU AI Act), évaluations des risques, observabilité des agents et documentation technique — par une équipe d'ingénierie qui comprend à la fois vos systèmes d'IA et la réglementation. Amsterdam.">
+<link rel="canonical" href="https://oopuo.com/fr/enterprise/">
+<meta name="robots" content="index, follow">
+<link rel="alternate" hreflang="en" href="https://oopuo.com/enterprise/">
+<link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/enterprise/">
+<link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/enterprise/">
+<link rel="alternate" hreflang="x-default" href="https://oopuo.com/enterprise/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://oopuo.com/fr/enterprise/">
+<meta property="og:title" content="Votre IA est puissante. Assurez-vous qu'elle est aussi légale.">
+<meta property="og:description" content="Conformité au règlement européen sur l'IA, évaluations des risques et gouvernance technique — la conformité comme ingénierie, pas comme paperasse.">
+<meta property="og:site_name" content="OOPUO">
+<meta property="og:image" content="https://oopuo.com/og-default.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OOPUO — nous construisons vos systèmes d'IA.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Votre IA est puissante. Assurez-vous qu'elle est aussi légale.">
+<meta name="twitter:description" content="Conformité au règlement européen sur l'IA, évaluations des risques et gouvernance technique — la conformité comme ingénierie, pas comme paperasse.">
+<meta name="twitter:image" content="https://oopuo.com/og-default.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
+<link rel="stylesheet" href="/assets/css/canvas.css">
+<noscript><style>.room,.ent-page{opacity:1!important;visibility:visible!important;position:relative!important;transform:none!important;height:auto!important}.hud,.scroll-hint,.nav-rail,.col1-rail,.sub-nav{display:none!important}</style></noscript>
+</head>
+<body data-palette="cyan">
+<div class="section-title" aria-hidden="true">
+  <span class="tick"></span>
+  <span class="name" id="section-name" data-num="EN">ENTERPRISE</span>
+</div>
+
+<div class="hud">
+  <div class="tl"><span class="brand"><span class="brand-mark" aria-hidden="true"></span>OOPUO</span></div>
+  <div class="ent"></div>
+  <div class="tr counter"><span class="current">EN</span> <span class="total"></span></div>
+  <div class="br next">NEXT <em id="next-label"></em></div>
+</div>
+
+<nav class="nav-rail" aria-label="Main sections">
+  <button class="nav-node" data-go="1" data-dist="3" aria-label="Arrivée"></button>
+  <button class="nav-node" data-go="2" data-dist="3" aria-label="Le Fossé"></button>
+  <button class="nav-node" data-go="3" data-dist="3" aria-label="Modules"></button>
+  <button class="nav-node" data-go="4" data-dist="3" aria-label="Studio"></button>
+  <button class="nav-node" data-go="5" data-dist="3" aria-label="Blog"></button>
+  <button class="nav-node" data-go="6" data-dist="3" aria-label="Invitation"></button>
+</nav>
+
+<nav class="col1-rail" aria-label="Module sub-pages">
+  <button class="col1-node" data-sub="1" aria-label="Overview"></button>
+  <button class="col1-node" data-sub="2" aria-label="Examples"></button>
+  <button class="col1-node" data-sub="3" aria-label="Process"></button>
+  <button class="col1-node" data-sub="4" aria-label="Pricing"></button>
+</nav>
+
+<div class="sculpture" id="sculpture" aria-hidden="true"></div>
+<div class="scroll-hint"></div>
+
+<nav class="sub-nav" aria-label="Sub-page navigation">
+  <button class="sub-nav-btn sub-nav-prev" id="sub-nav-prev" type="button">
+    <span class="sub-nav-arrow" aria-hidden="true">←</span>
+    <span class="sub-nav-label" id="sub-nav-prev-label"><span class="sub-nav-step">PREV</span><span class="sub-nav-name">—</span></span>
+  </button>
+  <button class="sub-nav-btn sub-nav-next" id="sub-nav-next" type="button">
+    <span class="sub-nav-label" id="sub-nav-next-label"><span class="sub-nav-step">NEXT</span><span class="sub-nav-name">—</span></span>
+    <span class="sub-nav-arrow" aria-hidden="true">→</span>
+  </button>
+</nav>
+
+<main class="stage" id="main" tabindex="-1">
+
+  <article class="ent-page active" id="ent-page">
+    <div class="ent-inner">
+      <a class="reader-back" href="/fr/">← Retour à OOPUO</a>
+
+      <header>
+        <span class="ent-label">Pour les entreprises régulées</span>
+        <h1 class="ent-h1">Votre IA est puissante.<br>Assurez-vous qu'elle est aussi légale.</h1>
+        <p class="ent-sub">Conformité au règlement européen sur l'IA, évaluations des risques et gouvernance technique — par une équipe d'ingénierie qui comprend à la fois vos systèmes et la réglementation.</p>
+        <div class="btn-row"><a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=%C3%89valuation%20de%20conformit%C3%A9">Demander une évaluation de conformité <span class="arrow">→</span></a></div>
+      </header>
+
+      <section class="ent-section">
+        <h2>Le règlement européen sur l'IA n'arrive pas. Il est là.</h2>
+        <p class="ent-body">Le règlement est entré en vigueur en août 2024. Les interdictions des pratiques d'IA inacceptables s'appliquent depuis février 2025. Les exigences pour les systèmes à haut risque entrent en jeu en août 2026. Le compte à rebours de la conformité a déjà commencé.</p>
+        <div class="ent-facts">
+          <div class="ent-fact"><div class="ent-fact-val">35 M€</div><div class="ent-fact-label">Amende maximale pour les pratiques d'IA interdites</div></div>
+          <div class="ent-fact"><div class="ent-fact-val">7 %</div><div class="ent-fact-label">Du chiffre d'affaires annuel mondial pour les infractions les plus graves</div></div>
+          <div class="ent-fact"><div class="ent-fact-val">Art. 6–49</div><div class="ent-fact-label">Obligations applicables aux déployeurs de systèmes d'IA à haut risque</div></div>
+        </div>
+        <p class="ent-body">Si votre entreprise utilise l'IA pour le recrutement, l'évaluation du crédit, la modération de contenu, le profilage client ou la prise de décision automatisée — vous êtes presque certainement concerné. Même les outils d'IA sur étagère peuvent déclencher des obligations de déployeur au titre du règlement.</p>
+        <p class="ent-body">La question n'est pas de savoir si vous devez vous conformer. C'est de savoir si vous le ferez de manière proactive ou sous la pression d'un contrôle.</p>
+      </section>
+
+      <section class="ent-section">
+        <span class="ent-label">Comment nous aidons</span>
+        <div class="ent-services">
+          <div class="ent-service">
+            <h3>Audit de conformité &amp; analyse d'écart</h3>
+            <p>Nous cartographions chaque système d'IA de votre organisation au regard des exigences du règlement européen sur l'IA. Vous obtenez une vision claire de votre exposition au risque, de votre catégorie d'obligation (fournisseur, déployeur, distributeur) et d'une feuille de route de remédiation priorisée.</p>
+            <p class="ent-deliverable"><strong>Livrable</strong>Un rapport d'audit complet avec classification des risques, analyse d'écart et un calendrier de conformité actionnable.</p>
+          </div>
+          <div class="ent-service">
+            <h3>Évaluation &amp; atténuation des risques</h3>
+            <p>Pour chaque système d'IA classé à haut risque, nous menons une évaluation structurée selon le cadre du règlement. Nous identifions les modes de défaillance, les vecteurs de biais et les lacunes de gouvernance des données — puis nous construisons les contrôles qui les comblent.</p>
+            <p class="ent-deliverable"><strong>Livrable</strong>Une documentation d'évaluation des risques par système, des stratégies d'atténuation et une évaluation du risque résiduel.</p>
+          </div>
+          <div class="ent-service">
+            <h3>Observabilité &amp; traçage des agents</h3>
+            <p>On ne peut pas gouverner ce qu'on ne voit pas. Nous mettons en place le traçage, la journalisation et le monitoring de vos agents d'IA pour que chaque décision soit enregistrée, explicable et auditable. Quand le régulateur demande pourquoi un système a pris une décision — vous avez la réponse.</p>
+            <p class="ent-deliverable"><strong>Livrable</strong>Une infrastructure d'observabilité déployée, avec tableaux de bord, alertes et exports de journaux prêts pour l'audit.</p>
+          </div>
+          <div class="ent-service">
+            <h3>Documentation technique &amp; reporting</h3>
+            <p>Le règlement européen sur l'IA exige une documentation étendue : registres de gouvernance des données, descriptions d'architecture système, métriques de performance et protocoles de supervision humaine. Nous rédigeons la documentation qui satisfait aux exigences de l'article 11 — exacte, structurée et maintenable.</p>
+            <p class="ent-deliverable"><strong>Livrable</strong>Un dossier de documentation technique complet aligné sur les exigences de l'annexe IV, prêt pour l'examen réglementaire.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ent-section">
+        <span class="ent-label">Comment nous travaillons</span>
+        <h2>La conformité comme ingénierie, pas comme paperasse.</h2>
+        <p class="ent-body">La plupart des cabinets de conformité vous remettent une checklist et un jeu de slides. Nous nous intégrons à votre équipe d'ingénierie. Nous lisons le code, comprenons l'architecture et construisons la conformité dans le système — pas autour de lui.</p>
+        <ol class="ent-principles">
+          <li><span class="ent-principle-num">01</span><div><h4>La profondeur technique plutôt que les audits de surface</h4><p>Nous ne nous contentons pas de demander « avez-vous de la documentation ? ». Nous vérifions que la documentation correspond au système. Revues d'architecture, traçage des flux de données, évaluation des modèles — le travail qui réduit vraiment le risque.</p></div></li>
+          <li><span class="ent-principle-num">02</span><div><h4>Sur site quand la confidentialité l'exige</h4><p>Certaines données ne peuvent pas quitter les murs. Nous déployons l'outillage d'observabilité et de gouvernance sur votre infrastructure — locale, cloud privé ou isolée si nécessaire.</p></div></li>
+          <li><span class="ent-principle-num">03</span><div><h4>Une conformité durable</h4><p>Nous construisons des processus que votre équipe pourra maintenir après notre départ. Pas d'enfermement propriétaire, pas de plateforme fermée, pas de dépendance à nous pour le fonctionnement courant.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="ent-section">
+        <span class="ent-label">Mission type</span>
+        <ol class="ent-timeline">
+          <li><span class="ent-week">Semaine 1–2</span><span class="ent-phase">Découverte &amp; inventaire des systèmes</span></li>
+          <li><span class="ent-week">Semaine 3–4</span><span class="ent-phase">Évaluation approfondie</span></li>
+          <li><span class="ent-week">Semaine 5–8</span><span class="ent-phase">Mise en œuvre &amp; documentation</span></li>
+          <li><span class="ent-week">Semaine 9–10</span><span class="ent-phase">Revue &amp; passation</span></li>
+        </ol>
+        <p class="ent-note">Les délais varient selon le périmètre. Une mission ciblée sur un seul système d'IA peut être bouclée en 2 à 3 semaines.</p>
+      </section>
+
+      <section class="ent-cta-block">
+        <h2>N'attendez pas l'audit pour découvrir les failles.</h2>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=%C3%89valuation%20de%20conformit%C3%A9">Demander une évaluation de conformité <span class="arrow">→</span></a>
+          <a class="btn btn-ghost" href="mailto:hello@oopuo.com?subject=Questions%20Enterprise">Posez-nous vos questions <span class="arrow">→</span></a>
+        </div>
+      </section>
+    </div>
+  </article>
+
+</main>
+
+<script>
+  /* Page LATÉRALE en mode routeur (Phase 2) (pas une étape du parcours) — déclare son propre `label`. */
+  window.OOPUO = {
+    locale: 'fr', track: 'europe',
+    route: '/fr/enterprise/', label: 'Enterprise', counter: 'EN', sculpture: 1, palette: 'cyan', totalRooms: 6,
+    journey: [
+      { path: '/fr/',          label: 'Arrivée',    sculpture: 1, rooms: [1, 2] },
+      { path: '/fr/services/', label: 'Modules',    sculpture: 3, rooms: [3] },
+      { path: '/fr/studio/',   label: 'Studio',     sculpture: 4, rooms: [4] },
+      { path: '/fr/blog/',     label: 'Blog',       sculpture: 5, palette: 'warm', rooms: [5] },
+      { path: '/fr/contact/',  label: 'Invitation', sculpture: 6, rooms: [6] }
+    ],
+    labels: { rooms: ["Arrivée","Le Fossé","Modules","Studio","Blog","Invitation"], end: "— FIN" }
+  };
+</script>
+<script src="/assets/js/engine.js"></script>
+<link rel="modulepreload" href="/assets/vendor/three/build/three.module.min.js">
+<link rel="modulepreload" href="/assets/vendor/three/examples/jsm/effects/AsciiEffect.js">
+<script type="importmap">
+{
+  "imports": {
+    "three": "/assets/vendor/three/build/three.module.min.js",
+    "three/addons/": "/assets/vendor/three/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="/assets/js/sculpture.js"></script>
+<script src="/assets/js/router.js"></script>
+</body>
+</html>

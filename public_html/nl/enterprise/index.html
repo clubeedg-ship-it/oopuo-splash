@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Meta Pixel — INACTIVE placeholder (D-025/Phase 0). Currently commented out so it loads nothing & logs no console error. TO ACTIVATE: replace both YOUR_META_PIXEL_ID below with your numeric Pixel ID, then uncomment the block by deleting the "PIXEL down" line and the "PIXEL up" line that wrap it. Phase 3 will move this behind the consent gate (PROJECT.md §C.5). -->
+<!-- PIXEL ↓
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','YOUR_META_PIXEL_ID');fbq('track','PageView');</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_META_PIXEL_ID&ev=PageView&noscript=1" alt=""/></noscript>
+PIXEL ↑ -->
+<title>EU AI Act-compliance voor gereguleerde bedrijven · OOPUO</title>
+<meta name="description" content="EU AI Act-compliance, risicobeoordelingen, agent-observability en technische documentatie — van een engineering team dat zowel je AI-systemen als de regelgeving begrijpt. Amsterdam.">
+<link rel="canonical" href="https://oopuo.com/nl/enterprise/">
+<meta name="robots" content="index, follow">
+<link rel="alternate" hreflang="en" href="https://oopuo.com/enterprise/">
+<link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/enterprise/">
+<link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/enterprise/">
+<link rel="alternate" hreflang="x-default" href="https://oopuo.com/enterprise/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://oopuo.com/nl/enterprise/">
+<meta property="og:title" content="Je AI is krachtig. Zorg dat hij ook legaal is.">
+<meta property="og:description" content="EU AI Act-compliance, risicobeoordelingen en technische governance — compliance als engineering, niet als papierwerk.">
+<meta property="og:site_name" content="OOPUO">
+<meta property="og:image" content="https://oopuo.com/og-default.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OOPUO — wij bouwen je AI-systemen.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Je AI is krachtig. Zorg dat hij ook legaal is.">
+<meta name="twitter:description" content="EU AI Act-compliance, risicobeoordelingen en technische governance — compliance als engineering, niet als papierwerk.">
+<meta name="twitter:image" content="https://oopuo.com/og-default.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
+<link rel="stylesheet" href="/assets/css/canvas.css">
+<noscript><style>.room,.ent-page{opacity:1!important;visibility:visible!important;position:relative!important;transform:none!important;height:auto!important}.hud,.scroll-hint,.nav-rail,.col1-rail,.sub-nav{display:none!important}</style></noscript>
+</head>
+<body data-palette="cyan">
+<div class="section-title" aria-hidden="true">
+  <span class="tick"></span>
+  <span class="name" id="section-name" data-num="EN">ENTERPRISE</span>
+</div>
+
+<div class="hud">
+  <div class="tl"><span class="brand"><span class="brand-mark" aria-hidden="true"></span>OOPUO</span></div>
+  <div class="ent"></div>
+  <div class="tr counter"><span class="current">EN</span> <span class="total"></span></div>
+  <div class="br next">NEXT <em id="next-label"></em></div>
+</div>
+
+<nav class="nav-rail" aria-label="Main sections">
+  <button class="nav-node" data-go="1" data-dist="3" aria-label="Aankomst"></button>
+  <button class="nav-node" data-go="2" data-dist="3" aria-label="De Kloof"></button>
+  <button class="nav-node" data-go="3" data-dist="3" aria-label="Modules"></button>
+  <button class="nav-node" data-go="4" data-dist="3" aria-label="Studio"></button>
+  <button class="nav-node" data-go="5" data-dist="3" aria-label="Blog"></button>
+  <button class="nav-node" data-go="6" data-dist="3" aria-label="Uitnodiging"></button>
+</nav>
+
+<nav class="col1-rail" aria-label="Module sub-pages">
+  <button class="col1-node" data-sub="1" aria-label="Overzicht"></button>
+  <button class="col1-node" data-sub="2" aria-label="Voorbeelden"></button>
+  <button class="col1-node" data-sub="3" aria-label="Proces"></button>
+  <button class="col1-node" data-sub="4" aria-label="Prijzen"></button>
+</nav>
+
+<div class="sculpture" id="sculpture" aria-hidden="true"></div>
+<div class="scroll-hint"></div>
+
+<nav class="sub-nav" aria-label="Sub-page navigation">
+  <button class="sub-nav-btn sub-nav-prev" id="sub-nav-prev" type="button">
+    <span class="sub-nav-arrow" aria-hidden="true">←</span>
+    <span class="sub-nav-label" id="sub-nav-prev-label"><span class="sub-nav-step">PREV</span><span class="sub-nav-name">—</span></span>
+  </button>
+  <button class="sub-nav-btn sub-nav-next" id="sub-nav-next" type="button">
+    <span class="sub-nav-label" id="sub-nav-next-label"><span class="sub-nav-step">NEXT</span><span class="sub-nav-name">—</span></span>
+    <span class="sub-nav-arrow" aria-hidden="true">→</span>
+  </button>
+</nav>
+
+<main class="stage" id="main" tabindex="-1">
+
+  <article class="ent-page active" id="ent-page">
+    <div class="ent-inner">
+      <a class="reader-back" href="/nl/">← Terug naar OOPUO</a>
+
+      <header>
+        <span class="ent-label">Voor gereguleerde bedrijven</span>
+        <h1 class="ent-h1">Je AI is krachtig.<br>Zorg dat hij ook legaal is.</h1>
+        <p class="ent-sub">EU AI Act-compliance, risicobeoordelingen en technische governance — van een engineering team dat zowel je systemen als de regelgeving begrijpt.</p>
+        <div class="btn-row"><a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=Compliance%20Assessment">Vraag een Compliance Assessment aan <span class="arrow">→</span></a></div>
+      </header>
+
+      <section class="ent-section">
+        <h2>De EU AI Act komt niet. Hij is er al.</h2>
+        <p class="ent-body">De regelgeving trad in augustus 2024 in werking. Verboden op onaanvaardbare AI-praktijken gelden vanaf februari 2025. De eisen voor hoogrisico-systemen treffen je vanaf augustus 2026. De compliance-klok loopt al.</p>
+        <div class="ent-facts">
+          <div class="ent-fact"><div class="ent-fact-val">€35M</div><div class="ent-fact-label">Maximale boete voor verboden AI-praktijken</div></div>
+          <div class="ent-fact"><div class="ent-fact-val">7%</div><div class="ent-fact-label">Van de wereldwijde jaaromzet voor de zwaarste overtredingen</div></div>
+          <div class="ent-fact"><div class="ent-fact-val">Art. 6–49</div><div class="ent-fact-label">Verplichtingen voor gebruiksverantwoordelijken van hoogrisico-AI-systemen</div></div>
+        </div>
+        <p class="ent-body">Gebruikt je bedrijf AI voor werving, kredietscoring, contentmoderatie, klantprofilering of geautomatiseerde besluitvorming — dan val je vrijwel zeker binnen de scope. Zelfs kant-en-klare AI-tools kunnen verplichtingen voor gebruiksverantwoordelijken triggeren onder de wet.</p>
+        <p class="ent-body">De vraag is niet óf je moet voldoen. Het is of je het proactief doet of onder druk van handhaving.</p>
+      </section>
+
+      <section class="ent-section">
+        <span class="ent-label">Hoe we helpen</span>
+        <div class="ent-services">
+          <div class="ent-service">
+            <h3>Compliance-audit &amp; gap-analyse</h3>
+            <p>We brengen elk AI-systeem in je organisatie in kaart tegen de eisen van de EU AI Act. Je krijgt een helder beeld van je risicoblootstelling, je categorie (aanbieder, gebruiksverantwoordelijke, distributeur) en een geprioriteerde remediatie-roadmap.</p>
+            <p class="ent-deliverable"><strong>Oplevering</strong>Een volledig auditrapport met risicoclassificatie, gap-analyse en een werkbare compliance-tijdlijn.</p>
+          </div>
+          <div class="ent-service">
+            <h3>Risicobeoordeling &amp; -mitigatie</h3>
+            <p>Voor elk als hoogrisico geclassificeerd AI-systeem voeren we een gestructureerde risicobeoordeling uit volgens het kader van de regelgeving. We identificeren faalmodi, biasvectoren en gaten in datagovernance — en bouwen de controles die ze dichten.</p>
+            <p class="ent-deliverable"><strong>Oplevering</strong>Risicobeoordelingsdocumentatie per systeem, mitigatiestrategieën en een evaluatie van het restrisico.</p>
+          </div>
+          <div class="ent-service">
+            <h3>Agent-observability &amp; tracing</h3>
+            <p>Je kunt niet besturen wat je niet ziet. We implementeren tracing, logging en monitoring over je AI-agents zodat elke beslissing wordt vastgelegd, uitlegbaar en auditbaar is. Vraagt de toezichthouder waarom een systeem een beslissing nam — dan heb jij het antwoord.</p>
+            <p class="ent-deliverable"><strong>Oplevering</strong>Observability-infrastructuur uitgerold, met dashboards, alerting en audit-klare log-exports.</p>
+          </div>
+          <div class="ent-service">
+            <h3>Technische documentatie &amp; rapportage</h3>
+            <p>De EU AI Act vereist uitgebreide documentatie: datagovernance-records, beschrijvingen van de systeemarchitectuur, prestatiemetrieken en protocollen voor menselijk toezicht. Wij schrijven de documentatie die voldoet aan de eisen van artikel 11 — accuraat, gestructureerd en onderhoudbaar.</p>
+            <p class="ent-deliverable"><strong>Oplevering</strong>Compleet pakket technische documentatie afgestemd op de eisen van Bijlage IV, klaar voor toetsing door de toezichthouder.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ent-section">
+        <span class="ent-label">Hoe we werken</span>
+        <h2>Compliance als engineering, niet als papierwerk.</h2>
+        <p class="ent-body">De meeste compliance-bureaus geven je een checklist en een slidedeck. Wij sluiten aan bij je engineering team. We lezen de code, begrijpen de architectuur en bouwen compliance ín het systeem — niet eromheen.</p>
+        <ol class="ent-principles">
+          <li><span class="ent-principle-num">01</span><div><h4>Technische diepgang boven oppervlakkige audits</h4><p>We vragen niet alleen "heb je documentatie?" We verifiëren dat de documentatie klopt met het systeem. Architectuurreviews, het tracen van datastromen, modelevaluatie — het werk dat het risico echt verlaagt.</p></div></li>
+          <li><span class="ent-principle-num">02</span><div><h4>On-premise wanneer privacy dat eist</h4><p>Sommige data mag het pand niet verlaten. We rollen observability- en governancetooling uit op jouw infrastructuur — lokaal, private cloud of air-gapped indien nodig.</p></div></li>
+          <li><span class="ent-principle-num">03</span><div><h4>Houdbare compliance</h4><p>We bouwen processen die je team kan onderhouden nadat we weg zijn. Geen vendor lock-in, geen propriëtaire platforms, geen afhankelijkheid van ons voor de doorlopende werking.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="ent-section">
+        <span class="ent-label">Typische opdracht</span>
+        <ol class="ent-timeline">
+          <li><span class="ent-week">Week 1–2</span><span class="ent-phase">Kennismaking &amp; systeeminventarisatie</span></li>
+          <li><span class="ent-week">Week 3–4</span><span class="ent-phase">Diepgaande beoordeling</span></li>
+          <li><span class="ent-week">Week 5–8</span><span class="ent-phase">Implementatie &amp; documentatie</span></li>
+          <li><span class="ent-week">Week 9–10</span><span class="ent-phase">Review &amp; overdracht</span></li>
+        </ol>
+        <p class="ent-note">Tijdlijnen variëren per scope. Een gerichte opdracht op één AI-systeem kan in 2–3 weken klaar zijn.</p>
+      </section>
+
+      <section class="ent-cta-block">
+        <h2>Wacht niet tot de audit de gaten vindt.</h2>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=Compliance%20Assessment">Vraag een Compliance Assessment aan <span class="arrow">→</span></a>
+          <a class="btn btn-ghost" href="mailto:hello@oopuo.com?subject=Enterprise%20vragen">Stuur ons je vragen <span class="arrow">→</span></a>
+        </div>
+      </section>
+    </div>
+  </article>
+
+</main>
+
+<script>
+  /* Phase 2 router-mode SIDE pagina (geen journey-stop) — declareert eigen `label`. */
+  window.OOPUO = {
+    locale: 'nl', track: 'europe',
+    route: '/nl/enterprise/', label: 'Enterprise', counter: 'EN', sculpture: 1, palette: 'cyan', totalRooms: 6,
+    journey: [
+      { path: '/nl/',          label: 'Aankomst',    sculpture: 1, rooms: [1, 2] },
+      { path: '/nl/services/', label: 'Modules',     sculpture: 3, rooms: [3] },
+      { path: '/nl/studio/',   label: 'Studio',      sculpture: 4, rooms: [4] },
+      { path: '/nl/blog/',     label: 'Blog',        sculpture: 5, palette: 'warm', rooms: [5] },
+      { path: '/nl/contact/',  label: 'Uitnodiging', sculpture: 6, rooms: [6] }
+    ],
+    labels: { rooms: ["Aankomst","De Kloof","Modules","Studio","Blog","Uitnodiging"], end: "— EINDE" }
+  };
+</script>
+<script src="/assets/js/engine.js"></script>
+<link rel="modulepreload" href="/assets/vendor/three/build/three.module.min.js">
+<link rel="modulepreload" href="/assets/vendor/three/examples/jsm/effects/AsciiEffect.js">
+<script type="importmap">
+{
+  "imports": {
+    "three": "/assets/vendor/three/build/three.module.min.js",
+    "three/addons/": "/assets/vendor/three/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="/assets/js/sculpture.js"></script>
+<script src="/assets/js/router.js"></script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Meta Pixel — INACTIVE placeholder (D-025/Phase 0). Currently commented out so it loads nothing & logs no console error. TO ACTIVATE: replace both YOUR_META_PIXEL_ID below with your numeric Pixel ID, then uncomment the block by deleting the "PIXEL down" line and the "PIXEL up" line that wrap it. Phase 3 will move this behind the consent gate (PROJECT.md §C.5). -->
+<!-- PIXEL ↓
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','YOUR_META_PIXEL_ID');fbq('track','PageView');</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_META_PIXEL_ID&ev=PageView&noscript=1" alt=""/></noscript>
+PIXEL ↑ -->
+<title>Observabilité des agents : garder ses systèmes d'IA conformes. · OOPUO</title>
+<meta name="description" content="Si les projets d'IA échouent à l'audit, ce n'est généralement pas à cause du modèle. C'est que personne ne peut répondre aux questions de base : qu'a-t-il fait, quand, avec quelle entrée, et pourquoi ?">
+<link rel="canonical" href="https://oopuo.com/fr/blog/agent-observability-compliance/">
+<meta name="robots" content="index, follow">
+<link rel="alternate" hreflang="en" href="https://oopuo.com/blog/agent-observability-compliance/">
+<link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/blog/agent-observability-compliance/">
+<link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/blog/agent-observability-compliance/">
+<link rel="alternate" hreflang="x-default" href="https://oopuo.com/blog/agent-observability-compliance/">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://oopuo.com/fr/blog/agent-observability-compliance/">
+<meta property="og:title" content="Observabilité des agents : garder ses systèmes d'IA conformes.">
+<meta property="og:description" content="Si les projets d'IA échouent à l'audit, ce n'est pas à cause du modèle — c'est que personne ne peut dire ce qu'il a fait, quand, avec quelle entrée et pourquoi.">
+<meta property="og:site_name" content="OOPUO">
+<meta property="og:image" content="https://oopuo.com/og-default.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OOPUO — nous construisons vos systèmes d'IA.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Observabilité des agents : garder ses systèmes d'IA conformes.">
+<meta name="twitter:description" content="Si les projets d'IA échouent à l'audit, ce n'est pas à cause du modèle — c'est que personne ne peut dire ce qu'il a fait, quand, avec quelle entrée et pourquoi.">
+<meta name="twitter:image" content="https://oopuo.com/og-default.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
+<link rel="stylesheet" href="/assets/css/canvas.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Observabilité des agents : garder ses systèmes d'IA conformes.","datePublished":"2026-03-01","author":{"@type":"Organization","name":"OOPUO"},"publisher":{"@type":"Organization","name":"OOPUO"},"mainEntityOfPage":"https://oopuo.com/fr/blog/agent-observability-compliance/"}</script>
+<noscript><style>.room,.ent-page{opacity:1!important;visibility:visible!important;position:relative!important;transform:none!important;height:auto!important}.hud,.scroll-hint,.nav-rail,.col1-rail,.sub-nav{display:none!important}</style></noscript>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Accueil","item":"https://oopuo.com/fr/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://oopuo.com/fr/blog/"},{"@type":"ListItem","position":3,"name":"Observabilité des agents & conformité","item":"https://oopuo.com/fr/blog/agent-observability-compliance/"}]}</script>
+</head>
+<body data-room="5" data-palette="warm">
+<div class="section-title" aria-hidden="true">
+  <span class="tick"></span>
+  <span class="name" id="section-name" data-num="05">BLOG</span>
+</div>
+
+<div class="hud">
+  <div class="tl"><span class="brand"><span class="brand-mark" aria-hidden="true"></span>OOPUO</span></div>
+  <div class="ent"><a href="/fr/enterprise/">Enterprise →</a></div>
+  <div class="tr counter"><span class="current">05</span> <span class="total">/ 06</span></div>
+  <div class="br next">NEXT <em id="next-label">— FIN</em></div>
+</div>
+
+<nav class="nav-rail" aria-label="Main sections">
+  <button class="nav-node" data-go="1" data-dist="3" aria-label="Arrivée"></button>
+  <button class="nav-node" data-go="2" data-dist="3" aria-label="Le Fossé"></button>
+  <button class="nav-node" data-go="3" data-dist="3" aria-label="Modules"></button>
+  <button class="nav-node" data-go="4" data-dist="3" aria-label="Studio"></button>
+  <button class="nav-node" data-go="5" data-dist="3" aria-label="Blog"></button>
+  <button class="nav-node" data-go="6" data-dist="3" aria-label="Invitation"></button>
+</nav>
+
+<nav class="col1-rail" aria-label="Module sub-pages">
+  <button class="col1-node" data-sub="1" aria-label="Overview"></button>
+  <button class="col1-node" data-sub="2" aria-label="Examples"></button>
+  <button class="col1-node" data-sub="3" aria-label="Process"></button>
+  <button class="col1-node" data-sub="4" aria-label="Pricing"></button>
+</nav>
+
+<div class="sculpture" id="sculpture" aria-hidden="true"></div>
+<div class="scroll-hint"></div>
+
+<nav class="sub-nav" aria-label="Sub-page navigation">
+  <button class="sub-nav-btn sub-nav-prev" id="sub-nav-prev" type="button">
+    <span class="sub-nav-arrow" aria-hidden="true">←</span>
+    <span class="sub-nav-label" id="sub-nav-prev-label"><span class="sub-nav-step">PREV</span><span class="sub-nav-name">—</span></span>
+  </button>
+  <button class="sub-nav-btn sub-nav-next" id="sub-nav-next" type="button">
+    <span class="sub-nav-label" id="sub-nav-next-label"><span class="sub-nav-step">NEXT</span><span class="sub-nav-name">—</span></span>
+    <span class="sub-nav-arrow" aria-hidden="true">→</span>
+  </button>
+</nav>
+
+<main class="stage" id="main" tabindex="-1">
+
+  <article class="ent-page active" id="ent-page">
+    <div class="ent-inner">
+      <a class="reader-back" href="/fr/blog/">← Tous les articles</a>
+
+      <header>
+        <span class="ent-label">Conformité · Mar 2026</span>
+        <h1 class="ent-h1">Observabilité des agents : garder ses systèmes d'IA conformes.</h1>
+        <p class="ent-sub">Si les projets d'IA échouent à l'audit, ce n'est généralement pas à cause du modèle. C'est que personne ne peut répondre aux questions de base : qu'a-t-il fait, quand, avec quelle entrée, et pourquoi ?</p>
+      </header>
+
+      <section class="ent-section">
+        <p class="ent-body">L'observabilité résout ce problème. C'est la couche d'infrastructure rébarbative sous chaque système d'IA qui doit rendre des comptes à quelqu'un — clients, auditeurs, régulateurs, votre propre équipe ops.</p>
+      </section>
+
+      <section class="ent-section">
+        <h2>Ce qu'il faut journaliser, au minimum</h2>
+        <p class="ent-body">Pour chaque appel d'agent :</p>
+        <ul>
+          <li><strong>Requête</strong> — le prompt complet envoyé au modèle, avec des règles de masquage pour les données personnelles.</li>
+          <li><strong>Contexte</strong> — quels outils ou sources de données étaient à la disposition de l'agent à ce moment-là. Versionné. Le même prompt avec un contexte RAG différent donne des réponses différentes.</li>
+          <li><strong>Réponse</strong> — la sortie complète du modèle. Le nombre de tokens. La latence.</li>
+          <li><strong>Appels d'outils</strong> — quels outils l'agent a appelés, avec leurs arguments. Chaque appel d'outil a son propre span.</li>
+          <li><strong>Résultat</strong> — a-t-il abouti ? A-t-il transféré à un humain ? L'utilisateur a-t-il accepté le résultat ?</li>
+          <li><strong>Identité</strong> — qui l'a déclenché, et pour le compte de qui.</li>
+        </ul>
+        <p class="ent-body">C'est le minimum pour pouvoir reconstituer ce qui s'est passé sur n'importe quelle interaction donnée.</p>
+      </section>
+
+      <section class="ent-section">
+        <h2>Quoi faire des journaux</h2>
+        <p class="ent-body">Trois choses, par ordre d'importance :</p>
+        <ol>
+          <li><strong>Les rendre interrogeables.</strong> « Montre-moi chaque appel où l'agent a recommandé X » devrait prendre 10 secondes. Si les journaux n'existent que sous forme de vidage de texte, ce n'est pas vraiment de l'observabilité.</li>
+          <li><strong>Alerter sur la dérive.</strong> Pic de latence, taux d'hallucination qui grimpe, changement soudain du taux de correction par l'utilisateur — ce sont les indicateurs avancés d'un système qui se dégrade.</li>
+          <li><strong>Exporter pour l'audit.</strong> Quand quelqu'un demande « montrez-moi tout ce que vous avez fait pour le client Y entre les dates A et B », vous le produisez en une seule requête.</li>
+        </ol>
+      </section>
+
+      <section class="ent-section">
+        <h2>L'angle conformité</h2>
+        <p class="ent-body">Le règlement européen sur l'IA exige explicitement la journalisation pour les systèmes d'IA à haut risque, avec une conservation pendant toute la durée de vie du système plus 10 ans. Le RGPD y ajoute le droit à l'explication. Les réglementations sectorielles (autorités financières, dispositifs médicaux, etc.) se superposent.</p>
+        <p class="ent-body">Vous n'avez pas besoin d'être dans un secteur très réglementé pour en profiter. La plupart des clients découvrent que le simple fait d'avoir des journaux transforme leur rapport au système — ils cessent de lui faire confiance par foi et commencent à lui faire confiance sur preuves.</p>
+      </section>
+
+      <section class="ent-section">
+        <h2>Ce que nous livrons</h2>
+        <p class="ent-body">Une couche d'observabilité standard, c'est une demi-journée de mise en place pour un nouveau client. Des traces OpenTelemetry, une petite instance ClickHouse, un tableau de bord Grafana, des politiques de rétention câblées à votre classification des données. Le tout posé sous le fournisseur de LLM que vous utilisez.</p>
+        <p class="ent-body">Si votre IA est en production et que vous ne pouvez pas sortir une trace complète des interactions d'hier, vous n'êtes pas prêt pour l'audit inévitable. Réglez ça maintenant, pas après.</p>
+      </section>
+
+      <div class="btn-row"><a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=Parler%20%C3%A0%20OOPUO">Parlons-en <span class="arrow">→</span></a></div>
+
+      <nav class="reader-nav">
+        <a class="prev" href="/fr/blog/ai-automations-20-hours-week/">
+          <span>← Précédent</span>
+          <span class="title-hint">Les automatisations IA qui font gagner 20 h et plus par semaine aux PME</span>
+        </a>
+      </nav>
+    </div>
+  </article>
+
+</main>
+
+<script>
+  /* Page LATÉRALE en mode routeur (Phase 2) (pas une étape du parcours) — déclare son propre `label`. */
+  window.OOPUO = {
+    locale: 'fr', track: 'europe',
+    route: '/fr/blog/agent-observability-compliance/', label: 'Blog', counter: '05', sculpture: 5, palette: 'warm', totalRooms: 6,
+    journey: [
+      { path: '/fr/',          label: 'Arrivée',    sculpture: 1, rooms: [1, 2] },
+      { path: '/fr/services/', label: 'Modules',    sculpture: 3, rooms: [3] },
+      { path: '/fr/studio/',   label: 'Studio',     sculpture: 4, rooms: [4] },
+      { path: '/fr/blog/',     label: 'Blog',       sculpture: 5, palette: 'warm', rooms: [5] },
+      { path: '/fr/contact/',  label: 'Invitation', sculpture: 6, rooms: [6] }
+    ],
+    labels: { rooms: ["Arrivée","Le Fossé","Modules","Studio","Blog","Invitation"], end: "— FIN" }
+  };
+</script>
+<script src="/assets/js/engine.js"></script>
+<link rel="modulepreload" href="/assets/vendor/three/build/three.module.min.js">
+<link rel="modulepreload" href="/assets/vendor/three/examples/jsm/effects/AsciiEffect.js">
+<script type="importmap">
+{
+  "imports": {
+    "three": "/assets/vendor/three/build/three.module.min.js",
+    "three/addons/": "/assets/vendor/three/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="/assets/js/sculpture.js"></script>
+<script src="/assets/js/router.js"></script>
+</body>
+</html>

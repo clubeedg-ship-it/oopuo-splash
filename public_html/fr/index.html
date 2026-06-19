@@ -3,6 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<script>
+/* Shim de redirection des hash (Phase 2) — les anciens liens single-page (#03/M.01/2, #05/POST.01, #enterprise…)
+   résolus contre "/fr/", désormais en mode routeur. On les redirige vers leurs vraies URL avant tout rendu.
+   Les salles 1/2 restent sur "/fr/" (pas de redirection). */
+(function () {
+  var h = location.hash.slice(1); if (!h) return;
+  var ROOM = { 1: null, 2: null, 3: '/fr/services/', 4: '/fr/studio/', 5: '/fr/blog/', 6: '/fr/contact/' };
+  var MOD  = { 1: '/fr/services/websites/', 2: '/fr/services/ai-support/', 3: '/fr/services/automation/', 4: '/fr/services/integrations/' };
+  var POST = { 1: '/fr/blog/eu-ai-act-smb-guide/', 2: '/fr/blog/ai-automations-20-hours-week/', 3: '/fr/blog/agent-observability-compliance/' };
+  var p = h.split('/'), dest = null;
+  if (p[0] === 'enterprise') dest = '/fr/enterprise/';
+  else if (parseInt(p[0], 10) === 3 && p[1] && p[1].indexOf('M.') === 0) dest = MOD[parseInt(p[1].slice(2), 10)] || '/fr/services/';
+  else if (parseInt(p[0], 10) === 5 && p[1] && p[1].indexOf('POST.') === 0) dest = POST[parseInt(p[1].slice(5), 10)] || '/fr/blog/';
+  else dest = ROOM[parseInt(p[0], 10)];
+  if (dest) location.replace(dest);
+})();
+</script>
 <!-- Meta Pixel — INACTIVE placeholder (D-025/Phase 0). Currently commented out so it loads nothing & logs no console error. TO ACTIVATE: replace both YOUR_META_PIXEL_ID below with your numeric Pixel ID, then uncomment the block by deleting the "PIXEL down" line and the "PIXEL up" line that wrap it. Phase 3 will move this behind the consent gate (PROJECT.md §C.5). -->
 <!-- PIXEL ↓
 <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','YOUR_META_PIXEL_ID');fbq('track','PageView');</script>
@@ -35,8 +52,9 @@ PIXEL ↑ -->
 <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
 <link rel="stylesheet" href="/assets/css/canvas.css">
 <noscript><style>.room{opacity:1!important;visibility:visible!important;position:relative!important;transform:none!important;height:auto!important;min-height:100vh}.hud,.scroll-hint,.nav-rail,.col1-rail,.sub-nav{display:none!important}</style></noscript>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"OOPUO","url":"https://oopuo.com/","logo":"https://oopuo.com/oopuo-logo.svg","email":"hello@oopuo.com","description":"Un studio d'ingénierie à Amsterdam qui construit des sites web, de l'automatisation et du support client propulsés par l'IA pour les entreprises européennes.","address":{"@type":"PostalAddress","addressLocality":"Amsterdam","addressCountry":"NL"},"areaServed":"EU"}</script>
 </head>
-<body data-room="1">
+<body data-room="1" data-palette="cyan">
 <div class="section-title" aria-hidden="true">
   <span class="tick"></span>
   <span class="name" id="section-name" data-num="01">ARRIVÉE</span>
@@ -44,14 +62,14 @@ PIXEL ↑ -->
 
 <div class="hud">
   <div class="tl"><span class="brand"><span class="brand-mark" aria-hidden="true"></span>OOPUO</span></div>
-  <div class="ent"></div>
+  <div class="ent"><a href="/fr/enterprise/">Enterprise →</a></div>
   <div class="tr counter"><span class="current">01</span> <span class="total">/ 06</span></div>
-  <div class="br next">NEXT <em id="next-label">— THE GAP</em> ↓</div>
+  <div class="br next">NEXT <em id="next-label">— LE FOSSÉ</em> ↓</div>
 </div>
 
 <nav class="nav-rail" aria-label="Main sections">
-  <button class="nav-node" data-go="1" data-dist="0" aria-label="Arrival"></button>
-  <button class="nav-node" data-go="2" data-dist="1" aria-label="The Gap"></button>
+  <button class="nav-node" data-go="1" data-dist="0" aria-label="Arrivée"></button>
+  <button class="nav-node" data-go="2" data-dist="1" aria-label="Le Fossé"></button>
   <button class="nav-node" data-go="3" data-dist="2" aria-label="Modules"></button>
   <button class="nav-node" data-go="4" data-dist="3" aria-label="Studio"></button>
   <button class="nav-node" data-go="5" data-dist="3" aria-label="Blog"></button>
@@ -79,7 +97,7 @@ PIXEL ↑ -->
   </button>
 </nav>
 
-<div class="stage" role="main" id="main" tabindex="-1">
+<main class="stage" id="main" tabindex="-1">
 
   <section class="room active" data-room="1" data-theme="dark">
     <div class="room-inner">
@@ -87,8 +105,8 @@ PIXEL ↑ -->
       <h1>Nous construisons vos systèmes d'IA. Vous, vous grandissez.</h1>
       <p class="lead">Sites web, automatisation et support client propulsés par l'IA pour les entreprises européennes qui veulent avancer plus vite — <strong>sans recruter d'équipe technique.</strong></p>
       <div class="btn-row">
-        <a class="btn btn-primary" href="#" data-go="3">Voir ce que nous construisons <span class="arrow">→</span></a>
-        <a class="btn btn-ghost" href="#" data-go="6">Réserver un appel <span class="arrow">→</span></a>
+        <a class="btn btn-primary" href="/fr/services/">Voir ce que nous construisons <span class="arrow">→</span></a>
+        <a class="btn btn-ghost" href="/fr/contact/">Réserver un appel gratuit <span class="arrow">→</span></a>
       </div>
     </div>
   </section>
@@ -101,101 +119,24 @@ PIXEL ↑ -->
     </div>
   </section>
 
-  <section class="room" data-room="3">
-    <div class="room-inner">
-      <h2>Quatre modules.<br>Installés.</h2>
-      <div class="modules">
-        <div class="module"><span class="corner">M.01</span><div class="module-tag">Sites web</div><div class="module-title">Sites web sur mesure</div><p class="module-desc">Modernes, rapides, orientés conversion. Chargement en moins d'une seconde, sans la lourdeur de WordPress.</p></div>
-        <div class="module"><span class="corner">M.02</span><div class="module-tag">AI Support</div><div class="module-title">Assistant client 24/7</div><p class="module-desc">Entraîné sur votre produit et votre ton. Transfère à un humain quand il le faut.</p></div>
-        <div class="module"><span class="corner">M.03</span><div class="module-tag">Automatisation</div><div class="module-title">Automatisation des processus</div><p class="module-desc">Saisie de données, rapports, factures, routage des leads — gérés en arrière-plan, de façon fiable.</p></div>
-        <div class="module"><span class="corner">M.04</span><div class="module-tag">Intégrations</div><div class="module-title">Connexions de plateformes</div><p class="module-desc">Votre CRM, votre facturation et vos stocks — qui se parlent. Fini la double saisie.</p></div>
-      </div>
-    </div>
-  </section>
 
-  <section class="room" data-room="4">
-    <div class="room-inner">
-      <h2>Un studio d'ingénierie.<br>Pas une agence.</h2>
-      <p class="lead">Vous voulez que le problème soit réglé — vite, et bien. OOPUO est un studio d'ingénierie conçu exactement pour ça : des ingénieurs seniors qui écrivent du code en production dès la première semaine, sans surcouche d'agence, sans des mois de cadrage. Périmètre fixe, planning fixe. Quand on dit que c'est livré en 4 semaines, c'est livré.</p>
-      <div class="principles">
-        <div class="principle"><div class="principle-num">01</div><h4>L'ingénierie d'abord</h4><p>Pas de slides, pas de théâtre. On écrit le code ; vous voyez un logiciel qui fonctionne dès la première semaine.</p></div>
-        <div class="principle"><div class="principle-num">02</div><h4>Senior de bout en bout</h4><p>Les ingénieurs qui cadrent votre projet sont ceux qui le construisent — et restent dans le code jusqu'à la mise en ligne.</p></div>
-        <div class="principle"><div class="principle-num">03</div><h4>Périmètre fixe</h4><p>Un prix, un planning. Pas de « ça dépend », pas de dérive de périmètre, pas de surprises.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="room" data-room="5">
-    <div class="room-inner">
-      <h1 class="blog-title">Approche</h1>
-      <p class="lead" style="max-width:640px">Un processus clair, un planning fixe. Pas de « ça dépend ».</p>
-      <div class="principles" style="margin-top:32px">
-        <div class="principle"><div class="principle-num">01</div><h4>Premier échange</h4><p>30 minutes. Vous dites ce qui prend du temps ; on identifie les deux ou trois leviers à plus fort impact.</p></div>
-        <div class="principle"><div class="principle-num">02</div><h4>Construction & livraison</h4><p>Périmètre clair, prix fixe. On construit, on teste, on lance — souvent en 1 à 4 semaines.</p></div>
-        <div class="principle"><div class="principle-num">03</div><h4>Support & itération</h4><p>Les choses changent. On est là pour les ajustements, le suivi et la montée en charge.</p></div>
-      </div>
-      <p class="lead" style="margin-top:28px">Vos données et celles de vos clients sont traitées conformément au <strong>RGPD</strong>.</p>
-    </div>
-  </section>
-
-  <section class="room" data-room="6" data-theme="dark">
-    <div class="room-inner">
-      <h2>Prêt à récupérer<br>votre temps ?</h2>
-      <p class="lead">Un appel de 30 minutes suffit pour savoir quels systèmes vous rapporteront le plus. Sans argumentaire de vente.</p>
-      <div class="stats">
-        <div class="stat"><div class="stat-val">20+</div><div class="stat-label">heures/semaine gagnées</div></div>
-        <div class="stat"><div class="stat-val">&lt;2 sem.</div><div class="stat-label">livraison typique</div></div>
-        <div class="stat"><div class="stat-val">€0</div><div class="stat-label">de licences WP</div></div>
-      </div>
-      <div class="btn-row" style="margin-top:40px">
-        <!-- HubSpot Meetings · portal 148607612 / eu1 · slug placeholder https://meetings-eu1.hubspot.com/oopuo — créez votre Meeting gratuit et remettez le vrai lien sur le bouton. En attendant : mailto (ne 404 pas). -->
-        <a class="btn btn-warm" href="mailto:hello@oopuo.com?subject=R%C3%A9server%20un%20appel%20avec%20OOPUO">Réserver un appel <span class="arrow">→</span></a>
-      </div>
-      <!-- E-mail direct (toujours fonctionnel) + formulaire HubSpot new-builder en placeholder INERTE.
-           ACTIVER : créez le formulaire FR dans HubSpot (new builder) et remplacez YOUR_FR_HUBSPOT_FORM_ID
-           ci-dessous par le vrai form-ID. Avec le placeholder YOUR_…, RIEN ne se charge depuis HubSpot (aucun appel pré-consentement). -->
-      <p class="lead" style="margin-top:28px">Vous préférez écrire ? <a href="mailto:hello@oopuo.com?subject=Question%20%C3%A0%20OOPUO" style="color:var(--teal)">hello@oopuo.com</a></p>
-      <div class="hs-form-wrap">
-        <div class="hs-form-frame" data-region="eu1" data-form-id="YOUR_FR_HUBSPOT_FORM_ID" data-portal-id="148607612"></div>
-      </div>
-      <script>
-        /* INERTE tant qu'un vrai form-ID n'est pas défini : avec le placeholder YOUR_…, ceci ne charge RIEN
-           depuis HubSpot (aucun appel pré-consentement). Mettez le vrai form-ID FR dans la div ci-dessus
-           pour activer ; l'embed se charge alors seulement quand la salle de contact est visible. */
-        (function () {
-          var frame = document.querySelector('.room[data-room="6"] .hs-form-frame');
-          var id = frame ? frame.getAttribute('data-form-id') : '';
-          if (!frame || /^YOUR_/.test(id)) return;
-          var loaded = false;
-          function load() { if (loaded) return; loaded = true;
-            var s = document.createElement('script');
-            s.src = 'https://js-eu1.hsforms.net/forms/embed/148607612.js';
-            document.body.appendChild(s);
-          }
-          var r6 = document.querySelector('.room[data-room="6"]');
-          if (!r6) return;
-          if (r6.classList.contains('active')) load();
-          new MutationObserver(function () { if (r6.classList.contains('active')) load(); })
-            .observe(r6, { attributes: true, attributeFilter: ['class'] });
-        })();
-      </script>
-    </div>
-  </section>
-
-  <!-- Europe module sub-rooms removed for the Brazil (pt-BR) track — D-018. -->
-  <!-- The three offers live as static cards in room 3 (Soluções); no drill-down. -->
-
-  <!-- Blog-readers + Enterprise overlay removed for the Brazil (pt-BR) track — D-018.
-       FR secondary locale: these are EN-only at launch (deferred). -->
-
-</div>
+</main>
 
 
 <script>
-  /* Config par page pour le moteur partagé (assets/js/engine.js). Libellés localisés + libellé de fin. */
+  /* HOME en mode routeur (Phase 2) — salles 1+2 (Arrivée + Le Fossé) avec snap interne ; journey =
+     les routes ordonnées que la coque persistante traverse. */
   window.OOPUO = {
     locale: 'fr', track: 'europe',
-    labels: { rooms: ["Arrivée","Le Fossé","Modules","Studio","Approche","Invitation"], end: "— FIN" }
+    route: '/fr/', rooms: [1, 2], sculpture: 1, palette: 'cyan', index: 0, totalRooms: 6,
+    journey: [
+      { path: '/fr/',          label: 'Arrivée',    sculpture: 1, rooms: [1, 2] },
+      { path: '/fr/services/', label: 'Modules',    sculpture: 3, rooms: [3] },
+      { path: '/fr/studio/',   label: 'Studio',     sculpture: 4, rooms: [4] },
+      { path: '/fr/blog/',     label: 'Blog',       sculpture: 5, palette: 'warm', rooms: [5] },
+      { path: '/fr/contact/',  label: 'Invitation', sculpture: 6, rooms: [6] }
+    ],
+    labels: { rooms: ["Arrivée","Le Fossé","Modules","Studio","Blog","Invitation"], end: "— FIN" }
   };
 </script>
 <script src="/assets/js/engine.js"></script>
@@ -210,5 +151,6 @@ PIXEL ↑ -->
 }
 </script>
 <script type="module" src="/assets/js/sculpture.js"></script>
+<script src="/assets/js/router.js"></script>
 </body>
 </html>

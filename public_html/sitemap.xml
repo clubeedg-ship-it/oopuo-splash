@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <!-- EN (Europe) — split multi-page (Phase 2). Home carries the 4-locale hreflang set;
-       deeper EN pages are EN-only for now (NL/FR/pt-br split per-track later). -->
   <url>
     <loc>https://oopuo.com/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/"/>
@@ -11,19 +9,90 @@
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://oopuo.com/pt-br/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/"/>
   </url>
-  <url><loc>https://oopuo.com/services/</loc></url>
-  <url><loc>https://oopuo.com/services/websites/</loc></url>
-  <url><loc>https://oopuo.com/services/ai-support/</loc></url>
-  <url><loc>https://oopuo.com/services/automation/</loc></url>
-  <url><loc>https://oopuo.com/services/integrations/</loc></url>
-  <url><loc>https://oopuo.com/studio/</loc></url>
-  <url><loc>https://oopuo.com/enterprise/</loc></url>
-  <url><loc>https://oopuo.com/blog/</loc></url>
-  <url><loc>https://oopuo.com/blog/eu-ai-act-smb-guide/</loc></url>
-  <url><loc>https://oopuo.com/blog/ai-automations-20-hours-week/</loc></url>
-  <url><loc>https://oopuo.com/blog/agent-observability-compliance/</loc></url>
-  <url><loc>https://oopuo.com/contact/</loc></url>
-  <!-- NL / FR (Europe) + pt-br (Brazil) — still single-page canvases -->
+  <url>
+    <loc>https://oopuo.com/services/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/services/websites/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/websites/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/websites/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/websites/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/websites/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/services/ai-support/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/ai-support/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/ai-support/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/ai-support/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/ai-support/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/services/automation/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/automation/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/automation/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/automation/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/automation/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/services/integrations/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/integrations/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/integrations/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/integrations/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/integrations/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/studio/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/studio/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/studio/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/studio/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/studio/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/enterprise/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/enterprise/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/enterprise/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/enterprise/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/enterprise/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/blog/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/blog/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/blog/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/blog/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/blog/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/blog/eu-ai-act-smb-guide/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/blog/eu-ai-act-smb-guide/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/blog/eu-ai-act-smb-guide/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/blog/eu-ai-act-smb-guide/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/blog/eu-ai-act-smb-guide/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/blog/ai-automations-20-hours-week/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/blog/ai-automations-20-hours-week/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/blog/ai-automations-20-hours-week/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/blog/ai-automations-20-hours-week/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/blog/ai-automations-20-hours-week/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/blog/agent-observability-compliance/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/blog/agent-observability-compliance/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/blog/agent-observability-compliance/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/blog/agent-observability-compliance/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/blog/agent-observability-compliance/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/contact/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/contact/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/contact/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/contact/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/contact/"/>
+  </url>
   <url>
     <loc>https://oopuo.com/nl/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/"/>
@@ -33,12 +102,180 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/"/>
   </url>
   <url>
+    <loc>https://oopuo.com/nl/services/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/nl/services/websites/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/websites/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/websites/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/websites/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/websites/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/nl/services/ai-support/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/ai-support/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/ai-support/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/ai-support/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/ai-support/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/nl/services/automation/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/automation/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/automation/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/automation/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/automation/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/nl/services/integrations/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/integrations/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/integrations/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/integrations/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/integrations/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/nl/studio/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/studio/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/studio/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/studio/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/studio/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/nl/enterprise/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/enterprise/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/enterprise/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/enterprise/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/enterprise/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/nl/blog/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/blog/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/blog/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/blog/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/blog/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/nl/blog/eu-ai-act-smb-guide/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/blog/eu-ai-act-smb-guide/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/blog/eu-ai-act-smb-guide/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/blog/eu-ai-act-smb-guide/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/blog/eu-ai-act-smb-guide/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/nl/blog/ai-automations-20-hours-week/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/blog/ai-automations-20-hours-week/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/blog/ai-automations-20-hours-week/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/blog/ai-automations-20-hours-week/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/blog/ai-automations-20-hours-week/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/nl/blog/agent-observability-compliance/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/blog/agent-observability-compliance/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/blog/agent-observability-compliance/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/blog/agent-observability-compliance/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/blog/agent-observability-compliance/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/nl/contact/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/contact/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/contact/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/contact/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/contact/"/>
+  </url>
+  <url>
     <loc>https://oopuo.com/fr/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/"/>
     <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/"/>
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://oopuo.com/pt-br/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/fr/services/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/fr/services/websites/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/websites/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/websites/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/websites/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/websites/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/fr/services/ai-support/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/ai-support/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/ai-support/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/ai-support/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/ai-support/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/fr/services/automation/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/automation/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/automation/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/automation/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/automation/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/fr/services/integrations/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/services/integrations/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/services/integrations/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/services/integrations/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/services/integrations/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/fr/studio/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/studio/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/studio/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/studio/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/studio/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/fr/enterprise/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/enterprise/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/enterprise/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/enterprise/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/enterprise/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/fr/blog/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/blog/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/blog/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/blog/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/blog/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/fr/blog/eu-ai-act-smb-guide/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/blog/eu-ai-act-smb-guide/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/blog/eu-ai-act-smb-guide/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/blog/eu-ai-act-smb-guide/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/blog/eu-ai-act-smb-guide/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/fr/blog/ai-automations-20-hours-week/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/blog/ai-automations-20-hours-week/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/blog/ai-automations-20-hours-week/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/blog/ai-automations-20-hours-week/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/blog/ai-automations-20-hours-week/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/fr/blog/agent-observability-compliance/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/blog/agent-observability-compliance/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/blog/agent-observability-compliance/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/blog/agent-observability-compliance/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/blog/agent-observability-compliance/"/>
+  </url>
+  <url>
+    <loc>https://oopuo.com/fr/contact/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/contact/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/contact/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://oopuo.com/fr/contact/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/contact/"/>
   </url>
   <url>
     <loc>https://oopuo.com/pt-br/</loc>
