@@ -998,3 +998,100 @@
   @media (prefers-reduced-motion: reduce){
     ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*){ animation: none !important; }
   }
+
+  /* ══ Split hero (Arrival) ═══════════════════════════════════════════════════════
+     The sculpture and the text must never share space — body copy over the bright
+     cyan core was unreadable, worst on mobile.
+
+     The sculpture element KEEPS its full-viewport box. Three.js sizes its renderer to
+     that box, so shrinking the element would distort the render (and the renderer is
+     only notified on window resize, not element resize). We move the ARTWORK with a
+     transform instead, which the renderer never sees. Scoped to [data-room="1"], so
+     the sculpture recentres as you leave Arrival. */
+  body[data-room="1"] .sculpture { transform: translateX(24%); }
+  .sculpture { transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1); }
+  body[data-room="1"] .room[data-room="1"] .room-inner { max-width: min(46vw, 620px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sculpture { transition: opacity 0.7s ease; }
+  }
+
+  /* ══ Deck — the horizontal accordion ════════════════════════════════════════════
+     One component, three levels: the Systems deck, the Lab deck, and the workflow
+     deck inside a case page. Full-height panels; hovering one expands it and the
+     others compress to spines. Clicking activates the panel's real URL. */
+  .room[data-room="2"] .room-inner { max-width: min(1440px, 92vw); }
+
+  .deck-intro { margin: 0 0 22px; max-width: 620px; }
+  /* Height is set by the content, not the viewport: a fixed tall panel left a large void
+     between the copy and the bottom-anchored gain figure. */
+  .deck { display: flex; gap: 10px; height: min(46vh, 430px); }
+
+  .deck-panel {
+    flex: 1 1 0; min-width: 0; position: relative; display: block; overflow: hidden;
+    background: var(--bg-elev); border: 1px solid var(--line-strong);
+    color: inherit; text-decoration: none;
+    transition: flex-grow 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+                background 0.3s ease, border-color 0.3s ease;
+  }
+  .deck-panel:hover, .deck-panel:focus-visible, .deck-panel.is-open { flex-grow: 3.4; border-color: var(--teal); }
+  .deck-panel:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+
+  /* Spine: the collapsed state. Vertical label, reads bottom-to-top. */
+  .deck-spine {
+    position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center;
+    padding: 0 0 26px; transition: opacity 0.28s ease;
+  }
+  .deck-spine span {
+    writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .deck-panel:hover .deck-spine, .deck-panel:focus-visible .deck-spine, .deck-panel.is-open .deck-spine { opacity: 0; }
+
+  /* Body: the expanded state. */
+  .deck-body {
+    position: absolute; inset: 0; display: flex; flex-direction: column; gap: 10px;
+    padding: 28px 30px 30px; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease 0.12s;
+  }
+  .deck-panel:hover .deck-body, .deck-panel:focus-visible .deck-body, .deck-panel.is-open .deck-body { opacity: 1; }
+  .deck-kicker { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal); }
+  .deck-title { font-family: var(--display); font-weight: 600; font-size: clamp(1.3rem, 2.1vw, 1.9rem); letter-spacing: -0.015em; color: var(--ink); line-height: 1.1; }
+  .deck-panel p { margin: 0; max-width: 46ch; }
+
+  /* The gain: the number is the point, so it gets its own type. */
+  .deck-gain { margin-top: auto; display: flex; flex-direction: column; gap: 3px; font-family: var(--mono); font-size: 12px; }
+  .deck-gain b { font-size: clamp(1.05rem, 1.7vw, 1.45rem); color: var(--teal); font-weight: 600; letter-spacing: -0.01em; }
+  .deck-gain s { text-decoration: line-through; color: var(--ink-faint); }
+
+  /* Status tag — no claim on this site appears without one. */
+  .deck-status { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .deck-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ink-faint); }
+  .deck-status[data-state="running"]::before { background: var(--teal); box-shadow: 0 0 10px var(--teal-glow); }
+  .deck-status[data-state="designed"]::before { background: transparent; border: 1px solid var(--ink-faint); }
+
+  .deck-panel.is-door { background: transparent; }
+  .deck-panel.is-door .deck-title { color: var(--teal); }
+
+  /* Touch + narrow: hover does not exist, so panels stack and tap-expand in place.
+     The first tap opens (engine.js intercepts it); a second tap follows the link. */
+  @media (max-width: 900px) {
+    .room[data-room="2"] .room-inner { max-width: none; }
+    .deck { flex-direction: column; height: auto; gap: 8px; }
+    .deck-panel { flex: 0 0 auto; min-height: 66px; transition: min-height 0.4s cubic-bezier(0.22, 0.61, 0.36, 1), border-color 0.3s ease; }
+    .deck-panel.is-open { min-height: 300px; }
+    .deck-spine { position: static; align-items: center; justify-content: flex-start; padding: 24px 20px; }
+    .deck-spine span { writing-mode: horizontal-tb; transform: none; }
+    .deck-body { position: absolute; padding: 24px 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .deck-panel, .deck-spine, .deck-body { transition: none; }
+  }
+
+  /* Content rooms dim the sculpture. The split hero solves room 1 by moving the artwork
+     out of the text column, but a deck claims the full width, so there is nowhere to move
+     it to — the copy would sit straight on the bright core again. Dimming keeps the
+     sculpture present as atmosphere while the content stays legible. */
+  body[data-room="2"] .sculpture { opacity: 0.32; }

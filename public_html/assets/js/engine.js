@@ -720,6 +720,40 @@
       if (atScrollEdge(dir) && navTo(dir)) { navCooldownUntil = now + NAV_COOLDOWN; lastNavDir = dir; }
     }, { passive: true });
 
+    // ── Deck (the horizontal accordion) ────────────────────────────────────────────
+    // Panels are real links, so pointer and keyboard already work for free: hover and
+    // :focus-visible expand a panel in CSS, Enter follows the href, and the URL is the
+    // truth rather than a JS-only state. Two things still need handling.
+    //
+    // 1. Touch has no hover. The first tap OPENS a panel; only a second tap on the panel
+    //    that is already open navigates — otherwise a phone user could never read a card.
+    // 2. Arrow keys inside a deck must walk the deck, not fly the journey to the next
+    //    section. These listeners are on document and the nav listeners are on window, so
+    //    these run first and stopPropagation() keeps the gesture local.
+    // Both are delegated, so they survive soft-nav without re-binding.
+    const coarsePointer = () => window.matchMedia('(hover: none)').matches;
+    document.addEventListener('click', (e) => {
+      const panel = e.target.closest && e.target.closest('.deck-panel');
+      if (!panel || !coarsePointer()) return;
+      if (panel.classList.contains('is-open')) return;   // already open → let the link through
+      e.preventDefault();
+      panel.closest('.deck').querySelectorAll('.deck-panel.is-open').forEach(p => p.classList.remove('is-open'));
+      panel.classList.add('is-open');
+    });
+    document.addEventListener('keydown', (e) => {
+      const panel = document.activeElement && document.activeElement.closest && document.activeElement.closest('.deck-panel');
+      if (!panel) return;
+      const fwd = e.key === 'ArrowRight' || e.key === 'ArrowDown';
+      const back = e.key === 'ArrowLeft' || e.key === 'ArrowUp';
+      if (!fwd && !back) return;
+      const items = Array.from(panel.closest('.deck').querySelectorAll('.deck-panel'));
+      const next = items[items.indexOf(panel) + (fwd ? 1 : -1)];
+      if (!next) return;                                 // at either end → let the journey nav have it
+      e.preventDefault();
+      e.stopPropagation();
+      next.focus();
+    });
+
     // first load: paint the HUD + activate the first room + (if contact) load the form. The
     // sculpture module places this page's configured shape itself — instantly, no morph.
     paint(cfg);
