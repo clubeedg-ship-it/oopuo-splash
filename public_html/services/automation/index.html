@@ -93,10 +93,371 @@ PIXEL ↑ -->
         <div class="btn-row"><a class="btn btn-primary" href="mailto:hello@oopuo.com?subject=Free%20call%20with%20OOPUO">Book a free call <span class="arrow">→</span></a></div>
       </header>
 
-      <section class="ent-section">
-        <span class="ent-label">Examples</span>
+      <section class="ent-section m03-case">
+        <style>
+        /* LIGHT, native to the page. Uses the page's existing global tokens (--bg / --bg-elev /
+           --bg-surface / --ink / --ink-mute / --ink-faint / --line / --line-strong / --teal /
+           --teal-glow) — we only ADD --serif and the 6 zone colours. White cards on the light
+           ground, hairline borders, no drop-shadows. Pale zone swatches get a DARK inset hairline
+           so they stay legible on white. */
+        .m03-case{ --serif:"Instrument Serif",serif;
+          --z1:#C6E0B4; --z2:#E4DFEC; --z3:#DDEBF7; --z4:#F4CCCC; --z5:#FCE4D6; --z6:#D9D9D9;
+          margin-top:48px; }
+        .m03-case .accent{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--teal);}
+        .m03-case .m03-lead{font-size:1.06rem;line-height:1.62;color:var(--ink-mute);max-width:60ch;margin:18px 0 0;}
+        .m03-case .m03-lead strong{color:var(--ink);font-weight:500;}
+
+        /* ── Carousel shell ── */
+        .m03-case .uc{position:relative;height:75vh;min-height:520px;margin-top:34px;overflow:hidden;
+          border:1px solid var(--line-strong);border-radius:14px;background:var(--bg-elev);}
+        .m03-case .uc-track{display:flex;height:100%;transition:transform .45s cubic-bezier(.4,0,.2,1);}
+        .m03-case .uc-card{flex:0 0 100%;width:100%;height:100%;display:flex;flex-direction:column;}
+        .m03-case .uc-card-head{flex:0 0 auto;padding:22px 30px 16px;border-bottom:1px solid var(--line);}
+        .m03-case .uc-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:var(--teal);}
+        .m03-case .uc-card-head h3{font-family:var(--display);font-weight:600;font-size:clamp(1.2rem,2.4vw,1.6rem);line-height:1.12;letter-spacing:-0.018em;margin:8px 0 0;color:var(--ink);}
+
+        /* ── Vertical scroll-snap scroller inside each card ── */
+        .m03-case .uc-steps{flex:1 1 auto;position:relative;overflow-y:auto;scroll-snap-type:y mandatory;
+          overscroll-behavior:auto;scroll-behavior:smooth;}
+        .m03-case .step{scroll-snap-align:start;min-height:100%;box-sizing:border-box;
+          padding:34px 30px 40px 64px;display:flex;flex-direction:column;justify-content:center;}
+        .m03-case .step-idx{font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal);}
+        .m03-case .step h4{font-family:var(--display);font-weight:600;font-size:clamp(1.25rem,2.6vw,1.7rem);line-height:1.1;letter-spacing:-0.018em;margin:6px 0 4px;color:var(--ink);}
+        .m03-case .step-cap{font-family:var(--display);font-size:0.92rem;color:var(--ink-faint);margin:0 0 18px;max-width:56ch;}
+
+        /* step-progress dots (vertical) */
+        .m03-case .uc-dots{position:absolute;left:20px;top:50%;transform:translateY(-50%);z-index:5;
+          display:flex;flex-direction:column;gap:11px;}
+        .m03-case .uc-dots button{width:9px;height:9px;padding:0;border-radius:50%;cursor:pointer;
+          border:1.5px solid var(--line-strong);background:transparent;transition:all .2s ease;}
+        .m03-case .uc-dots button.on{background:var(--teal);border-color:var(--teal);box-shadow:0 0 6px var(--teal-glow);}
+
+        /* ── Step 1: brainstorm dump ── */
+        .m03-case .dump{display:flex;flex-wrap:wrap;gap:8px 10px;max-width:60ch;}
+        .m03-case .dump span{display:inline-block;font-family:var(--mono);font-size:11.5px;color:var(--ink-mute);
+          background:var(--bg-surface);border:1px solid var(--line);border-radius:4px;padding:5px 9px;}
+        .m03-case .dump span.dot::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:middle;}
+
+        /* ── Step 2: agent ── */
+        .m03-case .agent{display:flex;flex-direction:column;gap:10px;max-width:54ch;}
+        .m03-case .agent .ai-row{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--ink-faint);}
+        .m03-case .agent .ai-row i{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 5px var(--teal-glow);}
+        .m03-case .agent .bar{height:12px;border-radius:3px;background:var(--bg-surface);border:1px solid var(--line);}
+
+        /* ── Step 3: zoned excel ── */
+        .m03-case .numbers{border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;background:var(--bg-elev);max-width:620px;}
+        .m03-case .numbers .nrow{display:grid;grid-template-columns:16px 1fr auto auto;gap:14px;align-items:center;padding:11px 16px;border-top:1px solid var(--line);}
+        .m03-case .numbers .nrow:first-child{border-top:0;}
+        .m03-case .numbers .nrow i{width:13px;height:13px;border-radius:2px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14);}
+        .m03-case .numbers .nrow .zn{font-size:0.92rem;color:var(--ink);}
+        .m03-case .numbers .nrow .ct{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);letter-spacing:0.04em;text-align:right;}
+        .m03-case .numbers .nrow .amt{font-family:var(--mono);font-size:0.95rem;color:var(--ink);text-align:right;min-width:90px;letter-spacing:0.01em;}
+        .m03-case .numbers .foot{border-top:1px solid var(--line-strong);padding:14px 16px;display:flex;flex-direction:column;gap:7px;background:var(--bg-surface);}
+        .m03-case .numbers .foot .fline{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:0.92rem;color:var(--ink-mute);}
+        .m03-case .numbers .foot .fline.grand{padding-top:8px;border-top:1px solid var(--line);}
+        .m03-case .numbers .foot .fline.grand .k{color:var(--ink);letter-spacing:0.16em;text-transform:uppercase;font-size:11px;}
+        .m03-case .numbers .foot .fline.grand .v{color:var(--teal);font-weight:500;font-size:1.4rem;letter-spacing:-0.01em;}
+
+        /* ── Step 4: blueprint ── */
+        .m03-case .bp-wrap{position:relative;border:1px solid var(--line-strong);border-radius:8px;background:#fff;overflow:hidden;max-width:560px;}
+        .m03-case .bp-wrap img{display:block;width:100%;height:auto;}
+        .m03-case .bp-masks{position:absolute;inset:0;pointer-events:none;}
+        .m03-case .bp-mask{position:absolute;opacity:.62;mix-blend-mode:multiply;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14);}
+        .m03-case .legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:16px 0 0;max-width:560px;}
+        .m03-case .chip{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.04em;color:var(--ink-mute);}
+        .m03-case .chip i{width:12px;height:12px;flex:0 0 12px;border-radius:2px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14);}
+        .m03-case .bp-cap{font-family:var(--display);font-style:italic;font-size:0.82rem;color:var(--ink-faint);margin:14px 0 0;max-width:60ch;}
+
+        /* ── Step 5: offer website mock ── */
+        .m03-case .site{border:1px solid var(--line-strong);background:var(--bg-elev);border-radius:8px;overflow:hidden;max-width:560px;}
+        .m03-case .site .bar{display:flex;align-items:center;gap:7px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--bg-surface);}
+        .m03-case .site .bar i{width:9px;height:9px;border-radius:50%;background:var(--ink-faint);opacity:.4;}
+        .m03-case .site .url{margin-left:10px;font-family:var(--mono);font-size:10px;color:var(--ink-faint);letter-spacing:0.05em;}
+        .m03-case .site .body{padding:22px 24px 26px;}
+        .m03-case .site .nav{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px;}
+        .m03-case .site .nav span{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:100px;border:1px solid var(--line-strong);font-family:var(--mono);font-size:9.5px;letter-spacing:0.07em;color:var(--ink-mute);}
+        .m03-case .site .nav span i{width:9px;height:9px;border-radius:2px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14);}
+        .m03-case .site .hero{font-family:var(--display);font-weight:600;font-size:1.4rem;letter-spacing:-0.015em;line-height:1.15;margin:0 0 6px;max-width:22ch;color:var(--ink);}
+        .m03-case .site .sub{font-size:0.88rem;color:var(--ink-mute);margin:0 0 20px;}
+        .m03-case .site .total-row{display:flex;align-items:baseline;justify-content:space-between;border-top:1px solid var(--line-strong);padding-top:16px;}
+        .m03-case .site .total-row .k{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-faint);}
+        .m03-case .site .total-row .v{font-family:var(--mono);font-weight:500;font-size:1.6rem;color:var(--teal);letter-spacing:-0.01em;}
+        .m03-case .m03-btn{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:12px 20px;border-radius:4px;font-family:var(--display);font-weight:500;font-size:0.92rem;text-decoration:none;background:var(--teal);color:#04242b;border:1px solid transparent;align-self:flex-start;}
+        .m03-case .m03-btn .arrow{transition:transform .2s ease;}
+        .m03-case .m03-btn:hover .arrow{transform:translateX(3px);}
+
+        /* ── Horizontal carousel nav (hidden when one card) ── */
+        .m03-case .uc-nav{position:absolute;bottom:16px;right:18px;z-index:6;display:flex;align-items:center;gap:10px;}
+        .m03-case .uc-arrow{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;
+          border-radius:50%;border:1px solid var(--line-strong);background:var(--bg-elev);color:var(--ink);
+          font-size:16px;cursor:pointer;transition:all .2s ease;}
+        .m03-case .uc-arrow:hover{border-color:var(--teal);color:var(--teal);}
+        .m03-case .uc-arrow[disabled]{opacity:.3;cursor:default;}
+        .m03-case .uc-cdots{display:flex;gap:7px;}
+        .m03-case .uc-cdots button{width:8px;height:8px;padding:0;border-radius:50%;border:1px solid var(--line-strong);background:transparent;cursor:pointer;}
+        .m03-case .uc-cdots button.on{background:var(--teal);border-color:var(--teal);}
+        .m03-case .uc[data-single="1"] .uc-nav{display:none;}
+
+        /* Click-to-open: the card shows a clickable TILE (cover); clicking opens the inner page
+           (the steps). JS adds .m03-js and toggles .open. Without JS the cover is hidden so the
+           steps stay directly reachable. */
+        .m03-case .uc-card{position:relative;}
+        .m03-case .uc-cover{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;justify-content:flex-end;
+          text-align:left;cursor:pointer;border:0;margin:0;padding:0;font:inherit;background:var(--bg-elev);color:var(--ink);text-decoration:none;overflow:hidden;}
+        .m03-case .uc-cover-media{flex:1 1 auto;min-height:0;background:#fff;border-bottom:1px solid var(--line);overflow:hidden;}
+        .m03-case .uc-cover-media img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
+        .m03-case .uc-cover-body{flex:0 0 auto;padding:22px 30px 26px;}
+        .m03-case .uc-cover-h3{display:block;font-family:var(--display);font-weight:600;font-size:clamp(1.3rem,2.6vw,1.8rem);letter-spacing:-0.02em;line-height:1.1;margin:9px 0 8px;color:var(--ink);}
+        .m03-case .uc-cover-p{display:block;font-size:0.94rem;color:var(--ink-mute);margin:0 0 12px;max-width:50ch;}
+        .m03-case .uc-facts{display:block;font-family:var(--mono);font-size:11px;letter-spacing:0.04em;color:var(--ink-faint);}
+        .m03-case .uc-facts strong{color:var(--teal);font-weight:600;}
+        .m03-case .uc-view{display:inline-block;margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal);}
+        .m03-case .uc-cover:hover .uc-view{text-decoration:underline;}
+        .m03-case .uc-back{position:absolute;top:14px;right:16px;z-index:10;display:none;align-items:center;gap:6px;
+          padding:7px 13px;border-radius:100px;border:1px solid var(--line-strong);background:var(--bg-elev);
+          font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-mute);cursor:pointer;}
+        .m03-case .uc-back:hover{color:var(--ink);border-color:var(--teal);}
+        .m03-case .uc.m03-js .uc-card.open .uc-cover{display:none;}
+        .m03-case .uc.m03-js .uc-card.open .uc-back{display:inline-flex;}
+
+        @media (max-width:640px){
+          .m03-case .uc{height:78vh;}
+          .m03-case .step{padding:26px 18px 34px 50px;}
+          .m03-case .uc-dots{left:14px;}
+          .m03-case .uc-card-head{padding:18px 20px 14px;}
+          .m03-case .numbers .nrow{grid-template-columns:14px 1fr auto;gap:10px;}
+          .m03-case .numbers .nrow .ct{display:none;}
+          .m03-case .legend{gap:7px 12px;}
+        }
+        </style>
+        <span class="ent-label">Case studies</span>
         <h2>Automations we've shipped.</h2>
-        <div class="examples-grid"><div class="example"><div class="example-client">Accounting · Rotterdam</div><div class="example-title">Invoice intake & data entry</div><p class="example-outcome">Manual entry from <strong>15 hours to 1</strong> a week. Zero typos since.</p></div><div class="example"><div class="example-client">Logistics · Antwerp</div><div class="example-title">Order routing agent</div><p class="example-outcome">Orders routed in seconds, not hours. <strong>99.7% accuracy.</strong></p></div><div class="example"><div class="example-client">Recruitment · Amsterdam</div><div class="example-title">Lead qualification & CRM sync</div><p class="example-outcome">Every inbound <strong>scored and logged overnight</strong>. Sales starts the day sorted.</p></div><div class="example"><div class="example-client">Property management · The Hague</div><div class="example-title">Monthly report generation</div><p class="example-outcome">12 reports built and sent automatically. <strong>Two days back</strong>, every month.</p></div></div>
+        <p class="m03-lead">Real processes, real numbers. The agent does the heavy gross work up front — so each deliverable comes out more <strong>accurate, professional and consistent</strong>: a standardized SOP plus AI, replacing the chaotic old way.</p>
+
+        <div class="uc" id="m03-uc" data-single="1">
+          <div class="uc-track" id="m03-track">
+
+            <!-- ── Use case 01 — Mahdi renovation estimate ── -->
+            <article class="uc-card">
+              <a class="uc-cover" href="https://ghostwhite-reindeer-417116.hostingersite.com/" target="_blank" rel="noopener noreferrer" aria-label="View the live renovation offer (opens in a new tab)">
+                <span class="uc-cover-media"><img src="/media/cases/mahdi-plan.webp" alt="" loading="lazy" width="1440" height="1019"></span>
+                <span class="uc-cover-body">
+                  <span class="uc-tag">Use case 01 · Netherlands</span>
+                  <span class="uc-cover-h3">Renovation estimate, automated.</span>
+                  <span class="uc-cover-p">A messy brainstorm becomes a colour-keyed, client-ready offer — 6 zones, 14 line items, a 5-step pipeline.</span>
+                  <span class="uc-facts"><strong>€&nbsp;66.900,90</strong> total offer · incl. 21% VAT</span>
+                  <span class="uc-view">View live offer ↗</span>
+                </span>
+              </a>
+              <div class="uc-card-head">
+                <span class="uc-tag">Use case 01 · Netherlands</span>
+                <h3>From a brainstorm to a colour-keyed offer.</h3>
+              </div>
+              <div class="uc-steps" data-steps>
+                <div class="uc-dots" data-dots aria-hidden="true"></div>
+
+                <!-- Step 1 -->
+                <section class="step">
+                  <span class="step-idx">Step 01 · Input</span>
+                  <h4>Brainstorm.</h4>
+                  <p class="step-cap">A messy, unstructured dump — scope, asides, half-prices, scribbles. No order, no totals.</p>
+                  <div class="dump">
+                    <span class="dot" style="--c:var(--z1)">kitchen — new units + worktop</span>
+                    <span>±14k living?</span>
+                    <span class="dot" style="--c:var(--z4)">bathroom retile, new toilet</span>
+                    <span>stairs creak — sand + paint</span>
+                    <span>hallway closet custom</span>
+                    <span class="dot" style="--c:var(--z3)">stairwell light</span>
+                    <span>attic storage shelving</span>
+                    <span>plaster everywhere</span>
+                    <span>VAT? incl. probably</span>
+                    <span>second bath upstairs maybe</span>
+                  </div>
+                </section>
+
+                <!-- Step 2 -->
+                <section class="step">
+                  <span class="step-idx">Step 02 · Processing</span>
+                  <h4>AI agent.</h4>
+                  <p class="step-cap">Parses the chaos, groups every fragment by room, prices each task against the rate card.</p>
+                  <div class="agent">
+                    <div class="ai-row"><i></i><i></i><i></i> parsing 38 fragments · grouping by room · pricing</div>
+                    <div class="bar" style="width:96%"></div>
+                    <div class="bar" style="width:88%"></div>
+                    <div class="bar" style="width:92%"></div>
+                    <div class="bar" style="width:74%"></div>
+                  </div>
+                </section>
+
+                <!-- Step 3 -->
+                <section class="step">
+                  <span class="step-idx">Step 03 · Structured</span>
+                  <h4>Zoned Excel.</h4>
+                  <p class="step-cap">14 line items resolved into 6 colour-keyed zones, each totalled — right-aligned, tabular.</p>
+                  <div class="numbers">
+                    <div class="nrow"><i style="background:var(--z1)"></i><span class="zn">Zone 1 · Living &amp; Kitchen</span><span class="ct">3 items</span><span class="amt">€&nbsp;14.800</span></div>
+                    <div class="nrow"><i style="background:var(--z2)"></i><span class="zn">Zone 2 · Hall &amp; Custom joinery</span><span class="ct">1 item</span><span class="amt">€&nbsp;5.120</span></div>
+                    <div class="nrow"><i style="background:var(--z3)"></i><span class="zn">Zone 3 · Stairwell</span><span class="ct">1 item</span><span class="amt">€&nbsp;5.900</span></div>
+                    <div class="nrow"><i style="background:var(--z4)"></i><span class="zn">Zone 4 · Sanitary &amp; Wet rooms</span><span class="ct">3 items</span><span class="amt">€&nbsp;13.300</span></div>
+                    <div class="nrow"><i style="background:var(--z5)"></i><span class="zn">Zone 5 · Upper floors &amp; Storage</span><span class="ct">2 items</span><span class="amt">€&nbsp;5.600</span></div>
+                    <div class="nrow"><i style="background:var(--z6)"></i><span class="zn">Zone 6 · General &amp; House-wide</span><span class="ct">4 items</span><span class="amt">€&nbsp;10.570</span></div>
+                    <div class="foot">
+                      <div class="fline"><span class="k">Subtotal · excl. VAT</span><span class="v">€&nbsp;55.290</span></div>
+                      <div class="fline"><span class="k">VAT · 21%</span><span class="v">€&nbsp;11.610,90</span></div>
+                      <div class="fline grand"><span class="k">Grand total</span><span class="v">€&nbsp;66.900,90</span></div>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- Step 4 -->
+                <section class="step">
+                  <span class="step-idx">Step 04 · Spatial</span>
+                  <h4>Colour-coded blueprint.</h4>
+                  <p class="step-cap">The same six colours wash onto the floor plan — the sheet becomes space.</p>
+                  <div class="bp-wrap">
+                    <img src="/media/cases/mahdi-plan.webp" alt="Redacted zoned renovation blueprint — six colour-keyed regions." loading="lazy" width="1440" height="1019">
+                    <div class="bp-masks">
+                      <span class="bp-mask" style="left:30%;top:54%;width:24%;height:34%;background:var(--z1);"></span>
+                      <span class="bp-mask" style="left:10%;top:56%;width:13%;height:30%;background:var(--z2);"></span>
+                      <span class="bp-mask" style="left:24%;top:6%;width:7%;height:40%;background:var(--z3);"></span>
+                      <span class="bp-mask" style="left:55%;top:56%;width:9%;height:30%;background:var(--z4);"></span>
+                      <span class="bp-mask" style="left:64%;top:54%;width:10%;height:32%;background:var(--z5);"></span>
+                      <span class="bp-mask" style="left:3%;top:54%;width:6%;height:34%;background:var(--z6);"></span>
+                    </div>
+                  </div>
+                  <div class="legend">
+                    <span class="chip"><i style="background:var(--z1)"></i>Living &amp; Kitchen</span>
+                    <span class="chip"><i style="background:var(--z2)"></i>Hall &amp; joinery</span>
+                    <span class="chip"><i style="background:var(--z3)"></i>Stairwell</span>
+                    <span class="chip"><i style="background:var(--z4)"></i>Sanitary &amp; wet</span>
+                    <span class="chip"><i style="background:var(--z5)"></i>Upper floors</span>
+                    <span class="chip"><i style="background:var(--z6)"></i>General</span>
+                  </div>
+                  <p class="bp-cap">Client, city and vendor redacted — zone names, colours and amounts kept verbatim.</p>
+                </section>
+
+                <!-- Step 5 -->
+                <section class="step">
+                  <span class="step-idx">Step 05 · Deliverable</span>
+                  <h4>Offer website.</h4>
+                  <p class="step-cap">A navigable, client-facing offer — the only thing the client ever sees.</p>
+                  <div class="site">
+                    <div class="bar"><i></i><i></i><i></i><span class="url">offer.oopuo.com/renovatie-nl</span></div>
+                    <div class="body">
+                      <div class="nav">
+                        <span><i style="background:var(--z1)"></i>Living &amp; Kitchen</span>
+                        <span><i style="background:var(--z2)"></i>Hall</span>
+                        <span><i style="background:var(--z3)"></i>Stairwell</span>
+                        <span><i style="background:var(--z4)"></i>Sanitary</span>
+                        <span><i style="background:var(--z5)"></i>Upper floors</span>
+                        <span><i style="background:var(--z6)"></i>General</span>
+                      </div>
+                      <div class="hero">Your renovation, <span class="accent">zone by zone.</span></div>
+                      <p class="sub">Six colour-keyed zones · 14 line items · indicative estimate, excl. tiles.</p>
+                      <div class="total-row"><span class="k">Grand total · incl. 21% VAT</span><span class="v">€&nbsp;66.900,90</span></div>
+                    </div>
+                  </div>
+                  <a class="m03-btn" href="mailto:hello@oopuo.com?subject=Automate%20a%20process%20like%20this">Automate a process like this <span class="arrow">→</span></a>
+                </section>
+
+              </div>
+            </article>
+
+          </div>
+
+          <div class="uc-nav" aria-hidden="true">
+            <button class="uc-arrow" id="m03-prev" type="button" aria-label="Previous use case">←</button>
+            <div class="uc-cdots" id="m03-cdots"></div>
+            <button class="uc-arrow" id="m03-next" type="button" aria-label="Next use case">→</button>
+          </div>
+        </div>
+
+        <script>
+        /* Enhancement only — CSS scroll-snap works without this; runs only on hard load. */
+        (function(){
+          var uc = document.getElementById('m03-uc');
+          if (!uc || uc.dataset.m03Init) return;
+          uc.dataset.m03Init = '1';
+          uc.classList.add('m03-js');
+          // Click a card's cover → open its inner page (the steps); back → close.
+          uc.addEventListener('click', function(e){
+            var o = e.target.closest('[data-open]');
+            var c = e.target.closest('[data-close]');
+            if (o){ var card = o.closest('.uc-card'); if (card) card.classList.add('open'); }
+            else if (c){ var cd = c.closest('.uc-card'); if (cd){ cd.classList.remove('open'); var s = cd.querySelector('[data-steps]'); if (s) s.scrollTop = 0; } }
+          });
+          var track = document.getElementById('m03-track');
+          var cards = track ? track.querySelectorAll('.uc-card') : [];
+          var idx = 0;
+
+          // Horizontal carousel
+          var prev = document.getElementById('m03-prev');
+          var next = document.getElementById('m03-next');
+          var cdots = document.getElementById('m03-cdots');
+          uc.dataset.single = cards.length <= 1 ? '1' : '0';
+          function goCard(i){
+            idx = Math.max(0, Math.min(cards.length - 1, i));
+            track.style.transform = 'translateX(' + (-idx * 100) + '%)';
+            if (prev) prev.disabled = idx === 0;
+            if (next) next.disabled = idx === cards.length - 1;
+            if (cdots) cdots.querySelectorAll('button').forEach(function(b, n){ b.classList.toggle('on', n === idx); });
+          }
+          if (cards.length > 1 && cdots){
+            for (var c = 0; c < cards.length; c++){
+              var b = document.createElement('button');
+              b.type = 'button';
+              b.setAttribute('aria-label', 'Use case ' + (c + 1));
+              (function(n){ b.addEventListener('click', function(){ goCard(n); }); })(c);
+              cdots.appendChild(b);
+            }
+          }
+          if (prev) prev.addEventListener('click', function(){ goCard(idx - 1); });
+          if (next) next.addEventListener('click', function(){ goCard(idx + 1); });
+          document.addEventListener('keydown', function(e){
+            if (cards.length <= 1) return;
+            if (e.key === 'ArrowRight') goCard(idx + 1);
+            else if (e.key === 'ArrowLeft') goCard(idx - 1);
+          });
+          // Touch swipe (horizontal only)
+          var sx = 0, sy = 0, sw = false;
+          uc.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; sy = e.touches[0].clientY; sw = false; }, {passive:true});
+          uc.addEventListener('touchmove', function(e){
+            if (sw || cards.length <= 1) return;
+            var dx = e.touches[0].clientX - sx, dy = e.touches[0].clientY - sy;
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5){ sw = true; goCard(dx < 0 ? idx + 1 : idx - 1); }
+          }, {passive:true});
+          goCard(0);
+
+          // Per-card vertical step dots
+          cards.forEach(function(card){
+            var steps = card.querySelector('[data-steps]');
+            var dotWrap = card.querySelector('[data-dots]');
+            if (!steps || !dotWrap) return;
+            var panels = steps.querySelectorAll('.step');
+            var dbtns = [];
+            panels.forEach(function(p, n){
+              var d = document.createElement('button');
+              d.type = 'button';
+              d.setAttribute('aria-label', 'Step ' + (n + 1));
+              d.addEventListener('click', function(){ p.scrollIntoView({behavior:'smooth', block:'start'}); });
+              dotWrap.appendChild(d);
+              dbtns.push(d);
+            });
+            function setActive(n){ dbtns.forEach(function(d, i){ d.classList.toggle('on', i === n); }); }
+            setActive(0);
+            var raf;
+            steps.addEventListener('scroll', function(){
+              if (raf) return;
+              raf = requestAnimationFrame(function(){
+                raf = null;
+                var active = Math.round(steps.scrollTop / steps.clientHeight);
+                active = Math.max(0, Math.min(panels.length - 1, active));
+                setActive(active);
+              });
+            });
+          });
+        })();
+        </script>
       </section>
 
       <section class="ent-section">
