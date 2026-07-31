@@ -6,3 +6,8 @@ dist/
 *.log
 # Session screenshots dropped by playwright debugging — not source.
 /*.png
+/*.jpeg
+/*.jpg
+.screenshots/
+# Client working material (source docs, unredacted plans) — never part of the upload set.
+/material/
