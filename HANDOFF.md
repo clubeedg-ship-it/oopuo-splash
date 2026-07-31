@@ -1,100 +1,117 @@
-# OOPUO Splash — next-agent handoff & initial assignment
+# OOPUO Splash — next-agent handoff
 
-Paste-ready brief for the next session. Read this, then `CLAUDE.md`, then `PROJECT.md §E`.
+Paste-ready brief. Read this, then `AGENTS.md §8`, then the spec and plan named below.
 `DECISIONS.md` is the full decision log. **No build step exists or should exist.**
 
----
-
-## Your assignment (do these, in order)
-
-1. **State snapshot.** Open the repo, confirm the live state, and write a short snapshot
-   to `PROJECT.md §E` (overwrite): what exists in `public_html/`, what's wired, what's
-   placeholder, what's broken. Verify by serving locally (`Static Site` launch config →
-   `http://localhost:4330/`) and walking each locale. Do **not** trust this file over what
-   you actually see — reconcile and report differences.
-2. **Plan to deployment.** Produce a phased plan (in `PROJECT.md §C`) to take the site from
-   today's state to a deployed launch in the **target architecture** below. Keep it
-   no-build. Get operator sign-off on the plan before large execution.
-3. Then execute, committing working increments. Operator deploys by uploading
-   `public_html/` to Hostinger `public_html` — they can do this in seconds, so live
-   integrations (HubSpot, Meta Pixel) are tested on **oopuo.com**, not locally.
+Last updated **2026-08-01**.
 
 ---
 
-## What OOPUO is (positioning — D-018, never mix the two)
+## Where the project is
 
-- **Europe track** (`en` root, `nl/`, `fr/`): enterprise framing, EU AI Act, Amsterdam, € pricing, HubSpot + email contact.
-- **Brazil track** (`pt-br/`): SMB strategy in Portuguese — WhatsApp-first automated service, "parceria não produto", R$ pricing, LGPD, Goiás PMEs. Outbound motion (low SEO need).
-- Enterprise/EU content NEVER appears on Brazil; WhatsApp/LGPD/partnership NEVER on Europe.
-- The internal Brazil strategy source: Google Doc "OOPUO — Guia estratégico interno" (indexed in context-mode as `oopuo-strategy-doc`).
+The site is live-ready static HTML in `public_html/`, deployed by uploading to Hostinger.
+EN, NL and FR each have a 13-page router tree; pt-br is still a single Brazil-native page.
 
-## Current state (verify, don't assume)
+**A repositioning is in flight, and it changes what EN is.** The site was a competent EU
+lead-generation brochure that said nothing about who the operator is or what he works on. It is
+becoming **OOPUO Intelligence — a personal lab**, whose job is credibility that converts into
+contracts and projects. Decision: **D-028**.
 
-- **No build.** Astro was tried and fully removed (D-020/D-021). Pure static HTML/CSS/JS.
-- Web root = **`public_html/`**. 4 locales, each currently ONE self-contained HTML file
-  with the full 6-room snap-scroll "canvas" (Three.js/ASCII sculpture, dark hero, HUD,
-  cyan palette; warm palette for the blog/room-5). `index.html` (EN), `nl/`, `fr/`,
-  `pt-br/`. Plus `favicon.svg`, `oopuo-logo*.svg`, `robots.txt`, `sitemap.xml`.
-- EN page is the FULL canvas (has module sub-rooms, 4 blog-readers, enterprise overlay).
-  NL/FR/pt-br are LEAN (6 rooms; sub-rooms/blog/enterprise removed). pt-br has Brazil SMB
-  copy + real WhatsApp; NL/FR are translated Europe copy.
-- Visual canon (keep): Instrument Sans + Satoshi + JetBrains Mono + Instrument Serif (CDN);
-  Three.js via CDN importmap; `prefers-reduced-motion` disables motion. WhatsApp CTAs use
-  brand colors, **never** WhatsApp green `#25D366`.
+Two documents govern the work. Read both before touching EN content or the room structure:
 
-## Integrations already wired (real IDs)
+- **Spec** — `docs/superpowers/specs/2026-07-31-oopuo-intelligence-repositioning-design.md`
+- **Plan** — `docs/superpowers/plans/2026-08-01-repositioning-build.md`
 
-- **HubSpot** portal `148607612`, region `eu1`, owner `clubeedg@gmail.com`.
-  - **Form** on EN contact (room 6): real form `2fef7ceb-b34c-4792-9a0d-1a2d618767b9`,
-    via the **new form-builder embed** (`https://js-eu1.hsforms.net/forms/embed/148607612.js`
-    + `<div class="hs-form-frame" data-region="eu1" data-form-id=… data-portal-id=…>`).
-    - ⚠️ New-builder forms do NOT work with legacy `hbspt.forms.create` (v2) — it renders nothing. Use the new embed.
-    - ⚠️ The embed iframe is `height:100%` → collapses to 0 in auto-height containers; give it `min-height`. It's loaded only when the contact room becomes visible (so it can size).
-    - ⚠️ **It does NOT render on `http://localhost`** — only the live https domain. So you cannot fully verify it locally; deploy to test.
-    - **Only on EN.** Replicate the same embed to `nl/` and `fr/` (Brazil keeps WhatsApp — no form).
-  - **Meetings** ("Book a free call", EN/NL/FR): placeholder `https://meetings-eu1.hubspot.com/oopuo` — operator creates a free Meeting and replaces the `oopuo` slug.
-- **Meta Pixel**: base code in `<head>` of all 4 pages, placeholder `YOUR_META_PIXEL_ID`
-  (console logs `Invalid PixelID: null` until replaced). Replace to activate.
-- **WhatsApp (Brazil)**: real **+55 66 99232-3668** → `https://wa.me/5566992323668`.
+NL, FR and pt-br are **frozen** until EN is approved on the live domain. Do not propagate early.
 
-## Target architecture (D-024 — what to build toward)
+---
 
-Restructure the single-page-per-locale canvas into **multi-page separated static, still no build**:
+## Start here
 
-```
-public_html/                 (or build into dist/ by hand — but NO build tooling)
-  index.html                 home (EN)        nl/  fr/  pt-br/  …same routes per locale
-  services/ studio/ contact/ …               (each section its own page = real crawlable URL)
-  blog/
-    index.html               blog listing
-    <slug>/index.html        rendered post page
-    content/<slug>.yml|.md    post source: title, date, author, category, body, banner image name
-  assets/
-    styles.css               shared canvas CSS (extract from the inline <style>)
-    sculpture.js             shared Three.js/ASCII engine (extract from inline <script>)
-    fonts/ logos/
-  media/
-    blog/<image>.jpg         blog banners, OG images — organized, referenced by filename from blog content
-  robots.txt  sitemap.xml
+```bash
+pwd && git branch --show-current && git status --porcelain
+python3 -m http.server 4330 --directory public_html   # → http://localhost:4330/
 ```
 
-- Each blog post = a content file (yaml or markdown) holding **just content + banner image filename**, plus its page. Decide how content→page happens **without a build** (e.g., author/maintain the HTML alongside the content file, or a tiny runtime `fetch()` renderer — propose in your plan).
-- Extract the repeated inline CSS/JS into `assets/` so pages aren't 2,500-line copies.
-- Keep the visual canon and the two-track separation. Keep hreflang + sitemap across all locales/pages.
+Then: `AGENTS.md §8` (hot snapshot) → plan §2 (what is next) → `PROJECT.md §E` (handoff detail).
+The plan is the assignment; work through §2 in order, one commit per task.
 
-## Open TODOs (carry into the plan)
+---
 
-- Replicate the HubSpot **form** embed to `/nl/` and `/fr/`.
-- Set the real HubSpot **Meeting slug** (replace `oopuo`).
-- Set the real **Meta Pixel ID** (replace `YOUR_META_PIXEL_ID`).
-- **Geo/language auto-routing** at the root: detect the visitor's language/region and route to the right locale (client-side JS, no build). Requested by the operator; not built.
-- The D-024 restructure itself (pages split, assets/media/blog folders, blog content files).
-- Optional: translated NL/FR blog + enterprise (currently EN-only).
+## What OOPUO is (D-018 — never mix the two tracks)
 
-## Hard rules
+- **Europe track** (`en` root, `nl/`, `fr/`): € pricing, EU AI Act, Amsterdam, HubSpot + email.
+- **Brazil track** (`pt-br/`): SMB strategy in Portuguese — WhatsApp-first automated service,
+  "parceria não produto", R$ pricing, LGPD, Goiás PMEs. Outbound motion, low SEO need.
+- Enterprise/EU content NEVER appears on Brazil; WhatsApp/LGPD/parceria NEVER on Europe.
+- Internal Brazil strategy source: Google Doc "OOPUO — Guia estratégico interno" (indexed in
+  context-mode as `oopuo-strategy-doc`).
 
-- No build step, no npm, no Astro. Static files only.
-- Never put WhatsApp content/branding on Europe pages or EU/enterprise content on Brazil.
-- WhatsApp buttons: brand colors, never `#25D366`.
-- Test HubSpot/Pixel on the live https domain, not localhost.
-- Commit on `main`; update `CLAUDE.md §8` + `PROJECT.md §E` at session close.
+---
+
+## What you most need to know about the repositioning
+
+**The positioning in one sentence.** *Give him a problem that is blocked — legally, structurally,
+or by privacy — and he finds the configuration that unblocks it.* Every section reinforces this;
+no section asserts it as an adjective.
+
+**Zenithcred is the proof, and the interesting part is not the biofeedback.** It is that an
+employer paying wages holds power over the employee, so consent to biometric measurement is not
+freely given — while unpaid volunteers dissolve that imbalance. The foundation/university/BV
+structure follows from that insight. `/lab/zenithcred/` is the most important page still unbuilt.
+
+**Nothing ships without a status tag.** Shipped, running and designed are visually distinct, and
+nothing marked designed may read as running. Zenithcred is designed: the foundation is not on its
+feet, the BV is not opened, no university has been approached.
+
+**One accordion, top level only.** Full-height panels, hover or tap expands, activating navigates
+to a real crawlable URL. Nesting it inside a case page was built, rejected by the operator, and
+removed. Do not reintroduce it.
+
+**Private and sovereign work is described by capability, never by client type.** The audience is
+named only as "people who run things". No sector, no client. Nothing goes on that page without a
+matching entry on the operator's demonstrable-capability list (spec §9.9).
+
+---
+
+## Traps that have already cost time
+
+- **Verify with the HTTP cache disabled.** A query string on the page URL does not bust an ES
+  module import. A correct fix looked broken for two runs because of this.
+- **Never stage a room by hand to measure layout.** Setting `.active` and `data-room` skips
+  `placeScroll()`, so you measure inside the slack band and correct layout looks broken. Drive it
+  with a real wheel gesture.
+- **Wait for `decode()` before calling an image broken.** Mid-load sampling reports
+  `complete: false` on healthy images.
+- **Touch cannot be verified from here.** Synthetic touch events do not drive native scrolling.
+  Say it is unverified rather than implying coverage — the operator deploys in seconds and can
+  check on a real device.
+- **HubSpot and Meta Pixel only work on the live https domain**, never on localhost.
+
+---
+
+## Blocked on the operator
+
+Nine content inputs (spec §9, tabulated in plan §4) gate **publication**, not construction. Build
+with placeholders and swap them in — that is the operator's stated preference for integration IDs,
+and the same pattern applies to copy.
+
+One has a clock on it: **§9.3 — Cutting Edge's name, floor plan and the €66.900,90 figure are
+already live on oopuo.com.** That is a current exposure rather than a future one.
+
+Older, unrelated to the repositioning: real Meta Pixel ID · real Meeting slug · NL+FR HubSpot
+form IDs · legal entity details for the privacy and mentions-légales pages. Each is a one-line
+swap into an in-place inert placeholder.
+
+---
+
+## Do not
+
+- Reintroduce a build step, Astro or npm. Tried and removed (D-020, D-021).
+- Mix Europe and Brazil framing (D-018).
+- Translate the EU material into pt-br. Its deep content must be authored Brazil-native.
+- Use WhatsApp green `#25D366`.
+- Nest the accordion inside a case page.
+- Position the site toward advertising defense or weapons capability. This was raised by the
+  operator, considered, and declined for commercial reasons recorded in spec §10 — so that it is
+  not reopened later as an oversight.

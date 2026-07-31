@@ -344,6 +344,43 @@ Each entry: date · id · title, then decision / rationale.
 
 **Consequences:** OQ-8 resolved for NL/FR. **pt-br is intentionally excluded** from translation: D-018 forbids showing enterprise/EU-AI-Act/€ material to Brazil, so its deep pages (blog/services/enterprise-equivalent) must be **authored Brazil-native** (Brazil offers, R$ pricing, WhatsApp, "parceria não produto") — a content task, not a translation. That is the remaining locale gap. Verified on fresh Playwright (NL/FR journeys, cross-locale hard-load, inert form placeholders, 0 console errors). Next decision id: **D-028**.
 
+### 2026-08-01 · D-028 · Reposition EN as OOPUO Intelligence (a personal lab)
+
+**Decision:** The EN site stops being a services brochure and becomes **OOPUO Intelligence — a
+personal lab focused on high gain**. Its job is credibility that converts into **contracts and
+projects, not investment**; the operator explicitly rejected the investor framing. NL, FR and
+pt-br are untouched until EN is approved on the live domain.
+
+The **signature trait** is what every section must reinforce and no section may assert as an
+adjective: *give him a problem that is blocked — legally, structurally, or by privacy — and he
+finds the configuration that unblocks it.* Zenithcred is its proof, and the load-bearing part is
+not the biofeedback: it is that an employer paying wages holds power over the employee, so
+consent to biometric measurement is not freely given, while unpaid volunteers dissolve that
+imbalance. The legal structure follows from the insight — the foundation runs the work, a
+university holds the data, a BV holds the platform IP.
+
+New spine: `Arrival → Systems (client proof) → The Lab (own ventures + research) → How I work →
+Services → Contact`. "The Gap" is retired as a section and its argument relocated to the Systems
+intro. Every claim carries a status tag (shipped / running / designed) and nothing marked
+designed is presented as running. Private and sovereign work is described **by capability, never
+by client type** — the audience is named only as "people who run things".
+
+**Rationale:** The site said nothing about who the operator is or what he works on — his own
+summary was "there's literally nothing there". Meanwhile the real inventory (Cutting Edge,
+Zenithcred, Interwall, a private voice assistant, eight shipped sites) was almost entirely absent.
+Evidence-first ordering was chosen over thesis-first because a stranger grants attention for
+evidence and spends it on a claim, not the reverse.
+
+**Consequences:** One accordion component, used at the **top level only** — nesting it inside a
+case page was built, rejected, and removed; four workflows are something to scan, not to operate.
+Side-page spacing was tightened globally (`120/120/84px` → `88/72/48px`). The site is explicitly
+**not positioned toward** advertising defense or weapons capability, for commercial reasons
+recorded in spec §10 so a later session does not reopen it as an oversight. Nine operator content
+inputs (spec §9) gate publication but not construction; §9.3 (Cutting Edge naming, the floor plan
+and the €66.900,90 figure) is a **live exposure already on oopuo.com**. Full spec:
+`docs/superpowers/specs/2026-07-31-oopuo-intelligence-repositioning-design.md`. Build plan:
+`docs/superpowers/plans/2026-08-01-repositioning-build.md`. Next decision id: **D-029**.
+
 ---
 
 ## §C — Design spec & roadmap (D-024 restructure · architecture D-025)
@@ -655,43 +692,53 @@ Pick one stream per task. Read only the stream you are working in.
 
 ## §E — Handoff (current next-step)
 
-> Overwrite per session. As of 2026-06-03. **Full next-agent brief = `HANDOFF.md` (repo root). Current hot state = `CLAUDE.md §8`. §A/§C/§D below still contain Astro-era detail — trust CLAUDE.md + this section over them.**
+> Overwrite per session. As of **2026-08-01**. Read `AGENTS.md §8` for the hot snapshot, then the
+> spec and the plan named below. Trust those three over anything older in this file.
 
-**Current mode:**
-- Solo operator + Claude. **NO build step** — pure static HTML/CSS/JS in `public_html/` (Astro removed entirely, D-021). Deploy = upload `public_html/` contents to Hostinger `public_html`; operator does this in seconds, so live integrations are tested on **oopuo.com**, not localhost.
-- Preview: `Static Site` launch config → `http://localhost:4330/`.
+**Mode:** solo operator + Claude. **NO build step** — plain static HTML/CSS/JS in `public_html/`,
+uploaded to Hostinger. Preview: `python3 -m http.server 4330 --directory public_html`.
+Live integrations (HubSpot form, Meta Pixel) only verify on the real https domain.
 
-**Live state (2026-06-19):** **EN, NL, and FR (Europe) are all fully SPLIT** into the same 13-page router tree (D-026 EN, D-027 NL/FR): `/` (Arrival+The Gap, in-page snap), `/services/` + 4 detail pages, `/studio/`, `/enterprise/`, `/blog/` + 3 posts, `/contact/` — persistent sculpture/HUD survive soft-nav; each URL is a full static HTML file with translated content. **pt-br (Brazil SMB) is still a single-page canvas** — kept Brazil-native (D-018), needs its own deep content authored, NOT translated from EU. `robots.txt` + regenerated `sitemap.xml` (40 URLs, full hreflang cross-links) present. Locale switcher (maps to equivalent page per locale) + root geo-suggest live on every page. All pass rules (no WhatsApp green; no EU/enterprise content on pt-br).
+**A repositioning is in flight (D-028).** EN is becoming **OOPUO Intelligence — a personal lab**.
+- Spec: `docs/superpowers/specs/2026-07-31-oopuo-intelligence-repositioning-design.md`
+- Plan: `docs/superpowers/plans/2026-08-01-repositioning-build.md`
+- Read both before touching EN content or the room structure. NL/FR/pt-br are frozen until EN is
+  approved live — do not propagate anything early.
 
-**Integrations wired (real IDs — D-023):**
-- **HubSpot** portal `148607612` / `eu1`. Form `2fef7ceb-b34c-4792-9a0d-1a2d618767b9` embedded on **EN** room 6 via the **new form-builder embed** (legacy v2 API does NOT work for it; renders only on live https, NOT localhost; iframe needs `min-height`). → **replicate the form to `nl/` + `fr/`**. Meetings "Book a free call" placeholder slug `meetings-eu1.hubspot.com/oopuo` → set the real slug.
-- **Meta Pixel** base code on all 4 pages, placeholder `YOUR_META_PIXEL_ID` → set the real Pixel ID.
-- **WhatsApp** Brazil `+55 66 99232-3668` (brand colors, never green).
+**Shipped in the 2026-08-01 session:**
+- Repo coherence: `AGENTS.md` and `public_html/media/` were **untracked** while being depended on;
+  both now tracked. `.screenshots/` and `/material/` ignored.
+- Engine: the edge-scroll rework was reviewed and committed **with a real bug fixed** — a passive
+  wheel listener runs after the compositor applies the scroll, so one hard flick both scrolled a
+  section to its end and crossed into the next. The gate now reads a settled position.
+- Perf: sculpture visible at **~986ms, was 2372ms** (UnrealBloomPass is built lazily after the
+  first frame); work images **4.4MB → 272KB** as WebP; console is silent (`willReadFrequently`).
+- Home: split hero (text and sculpture never overlap) + the **Systems deck** in room 2.
+- `/systems/cutting-edge/` — the card activates into a real page. 41 URLs in the sitemap, exact
+  parity with the page tree.
 
-**Phase 0 triage — DONE (2026-06-11, commits `caaa43d`→`a9ad774`).** Shipped, verified inert on all 4 locales via local preview:
-- Meta Pixel made an **inert commented placeholder** on all 4 (was loading `fbevents.js` pre-consent + logging `Invalid PixelID`); kept in-file for a quick swap (operator preference).
-- NL/FR contact repaired: dead legacy `hbspt.forms.create` embed → **correct new-builder placeholder** with a guard that loads nothing from HubSpot until a real `YOUR_NL/FR_HUBSPOT_FORM_ID` is set, **+ `hello@oopuo.com` mailto** (NL/FR previously had zero working contact).
-- "Book a free call" on EN/NL/FR repointed off the 404 Meetings slug to a working **mailto** (slug parked in a comment).
-- **Branded per-track OG images** shipped (`og-default.png` EU / `og-default-br.png` BR, 1200×630, from `tools/og/`) — fixed the 404'd `og:image` on every share.
-- `.DS_Store` removed from the upload set.
-- Plan: `docs/superpowers/plans/2026-06-11-phase0-triage.md`.
+**Next, in order (plan §2):**
+1. `/lab/` + `/lab/zenithcred/` — the most important new page on the site; it carries the
+   consent argument that is the whole positioning.
+2. `/systems/websites/` — clears the last 404 from the Systems deck.
+3. Mobile overlay menu — the homepage still exposes ~7 links and no menu under 900px.
+4. `/services/private/` — gated on operator input §9.9 (the demonstrable capability list).
+5. Demote Services to position 5, retitle Studio to "How I work", add the capability bench.
 
-**Phase 1 shared foundation — DONE (2026-06-12, commits `c594e41`→`a7f9c96`).** 8 tasks, each verified on a fresh preview context (UX held identical):
-- Extracted the engine to shared assets: `assets/css/canvas.css` (847-line style block + room-6 rules, room-6 top-align scoped to `[data-contact="form"]`), `assets/js/sculpture.js` (Three.js module), `assets/js/engine.js` (boot/nav). Each page now = content DOM + a `window.OOPUO` config (localized room labels + `track`) + `<link>`/`<script>` to the shared assets. Pages went **2557/2263 → 508/216 lines**.
-- **Self-hosted** 16 woff2 (latin+latin-ext) + minified three.js (10 files) → **0 cross-origin requests** (no Google Fonts CDN, no unpkg; GDPR + SPOF gone).
-- Dropped ~178 lines of dead `__dead_oldShapes`; localized the HUD end-label (— EINDE/FIN/FIM, fixes the audit bug).
-- Fixed `prefers-reduced-motion` (instant shape-swap, was only stopping rotation — §5 invariant now true) + render-loop hardening (visibilitychange pause, dirty-check, `setPixelRatio(1)`, WebGL try/catch fallback).
-- a11y baseline: `inert` inactive rooms (out of tab/SR tree, doesn't block nav), `:focus-visible` ring, AA `--ink-faint`, `role=main` + localized skip-link, `<noscript>` stacked fallback.
-- Plan: `docs/superpowers/plans/2026-06-11-phase1-foundation.md`.
+**Blocked on operator (spec §9):** the Cutting Edge workflow list · whether the Power BI /
+inventory / assistant work is client work or Interwall · **Cutting Edge's agreement to be named,
+which is already live on oopuo.com** · the foundation's name and its founder's consent · what
+Zenithcred is (programme or platform) and whether the name is registered · what a Lab reader
+should do · a name for the voice agent · what "power business integrations" means · **the
+demonstrable private/sovereign capability list**. Plus the older four: real Meta Pixel ID, real
+Meeting slug, NL+FR HubSpot form IDs, legal entity details.
 
-**Next direction:** **Phase 2 split is DONE for EN + NL + FR (D-026, D-027); JSON-LD breadth DONE.** Remaining before Phase 3:
-1. **pt-br deep content** — split pt-br into the router tree like the others, BUT its blog/service-detail/enterprise-equivalent pages must be **authored Brazil-native** (Brazil offers, R$ pricing, WhatsApp, parceria) — D-018 forbids reusing/translating the EU material. This is a content task; needs operator direction on the Brazil offer set (partly in the internal guide referenced by D-018).
-2. **Blog authoring pipeline** (§C.4): the posts are hand-authored HTML; build the stdlib-only `tools/render_posts.py` so the operator adds posts from markdown (deferred, operator-convenience — not launch-blocking).
-Then **Phase 3** (compliance + conversion) once operator inputs land (§C.8). The shared assets + router are the foundation.
+**Unverified:** touch/swipe. Synthetic touch events do not drive native scrolling, so the
+edge-scroll and deck tap behaviour need a real device on the deployed site.
 
-**Blocked on operator (§C.8):** real Meta Pixel ID · real Meeting slug · NL+FR HubSpot form IDs (new builder) · legal entity details for the privacy / mentions-légales pages. Each is a quick swap into an in-place inert placeholder; none block Phase 2.
-
-**Do not:** reintroduce a build step / Astro / npm. Mix Europe & Brazil framing. Use WhatsApp green `#25D366`. Trust the Astro-era §A/§C/§D over CLAUDE.md.
+**Do not:** reintroduce a build step / Astro / npm. Mix Europe and Brazil framing (D-018). Use
+WhatsApp green. Nest the accordion inside a case page (built, rejected, removed). Publish a
+capability on `/services/private/` without a matching entry on the §9.9 list.
 
 ---
 

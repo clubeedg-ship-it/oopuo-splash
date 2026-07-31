@@ -34,8 +34,8 @@ Then read §3.
 
 - `canvas` = the visual aesthetic (Three.js + AsciiEffect sculpture, dark-first hero, HUD, cyan/warm palette). The original single-file design lives in `design/08-v2-lobby/` history; the live pages embed the same engine inline.
 - `site` = the shipped static files in **`public_html/`** (what uploads to Hostinger).
-- `room` = one full-viewport section (6: Arrival/Gap/Modules/Studio/Blog|Approach/Invitation). In the CURRENT pages all 6 live in one scroll page per locale; the TARGET (D-024) splits them into separate pages.
-- `sculpture` = Three.js ASCII shape (one per room). `morph` = 5.2s transition between two. `HUD` = brand mark + counter + section title + nav rail overlay. `palette family` = `--grad-*` + `--teal` (cyan default, warm for blog/room-5).
+- `room` = one full-viewport section. EN is moving to **Arrival / Systems / The Lab / How I work / Services / Contact** (D-028); NL/FR/pt-br still use the old set (Arrival/Gap/Modules/Studio/Blog/Invitation). In the CURRENT pages all 6 live in one scroll page per locale; the TARGET (D-024) splits them into separate pages.
+- `sculpture` = Three.js ASCII shape (one per room). `morph` = 5.2s transition between two. `HUD` = brand mark + counter + section title + nav rail overlay. `palette family` = `--grad-*` + `--teal` (cyan default, warm for blog/room-5). `deck` = the horizontal accordion (full-height panels, hover/tap expands, activates into a real URL) — **top level only**.
 
 ## 5. Invariants
 
@@ -69,7 +69,7 @@ Then read §3.
 ## 7. Execution & write rules
 
 - One bounded task at a time. **No build step** — never reintroduce Astro/npm (tried + removed, D-020/D-021).
-- `DECISIONS.md` is the append-only log (next id: **D-028**).
+- `DECISIONS.md` is the append-only log (next id: **D-029**).
 - PROJECT.md section cadence: §A stable · §B/§F append-only · §C/§D/§E/§G overwrite. Update `AGENTS.md §8` (snapshot below) at session close.
 - Don't create new top-level planning files when AGENTS.md / PROJECT.md can hold it (HANDOFF.md + DEPLOY.md are the sanctioned extras).
 
@@ -78,37 +78,58 @@ Then read §3.
 > Overwritten at session close. Mirrors current hot state.
 
 - branch: `main` · clean tree · **no build step** · site = `public_html/` (Hostinger-ready).
-- ⚠️ **A REPOSITIONING IS IN FLIGHT.** The spec at
-  `docs/superpowers/specs/2026-07-31-oopuo-intelligence-repositioning-design.md` supersedes the
-  services-brochure framing below for **EN**. The site becomes **OOPUO Intelligence — a personal
-  lab**, whose job is credibility that converts into contracts. Signature trait: *give him a
-  problem that is blocked (legally, structurally, by privacy) and he finds the configuration that
-  unblocks it.* New spine: Arrival → **Systems** (client proof) → **The Lab** (own ventures +
-  research) → How I work → Services → Contact. Read the spec before touching EN content or the
-  room structure. NL/FR/pt-br are untouched until EN is approved live.
-- **EN + NL + FR (Europe) are all fully SPLIT** (D-026 EN, D-027 NL/FR) into the same 13-page router tree on a 5-stop journey: `/` (rooms 1+2, in-page snap) → `/services/` (+4 details) → `/studio/` → `/blog/` (+3 posts) → `/contact/`, plus `/enterprise/` side page. Translated content per locale (NL "je", FR "vous"). Persistent sculpture/HUD survive soft-nav; each URL is a full static HTML file. **pt-br (Brazil SMB) still single-page** (`/pt-br/`) — kept Brazil-native (D-018); its deep content must be authored, not translated. All pass rules (no green; pt-br has no EU/enterprise content). Full hreflang matrix + regenerated `sitemap.xml` (40 URLs) + `robots.txt`. Locale switcher (→ equivalent page per locale) + root geo-suggest on every page.
+- ⚠️ **A REPOSITIONING IS IN FLIGHT (D-028).** The **EN** site is becoming **OOPUO Intelligence —
+  a personal lab**, whose job is credibility that converts into **contracts, not investment**.
+  Signature trait, which every section reinforces: *give him a problem that is blocked — legally,
+  structurally, or by privacy — and he finds the configuration that unblocks it.* New spine:
+  **Arrival → Systems** (client proof) **→ The Lab** (own ventures + research) **→ How I work →
+  Services → Contact**. "The Gap" retired as a section. Nothing ships without a **status tag**
+  (shipped / running / designed). Private work is described **by capability, never by client
+  type**. Read before touching EN content or room structure:
+  spec `docs/superpowers/specs/2026-07-31-oopuo-intelligence-repositioning-design.md` ·
+  plan `docs/superpowers/plans/2026-08-01-repositioning-build.md`.
+  **NL/FR/pt-br are frozen** until EN is approved live — do not propagate early.
+- **EN home is repositioned:** room 1 = split hero (text and sculpture never overlap), room 2 =
+  **Systems deck** — the one accordion component (full-height panels, hover/tap expands,
+  activating navigates to a real URL). **Top level only** — nesting it inside a case page was
+  built, rejected, removed. `/systems/cutting-edge/` is live (workflows are a plain list there).
+  Still 404: `/systems/websites/`, `/lab/`.
+- **EN + NL + FR (Europe) are all fully SPLIT** (D-026 EN, D-027 NL/FR) into the same 13-page router tree on a 5-stop journey: `/` (rooms 1+2, in-page snap) → `/services/` (+4 details) → `/studio/` → `/blog/` (+3 posts) → `/contact/`, plus `/enterprise/` side page. Translated content per locale (NL "je", FR "vous"). Persistent sculpture/HUD survive soft-nav; each URL is a full static HTML file. **pt-br (Brazil SMB) still single-page** (`/pt-br/`) — kept Brazil-native (D-018); its deep content must be authored, not translated. All pass rules (no green; pt-br has no EU/enterprise content). Full hreflang matrix + regenerated `sitemap.xml` (**41 URLs**, incl. `/systems/cutting-edge/`) + `robots.txt`. Locale switcher (→ equivalent page per locale) + root geo-suggest on every page.
 - Integrations (after Phase 0): **Meta Pixel = inert commented placeholder on all 4** (loads nothing/0 errors until the real ID is set + uncommented — operator preference [[inert placeholders]]); **EN HubSpot form live** (real `2fef7ceb…`, new-builder embed); **NL/FR = inert new-builder form placeholder** (`YOUR_NL/FR_HUBSPOT_FORM_ID`, guarded loader injects nothing until a real ID is set) **+ `hello@oopuo.com` mailto**; "Book a free call" → **mailto** on EN/NL/FR (404 Meetings slug parked in a code comment); **per-track OG images shipped** (`og-default.png` EU / `og-default-br.png` BR, 1200×630); WhatsApp real on pt-br.
-- **NEXT:** Phase 0 + Phase 1 + **Phase 2 split = DONE for EN + NL + FR** (D-026, D-027) + JSON-LD breadth done. All three Europe locales live on the router (home rooms 1+2 in-page snap + boundary soft-nav; side pages for enterprise/service-details/blog-posts; per-locale hash-redirect shim; locale switcher → equivalent page + geo-suggest; sitemap = 40 URLs + full hreflang). Verified on fresh Playwright, 0 console errors. **Remaining before Phase 3:** (1) **pt-br deep content** — split it like the others BUT author its blog/service/enterprise pages Brazil-native (R$/WhatsApp/parceria; D-018 forbids translating the EU material) — needs operator direction on the Brazil offer set; (2) **blog markdown pipeline** `tools/render_posts.py` (posts hand-authored HTML now — deferred, operator-convenience). Then **Phase 3** (compliance + conversion) when operator inputs land.
-- Operator inputs pending (§C.8): real Meta Pixel ID; real Meeting slug; **NL+FR HubSpot form IDs (new builder)**; legal entity details for privacy/mentions-légales pages. (Each is a quick swap into the in-place inert placeholders. None block Phase 2.)
+- **NEXT (see plan §2):** `/lab/` + `/lab/zenithcred/` → `/systems/websites/` → mobile overlay
+  menu → `/services/private/` (gated on input §9.9) → demote Services / retitle Studio. Phases 0–2
+  (triage, shared foundation, EN+NL+FR split, JSON-LD) are DONE. Still queued behind the
+  repositioning: **pt-br deep content** (authored Brazil-native, D-018 forbids translating the EU
+  material — needs operator direction on the Brazil offer set); **blog markdown pipeline**
+  `tools/render_posts.py` (deferred, operator convenience); then **Phase 3** (compliance +
+  conversion).
+- Operator inputs pending: **nine content inputs for the repositioning** (spec §9, tabulated in
+  plan §4) — they gate **publication, not construction**, so build with placeholders. **§9.3 has a
+  clock on it: Cutting Edge's name, floor plan and the €66.900,90 figure are ALREADY LIVE on
+  oopuo.com** — a current exposure, not a future one. **§9.9** (demonstrable private/sovereign
+  capability list) gates `/services/private/` entirely. Plus the older four: real Meta Pixel ID;
+  real Meeting slug; **NL+FR HubSpot form IDs (new builder)**; legal entity details for
+  privacy/mentions-légales. (Each of those four is a quick swap into an in-place inert placeholder.)
 - Testing note: HubSpot form + Meta Pixel only verify on the **live https** domain (operator deploys to oopuo.com in seconds), not on localhost. JS changes can be browser-cached on localhost — verify in a fresh context (Playwright) not the warm preview tab.
-- last session: 2026-08-01 — **repositioning brainstorm + foundation work.** Spec written (see the
-  ⚠️ bullet above) and committed. Five commits: (1) `AGENTS.md` now tracked — `CLAUDE.md` had
-  become a bare `@AGENTS.md` pointer to an **untracked** file, so a fresh clone lost all agent
-  memory; `.screenshots/` + `/material/` ignored (18MB of root PNG debris archived, not deleted).
-  (2) The uncommitted edge-scroll rework reviewed and committed **with a real bug fixed**: the
-  passive wheel listener runs *after* the compositor applies the scroll, so `scrollTop` read "at
-  the edge" for a flick that had only just arrived — one hard flick scrolled a section to its end
-  AND crossed into the next, skipping all the content (600px delta skipped all 383px of room 1;
-  420px raced between runs). Gate now reads a **settled** position sampled on a scroll-idle
-  debounce. (3) Automation case study + work gallery committed along with `public_html/media/`,
-  which was **untracked while live pages depended on it**; images converted to WebP, **4.4MB →
-  272KB** (94%), PNG originals archived outside the upload set. (4) The spec. (5)
-  `willReadFrequently` on the AsciiEffect 2d context — console is now **completely silent**.
-  Verified throughout on fresh Playwright with the HTTP cache disabled. **Touch/swipe is NOT
-  verified** — synthetic touch events don't drive native scrolling; needs a real device on
-  oopuo.com. **Nine operator content inputs** are listed in spec §9; §9.9 (demonstrable private/
-  sovereign capability) gates that page, and §9.3 (Cutting Edge naming + the €66.900,90 floor
-  plan) is a **live exposure already on oopuo.com**, not a future one.
+- last session: 2026-08-01 — **repositioning brainstormed, specced, and started (D-028).** Spec +
+  build plan written; `DECISIONS.md`, `PROJECT.md §B/§E`, `HANDOFF.md` all updated. Ten commits.
+  **Repo coherence:** `AGENTS.md` and `public_html/media/` were **untracked while being depended
+  on** (a fresh clone lost all agent memory; live pages referenced files not in the repo) — both
+  now tracked; `.screenshots/` + `/material/` ignored; 18MB of root PNG debris archived.
+  **Engine:** the uncommitted edge-scroll rework was reviewed and committed **with a real bug
+  fixed** — the wheel listener is passive, so the compositor applies the scroll *before* the
+  handler runs and `scrollTop` read "at the edge" for a flick that had only just arrived; one hard
+  flick both scrolled a section to its end and crossed into the next (600px skipped all 383px of
+  room 1). The gate now reads a **settled** position sampled on a scroll-idle debounce.
+  **Perf:** sculpture visible **2372ms → 986ms** (UnrealBloomPass compiles ~7 shaders and
+  allocates 5 mip targets at construction — now built lazily after frame 1); work images **4.4MB →
+  272KB** as WebP; `willReadFrequently` on the AsciiEffect context → console **completely
+  silent**; hero fonts preloaded. **UI:** split hero, Systems deck, `/systems/cutting-edge/`
+  (41 sitemap URLs, exact parity), side-page spacing tightened `120/120/84` → `88/72/48`.
+  **Unverified: touch/swipe** — synthetic touch events do not drive native scrolling; needs a real
+  device on oopuo.com. **Next:** `/lab/` + `/lab/zenithcred/` (the page carrying the whole
+  argument), then `/systems/websites/`, then the mobile overlay menu (the homepage still has ~7
+  links and no menu under 900px).
 - previous session: 2026-06-19 — **NL + FR full content parity (D-027)** + Phase 2 EN finish + JSON-LD. Earlier in the session: completed the EN split (D-026 — router-mode home, multi-room snap, side pages, locale chrome, hash shim) and added JSON-LD breadth (Organization + Service + BreadcrumbList, 11 blocks). Then, per operator directive "all languages should have all content," split **NL and FR** into the full 13-page router tree (two parallel subagents translated the EN page set: NL informal "je", FR formal "vous"; € + EU-AI-Act framing kept; inert `YOUR_NL/FR_HUBSPOT_FORM_ID` + mailto on contact). Added en/nl/fr hreflang to the 12 EN deep pages; regenerated `sitemap.xml` → 40 URLs with full cross-links; upgraded the engine locale switcher to target the **equivalent page** per locale; mobile CSS for the switcher/geo-suggest. Verified NL + FR journeys on fresh Playwright (in-page snap, soft-nav, warm blog, deep-load, cross-locale hard-load) — 0 errors. **pt-br left Brazil-native** (D-018 — its deep content must be authored, not translated). 26 new NL/FR pages.
 
 ## 9. Pointer table — `PROJECT.md` sections
