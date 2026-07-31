@@ -107,7 +107,12 @@ class AsciiEffect {
 
 		}
 
-		const oCtx = oCanvas.getContext( '2d' );
+		// OOPUO LOCAL MODIFICATION (2026-08-01) — do not lose on a Three.js update.
+		// asciifyImage() calls getImageData() on every rendered frame. Without this hint the
+		// browser keeps the canvas GPU-backed and reads it back each time, which is the slow
+		// path and logs a console warning on every page load. willReadFrequently moves the
+		// canvas to a CPU-backed buffer, which is what a per-frame readback wants.
+		const oCtx = oCanvas.getContext( '2d', { willReadFrequently: true } );
 		if ( ! oCtx.getImageData ) {
 
 			return;
