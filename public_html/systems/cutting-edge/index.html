@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Meta Pixel — INACTIVE placeholder (D-025/Phase 0). Currently commented out so it loads nothing & logs no console error. TO ACTIVATE: replace both YOUR_META_PIXEL_ID below with your numeric Pixel ID, then uncomment the block by deleting the "PIXEL down" line and the "PIXEL up" line that wrap it. Phase 3 will move this behind the consent gate (PROJECT.md §C.5). -->
+<!-- PIXEL ↓
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','YOUR_META_PIXEL_ID');fbq('track','PageView');</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_META_PIXEL_ID&ev=PageView&noscript=1" alt=""/></noscript>
+PIXEL ↑ -->
+<title>Cutting Edge — an internal logic flow, rebuilt · OOPUO</title>
+<meta name="description" content="An interior-design production company's internal flow rebuilt around AI: sourcing, design and 3D, the renovation-estimate pipeline, project management. Design work that took one to two weeks now takes two days at most.">
+<link rel="canonical" href="https://oopuo.com/systems/cutting-edge/">
+<meta name="robots" content="index, follow">
+<link rel="alternate" hreflang="en" href="https://oopuo.com/systems/cutting-edge/">
+<link rel="alternate" hreflang="x-default" href="https://oopuo.com/systems/cutting-edge/">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://oopuo.com/systems/cutting-edge/">
+<meta property="og:title" content="Cutting Edge — an internal logic flow, rebuilt · OOPUO">
+<meta property="og:description" content="Sourcing, design and 3D, estimates, project management. One to two weeks of design work, now two days at most.">
+<meta property="og:site_name" content="OOPUO">
+<meta property="og:image" content="https://oopuo.com/og-default.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OOPUO Intelligence — a lab for high-gain systems.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cutting Edge — an internal logic flow, rebuilt · OOPUO">
+<meta name="twitter:description" content="Sourcing, design and 3D, estimates, project management. One to two weeks of design work, now two days at most.">
+<meta name="twitter:image" content="https://oopuo.com/og-default.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrumentsans-700-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrumentsans-400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrainsmono-400-latin.woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/canvas.css">
+<noscript><style>.room,.ent-page{opacity:1!important;visibility:visible!important;position:relative!important;transform:none!important;height:auto!important}.hud,.scroll-hint,.nav-rail,.col1-rail,.sub-nav{display:none!important}</style></noscript>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"CreativeWork","name":"Cutting Edge — an internal logic flow, rebuilt","provider":{"@type":"Organization","name":"OOPUO","url":"https://oopuo.com/"},"url":"https://oopuo.com/systems/cutting-edge/","description":"An interior-design production company's internal flow rebuilt around AI: sourcing, design and 3D, the renovation-estimate pipeline, project management."},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://oopuo.com/"},{"@type":"ListItem","position":2,"name":"Systems","item":"https://oopuo.com/"},{"@type":"ListItem","position":3,"name":"Cutting Edge","item":"https://oopuo.com/systems/cutting-edge/"}]}]</script>
+</head>
+<body data-palette="cyan">
+<div class="section-title" aria-hidden="true">
+  <span class="tick"></span>
+  <span class="name" id="section-name" data-num="S.01">CUTTING EDGE</span>
+</div>
+
+<div class="hud">
+  <div class="tl"><span class="brand"><span class="brand-mark" aria-hidden="true"></span>OOPUO</span></div>
+  <div class="ent"><a href="/enterprise/">Enterprise →</a></div>
+  <div class="tr counter"><span class="current">S.01</span> <span class="total"></span></div>
+  <div class="br next">NEXT <em id="next-label"></em></div>
+</div>
+
+<nav class="nav-rail" aria-label="Main sections">
+  <button class="nav-node" data-go="1" data-dist="0" aria-label="Arrival"></button>
+  <button class="nav-node" data-go="2" data-dist="0" aria-label="Systems"></button>
+  <button class="nav-node" data-go="3" data-dist="3" aria-label="Services"></button>
+  <button class="nav-node" data-go="4" data-dist="3" aria-label="Studio"></button>
+  <button class="nav-node" data-go="5" data-dist="3" aria-label="Blog"></button>
+  <button class="nav-node" data-go="6" data-dist="3" aria-label="Invitation"></button>
+</nav>
+
+<nav class="col1-rail" aria-label="Module sub-pages">
+  <button class="col1-node" data-sub="1" aria-label="Overview"></button>
+  <button class="col1-node" data-sub="2" aria-label="Examples"></button>
+  <button class="col1-node" data-sub="3" aria-label="Process"></button>
+  <button class="col1-node" data-sub="4" aria-label="Pricing"></button>
+</nav>
+
+<div class="sculpture" id="sculpture" aria-hidden="true"></div>
+<div class="scroll-hint"></div>
+
+<nav class="sub-nav" aria-label="Sub-page navigation">
+  <button class="sub-nav-btn sub-nav-prev" id="sub-nav-prev" type="button">
+    <span class="sub-nav-arrow" aria-hidden="true">←</span>
+    <span class="sub-nav-label" id="sub-nav-prev-label"><span class="sub-nav-step">PREV</span><span class="sub-nav-name">—</span></span>
+  </button>
+  <button class="sub-nav-btn sub-nav-next" id="sub-nav-next" type="button">
+    <span class="sub-nav-label" id="sub-nav-next-label"><span class="sub-nav-step">NEXT</span><span class="sub-nav-name">—</span></span>
+    <span class="sub-nav-arrow" aria-hidden="true">→</span>
+  </button>
+</nav>
+
+<main class="stage" id="main" tabindex="-1">
+
+  <article class="ent-page active" id="ent-page">
+    <div class="ent-inner">
+      <a class="reader-back" href="/">← Back to systems</a>
+
+      <header>
+        <span class="ent-label">S.01 · Interior design production</span>
+        <h1 class="ent-h1">An internal logic<br>flow, rebuilt.</h1>
+        <p class="ent-sub">Cutting Edge designs and produces interiors. The work was never the problem — the flow around it was. Sourcing, design, estimating and project handling each sat in a different place, and every job paid the cost of moving between them.</p>
+        <div class="case-headline">
+          <span class="case-headline-before"><s>1–2 weeks</s> per design</span>
+          <span class="case-headline-after">→ 2 days maximum</span>
+        </div>
+        <p class="ent-body"><strong>What changed:</strong> the AI does the sourcing and the design. Four workflows, one flow — each one below.</p>
+      </header>
+
+      <!-- The workflow deck. Same component as the Systems deck on the home page, one level
+           down: the card that was a panel there is the whole page here, and its workflows are
+           the panels. PLACEHOLDER CONTENT — the workflow list and per-workflow figures are
+           operator inputs (spec §9.1). Structure is final; the words are not. -->
+      <section class="ent-section">
+        <span class="ent-label">The workflows</span>
+        <h2>Four workflows, one flow.</h2>
+
+        <div class="deck deck-inline" role="list">
+          <div class="deck-panel" role="listitem" tabindex="0">
+            <span class="deck-spine"><span>01 — Sourcing</span></span>
+            <span class="deck-body">
+              <span class="deck-kicker">01 · Sourcing</span>
+              <span class="deck-title">The AI does the sourcing.</span>
+              <p>Finding, comparing and specifying what a room needs, against what is actually available and what it costs.</p>
+              <span class="deck-status" data-state="running">Running</span>
+            </span>
+          </div>
+
+          <div class="deck-panel" role="listitem" tabindex="0">
+            <span class="deck-spine"><span>02 — Design &amp; 3D</span></span>
+            <span class="deck-body">
+              <span class="deck-kicker">02 · Design &amp; 3D</span>
+              <span class="deck-title">Two weeks, done in two days.</span>
+              <p>The 3D modelling that carried the design used to run one to two weeks per design.</p>
+              <span class="deck-gain">
+                <span><s>1–2 weeks</s></span>
+                <b>→ 2 days max</b>
+              </span>
+              <span class="deck-status" data-state="running">Running</span>
+            </span>
+          </div>
+
+          <div class="deck-panel" role="listitem" tabindex="0">
+            <span class="deck-spine"><span>03 — Estimates</span></span>
+            <span class="deck-body">
+              <span class="deck-kicker">03 · Renovation estimate</span>
+              <span class="deck-title">Brainstorm to client-ready offer.</span>
+              <p>A messy brainstorm becomes a colour-keyed, client-ready offer: 6 zones, 14 line items, a 5-step pipeline.</p>
+              <span class="deck-gain"><b>6 zones · 14 line items</b></span>
+              <a class="deck-link" href="#w-estimate">See it end to end →</a>
+              <span class="deck-status" data-state="running">Running</span>
+            </span>
+          </div>
+
+          <div class="deck-panel" role="listitem" tabindex="0">
+            <span class="deck-spine"><span>04 — Project management</span></span>
+            <span class="deck-body">
+              <span class="deck-kicker">04 · Project management</span>
+              <span class="deck-title">The job knows where it is.</span>
+              <p>Status stops being assembled by hand from four places at the end of the week.</p>
+              <span class="deck-status" data-state="running">Running</span>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section class="ent-section" id="w-estimate">
+        <span class="ent-label">Workflow 03 · in detail</span>
+        <h2>The estimate, end to end.</h2>
+        <p class="ent-body">The clearest of the four to show, because its output is a document a client actually receives. A zoned plan comes out the far end with every region priced.</p>
+        <figure class="case-figure">
+          <img src="/media/cases/mahdi-plan.webp" alt="Zoned renovation plan — six colour-keyed regions across two floors, with a legend mapping each zone." loading="lazy" width="1440" height="1019">
+          <figcaption>Six colour-keyed zones across two floors. Each region carries its own line items into the offer.</figcaption>
+        </figure>
+      </section>
+
+      <section class="ent-section">
+        <span class="ent-label">What it took</span>
+        <h2>How it was built.</h2>
+        <ol class="process-list">
+          <li><strong>Follow the existing flow.</strong> Not the flow as described — the one actually being run, including the parts nobody would put in a process document.</li>
+          <li><strong>Find where the time goes.</strong> The 3D modelling was the obvious cost. The re-typing between stages was the quiet one.</li>
+          <li><strong>Automate the production, keep the judgement.</strong> The AI sources and drafts. What goes to a client is still a decision a person makes.</li>
+          <li><strong>Hand it over.</strong> It runs inside the company, not inside a retainer.</li>
+        </ol>
+      </section>
+
+      <section class="ent-section">
+        <span class="ent-label">Next</span>
+        <h2>A flow of your own?</h2>
+        <p class="ent-body">If the work is fine and the flow around it is the problem, that is the same shape.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/contact/">Work with me <span class="arrow">→</span></a>
+          <a class="btn btn-ghost" href="/lab/">See the lab <span class="arrow">→</span></a>
+        </div>
+      </section>
+    </div>
+  </article>
+
+</main>
+
+<script>
+  /* Router-mode SIDE page (case study; reached from the Systems deck on "/", not a journey stop). */
+  window.OOPUO = {
+    locale: 'en', track: 'europe',
+    route: '/systems/cutting-edge/', label: 'Cutting Edge', counter: 'S.01', sculpture: 1, palette: 'cyan', totalRooms: 6,
+    journey: [
+      { path: '/',          label: 'Arrival',    sculpture: 1, rooms: [1, 2] },
+      { path: '/services/', label: 'Services',   sculpture: 3, rooms: [3] },
+      { path: '/studio/',   label: 'Studio',     sculpture: 4, rooms: [4] },
+      { path: '/blog/',     label: 'Blog',       sculpture: 5, palette: 'warm', rooms: [5] },
+      { path: '/contact/',  label: 'Invitation', sculpture: 6, rooms: [6] }
+    ],
+    labels: { rooms: ["Arrival","Systems","Services","Studio","Blog","Invitation"], end: "— END" }
+  };
+</script>
+<script src="/assets/js/engine.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "/assets/vendor/three/build/three.module.min.js",
+    "three/addons/": "/assets/vendor/three/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="/assets/js/sculpture.js"></script>
+<script src="/assets/js/router.js"></script>
+</body>
+</html>

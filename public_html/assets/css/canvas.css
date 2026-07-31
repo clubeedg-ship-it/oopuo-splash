@@ -1105,3 +1105,42 @@
      it to — the copy would sit straight on the bright core again. Dimming keeps the
      sculpture present as atmosphere while the content stays legible. */
   body[data-room="2"] .sculpture { opacity: 0.32; }
+
+  /* ══ Case page (a Systems card, activated) ══════════════════════════════════════
+     The deck inside a case page cannot size itself from the section the way the home
+     deck does — .ent-page is one long scroll container, not a viewport-height room —
+     so this variant carries its own height. */
+  .deck-inline { height: min(62vh, 540px); margin-top: 18px; }
+
+  /* The gain, stated once at the top of the page. It is the reason the page exists,
+     so it is not buried in body copy. */
+  .case-headline {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px;
+    margin: 26px 0 22px; padding: 18px 22px;
+    background: var(--bg-elev); border: 1px solid var(--line-strong); border-left: 2px solid var(--teal);
+    font-family: var(--mono);
+  }
+  .case-headline-before { font-size: 13px; color: var(--ink-faint); }
+  .case-headline-before s { text-decoration: line-through; }
+  .case-headline-after { font-size: clamp(1.15rem, 2.2vw, 1.7rem); font-weight: 600; color: var(--teal); letter-spacing: -0.01em; }
+
+  .case-figure { margin: 22px 0 0; }
+  .case-figure img { width: 100%; height: auto; display: block; background: var(--bg-elev); border: 1px solid var(--line-strong); }
+  .case-figure figcaption { margin-top: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-faint); }
+
+  @media (max-width: 900px) {
+    /* Matches the home deck: stacked, panels share the height, tap to expand. */
+    .deck-inline { height: min(70vh, 560px); }
+  }
+
+  /* Case pages dim the sculpture for the same reason room 2 does: an inline deck claims the
+     full width, so there is nowhere to move the artwork to. Scoped with :has() to pages that
+     actually carry a deck, so the twelve existing side pages are untouched. */
+  body:has(.deck-inline) .sculpture { opacity: 0.32; }
+
+  /* An action inside a panel — used where a workflow has somewhere to go. */
+  .deck-link { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--teal); text-decoration: none; border-bottom: 1px solid transparent; align-self: flex-start; }
+  .deck-link:hover { border-bottom-color: var(--teal); }
+
+  /* Panels are focusable divs where they are not links, so they need the same focus ring. */
+  .deck-panel[tabindex]:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }

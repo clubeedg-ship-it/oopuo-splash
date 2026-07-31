@@ -52,6 +52,11 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/studio/"/>
   </url>
   <url>
+    <loc>https://oopuo.com/systems/cutting-edge/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/systems/cutting-edge/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://oopuo.com/systems/cutting-edge/"/>
+  </url>
+  <url>
     <loc>https://oopuo.com/enterprise/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://oopuo.com/enterprise/"/>
     <xhtml:link rel="alternate" hreflang="nl" href="https://oopuo.com/nl/enterprise/"/>
