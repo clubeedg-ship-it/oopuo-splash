@@ -3,6 +3,26 @@
   // before branching so legacy single-page locales get it too. Runs once per full page load.
   initLocaleChrome();
 
+  // Section-transition gesture tuning. Declared ABOVE the router-mode branch so both nav systems
+  // (router pages in initRouterMode + the legacy in-page snap below) can read them — the early
+  // `return` on the next line would otherwise leave these in the TDZ for router pages.
+  //
+  // Router pages give each section REAL scroll travel (a slack band, --room-slack in canvas.css):
+  // you scroll the content freely and only snap to the next section once you hit the scroll edge.
+  // EDGE_* is the small extra push needed AT the edge to cross over (low — you're already there).
+  // WHEEL/TOUCH_THRESHOLD are the legacy single-page (pt-br) deadzone, unchanged.
+  const WHEEL_THRESHOLD = 140;
+  const TOUCH_THRESHOLD = 120;
+  const EDGE_WHEEL = 70;          // extra wheel delta at the edge before snapping (router pages)
+  const EDGE_TOUCH = 80;          // extra swipe px at the edge before snapping (router pages)
+  const SLACK_RATIO = 0.34;       // keep in sync with --room-slack (vh) in canvas.css
+  const NAV_COOLDOWN = 620;       // ms after a snap during which no further snap fires (router pages).
+                                  // FIXED (not extended) so sustained scrolling advances one section
+                                  // per cooldown — continuous scrolling never gets stuck.
+  const COAST_RATIO = 0.55;       // a wheel event whose |deltaY| drops below this fraction of the
+                                  // current gesture's peak is treated as inertial coast and ignored,
+                                  // so a single flick = ONE section while steady scrolling keeps going.
+
   // Phase 2: split pages declare window.OOPUO.journey → ROUTER MODE — the persistent shell drives the
   // sculpture + HUD and hands page-to-page navigation to assets/js/router.js. Pages without a journey
   // fall through to the legacy single-page engine below (current home / nl / fr / pt-br, unchanged).
@@ -18,7 +38,6 @@
 
   let current = 1, currentMod = null, currentSub = 1, animating = false, entOpen = false;
   let wheelAcc = 0, wheelTimer;
-  const WHEEL_THRESHOLD = 60;
 
   const rooms = document.querySelectorAll('.room');
   rooms.forEach(r => { r.inert = !r.classList.contains('active'); }); // a11y: keep inactive rooms out of tab order + SR tree
@@ -340,7 +359,7 @@
   window.addEventListener('touchend', e => {
     if (currentMod !== null || currentPost !== null) return;
     const dy = touchY - e.changedTouches[0].clientY;
-    if (Math.abs(dy) > 50) go(current + (dy > 0 ? 1 : -1));
+    if (Math.abs(dy) > TOUCH_THRESHOLD) go(current + (dy > 0 ? 1 : -1));
   }, { passive: true });
 
   // —— URL hash routing —————————————————————————————————————————————
@@ -441,6 +460,80 @@
     let journey = cfg.journey, idx = cfg.index || 0, animating = false;
     let pageRooms = [], localIdx = 0; // rooms shown on THIS page (multi for home: Arrival + The Gap)
 
+    // Marks the document so canvas.css can give router sections real scroll travel (the slack
+    // band) — legacy pt-br has no journey, never gets this, keeps its old instant-snap canvas.
+    document.documentElement.classList.add('router-mode');
+
+    // The section the wheel/touch nav should read for its scroll position.
+    const activeRoomEl = () =>
+      document.querySelector('main#main .room.active') || document.querySelector('main#main .room');
+
+    // Side pages (service detail / enterprise / blog post / legal) render an .ent-page article
+    // instead of .room sections; their scroll container is .ent-page (overflow-y:auto), which the
+    // edge-scroll logic above does NOT track. Without this guard activeRoomEl()/atScrollEdge() find
+    // no .room, report "always at the edge", and every wheel/touch/key gesture fires navTo() —
+    // yanking the reader off the article. On a side page we bail out of snap-nav entirely and let
+    // .ent-page scroll natively (navigation off a side page happens via the nav-rail / back link).
+    const onSidePage = () => !document.querySelector('main#main .room');
+
+    // True when the active section is scrolled to the edge in the gesture's direction — i.e. there
+    // is no more content slack to consume, so the gesture should cross to the next/prev section.
+    function atScrollEdge(dir) {
+      const el = activeRoomEl();
+      if (!el) return true;
+      const max = el.scrollHeight - el.clientHeight;
+      if (max <= 1) return true;                       // nothing to scroll → always at the edge
+      return dir > 0 ? el.scrollTop >= max - 2 : el.scrollTop <= 2;
+    }
+
+    // Where the active section had SETTLED before the current gesture began.
+    //
+    // The wheel listener is passive, so the compositor applies the scroll and the handler runs
+    // afterwards — meaning el.scrollTop inside the handler can already read "at the edge" for a
+    // flick that only just travelled there. Gating on that let one hard flick scroll a section to
+    // its end AND cross into the next in the same gesture, skipping all of the content between
+    // (measured 2026-07-31: a single 600px delta skipped all 383px of room 1; 420px raced and
+    // behaved differently between runs). Sampling the position on a scroll-idle debounce instead
+    // makes the gate independent of that race: crossing requires the section to have been RESTING
+    // at its edge when the gesture started, so reaching the edge and leaving it are always two
+    // separate gestures.
+    let settledTop = 0, settleT;
+    const markSettled = (v) => { clearTimeout(settleT); settledTop = v; };
+    document.addEventListener('scroll', (e) => {
+      const el = activeRoomEl();
+      if (!el || e.target !== el) return;
+      clearTimeout(settleT);
+      settleT = setTimeout(() => { settledTop = el.scrollTop; }, 150);
+    }, true);
+
+    function settledAtEdge(dir) {
+      const el = activeRoomEl();
+      if (!el) return true;
+      const max = el.scrollHeight - el.clientHeight;
+      if (max <= 1) return true;                       // nothing to scroll → always at the edge
+      return dir > 0 ? settledTop >= max - 2 : settledTop <= 2;
+    }
+
+    // Place the scroll position when a section becomes active: short sections sit centred (equal
+    // slack above + below to scroll into); sections taller than the viewport anchor at content-top
+    // (keeping the upward slack so you can still scroll up a touch before snapping back).
+    function placeScroll() {
+      const el = activeRoomEl();
+      if (!el) return;
+      requestAnimationFrame(() => {
+        const max = el.scrollHeight - el.clientHeight;
+        // markSettled on every branch: a newly activated section is at rest where we put it, and
+        // the gesture gate reads that resting position rather than waiting for the scroll debounce.
+        if (max <= 1) { el.scrollTop = 0; markSettled(0); return; }
+        const rn = el.dataset.room || '';
+        if (rn === '5' || rn === '6') { el.scrollTop = 0; markSettled(0); return; }   // blog/contact: real content, no slack band → start at top
+        const inner = el.querySelector('.room-inner');
+        const slackPx = Math.round(el.clientHeight * SLACK_RATIO);
+        el.scrollTop = (inner && inner.offsetHeight > el.clientHeight) ? slackPx : Math.round(max / 2);
+        markSettled(el.scrollTop);
+      });
+    }
+
     function paint(c) {
       journey = c.journey || journey;
       idx = c.index || 0;
@@ -495,26 +588,41 @@
       });
       paintHUD(rn);
       sculpt(rn);
+      placeScroll();
     }
 
+    // Returns true only if it actually changed section (so the caller arms the settle lock only
+    // on a real move — a no-op at the first/last boundary must not lock out the next gesture).
     function navTo(dir) {
-      if (animating) return;
+      if (animating) return false;
       const nl = localIdx + dir;
       if (pageRooms.length > 1 && nl >= 0 && nl < pageRooms.length) { // snap between rooms on this page
         animating = true; goLocal(nl, dir);
-        setTimeout(() => { animating = false; }, 720); return;
+        setTimeout(() => { animating = false; }, 720); return true;
       }
       const n = idx + dir;                                           // boundary → adjacent journey stop
-      if (n < 0 || n >= journey.length || !window.__oopuoRouter) return;
+      if (n < 0 || n >= journey.length || !window.__oopuoRouter) return false;
       animating = true;
       Promise.resolve(window.__oopuoRouter.navigate(journey[n].path)).finally(() => { animating = false; });
+      return true;
     }
 
-    // activate the first room of the current page (or, for a side page, just reveal its content)
-    function activateInitialRoom() {
+    // activate the first room of the current page (or, for a side page, just reveal its content).
+    // animate=true (router page swap): start the new room inactive, flush that frame, then activate
+    // next frame so the slide+fade entry transition actually runs instead of the content popping in
+    // dry. animate=false (cold start): activate instantly.
+    function activateInitialRoom(animate) {
       const rs = document.querySelectorAll('main#main .room');
-      if (pageRooms.length) rs.forEach((r) => { const a = Number(r.dataset.room) === pageRooms[0]; r.classList.toggle('active', a); r.inert = !a; });
-      else rs.forEach((r) => { r.classList.add('active'); r.inert = false; });
+      const target = pageRooms.length ? pageRooms[0] : null;
+      const apply = () => {
+        rs.forEach((r) => { const a = target == null ? true : Number(r.dataset.room) === target; r.classList.toggle('active', a); r.inert = !a; });
+        placeScroll();
+      };
+      if (!animate || !rs.length) { apply(); return; }
+      rs.forEach((r) => { r.classList.remove('active'); r.inert = true; });
+      void document.getElementById('main').offsetHeight;   // paint the inactive (opacity:0/offset) state
+      requestAnimationFrame(apply);                          // → next frame: activate, transition runs
+      return;
     }
 
     // load the HubSpot form embed if the current page has a real (non-placeholder) form frame.
@@ -535,8 +643,11 @@
     // router.js calls this after it swaps <main> — repaint shell for the new page
     window.__oopuoOnRoute = function (c) {
       c = c || cfg;
+      const prevIdx = idx;                                  // capture before paint() overwrites it
       paint(c);
-      activateInitialRoom();
+      // entry slide direction: forward along the journey = down, backward = up
+      document.body.dataset.direction = (c.index || 0) < prevIdx ? 'up' : 'down';
+      activateInitialRoom(true);                            // animate the new page in (not a dry pop-in)
       sculpt(c.sculpture || (c.rooms && c.rooms[0]) || 1);
       loadContactForm();
       const m = document.getElementById('main');
@@ -553,21 +664,60 @@
       });
     });
 
-    // wheel / keyboard / touch → adjacent journey stop (single-room pages; debounced)
-    let wAcc = 0, wT;
+    // wheel / keyboard / touch → adjacent journey stop. Edge-gated: while the active section
+    // still has content slack to scroll in the gesture's direction, we let it scroll natively
+    // (passive listener, no preventDefault) and reset the accumulator. Only once it's at the
+    // scroll edge does a further nudge (EDGE_WHEEL) cross to the next/prev section.
+    let wAcc = 0, wT, navCooldownUntil = 0, lastNavDir = 0, clusterPeak = 0, lastWheelTs = 0;
     window.addEventListener('wheel', (e) => {
-      wAcc += e.deltaY; clearTimeout(wT); wT = setTimeout(() => { wAcc = 0; }, 220);
-      if (Math.abs(wAcc) >= 60) { navTo(wAcc > 0 ? 1 : -1); wAcc = 0; }
+      if (onSidePage()) return;                           // side page → let .ent-page scroll natively
+      const now = e.timeStamp, dir = e.deltaY > 0 ? 1 : -1, mag = Math.abs(e.deltaY);
+      // Track the peak |deltaY| of the current scroll cluster; a >160ms quiet gap starts a new one.
+      if (now - lastWheelTs > 160) clusterPeak = 0;
+      lastWheelTs = now;
+      clusterPeak = Math.max(clusterPeak, mag);
+      // Reversal = fresh intent → drop the cooldown AND reset the peak so the new direction isn't
+      // mistaken for the previous fling's coast.
+      if (dir !== lastNavDir) { navCooldownUntil = 0; clusterPeak = mag; }
+      // Mid-transition or inside the post-snap cooldown → just scroll content, never snap. The
+      // cooldown is FIXED (not extended), so sustained scrolling advances one section per cooldown
+      // instead of getting stuck.
+      if (animating || now < navCooldownUntil) { wAcc = 0; return; }
+      // Gate on the SETTLED position, not the live one — see settledAtEdge(). While the section
+      // still has slack to travel from where it was resting, the gesture only scrolls content.
+      if (!settledAtEdge(dir)) { wAcc = 0; return; }
+      // Coast guard: a wheel event well below the gesture's peak is the inertial tail of a flick →
+      // ignore it, so one flick = one section while a steady (peak-level) scroll keeps advancing.
+      if (mag < clusterPeak * COAST_RATIO) { wAcc = 0; return; }
+      wAcc += e.deltaY; clearTimeout(wT); wT = setTimeout(() => { wAcc = 0; }, 200);
+      if (Math.abs(wAcc) >= EDGE_WHEEL && navTo(dir)) { wAcc = 0; navCooldownUntil = now + NAV_COOLDOWN; lastNavDir = dir; }
     }, { passive: true });
     window.addEventListener('keydown', (e) => {
+      if (onSidePage()) return;                          // side page → leave keys to native scroll
       if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); navTo(1); }
       else if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); navTo(-1); }
     });
-    let tY = 0;
-    window.addEventListener('touchstart', (e) => { tY = e.touches[0].clientY; }, { passive: true });
+    let tY = 0, tTop = 0;
+    window.addEventListener('touchstart', (e) => {
+      tY = e.touches[0].clientY;
+      tTop = activeRoomEl()?.scrollTop ?? 0;             // baseline for the touchend scroll guard
+    }, { passive: true });
     window.addEventListener('touchend', (e) => {
+      if (onSidePage()) return;                          // side page → let .ent-page scroll natively
+      const now = e.timeStamp;
       const dy = tY - e.changedTouches[0].clientY;
-      if (Math.abs(dy) > 50) navTo(dy > 0 ? 1 : -1);
+      if (Math.abs(dy) <= EDGE_TOUCH) return;            // not a deliberate swipe → ignore
+      const dir = dy > 0 ? 1 : -1;
+      if (dir !== lastNavDir) navCooldownUntil = 0;      // reversal → fresh gesture (see wheel)
+      if (animating || now < navCooldownUntil) return;   // fixed cooldown — one swipe = one section
+      // Only snap when the section is at its scroll edge — otherwise native scroll already moved
+      // the content and we leave the user where they scrolled to.
+      // Same rule as the wheel gate: a swipe that consumed content scroll has done its job and must
+      // not ALSO cross the edge, or one long swipe skips the whole section. Touch can compare
+      // directly, since touchstart samples the position before the scroll happens.
+      const tEl = activeRoomEl();
+      if (tEl && Math.abs(tEl.scrollTop - tTop) > 2) return;
+      if (atScrollEdge(dir) && navTo(dir)) { navCooldownUntil = now + NAV_COOLDOWN; lastNavDir = dir; }
     }, { passive: true });
 
     // first load: paint the HUD + activate the first room + (if contact) load the form. The
@@ -593,22 +743,68 @@
     // EN-equivalent ("bare") path of the page we're on, e.g. /nl/services/ -> /services/ , /fr/ -> /
     const bare = location.pathname.replace(/^\/(nl|fr|pt-br)(?=\/)/, '') || '/';
     const hud = document.querySelector('.hud');
+    // Header logo/wordmark → home (locale-aware). Pages where .brand is already an <a> skip this.
+    if (hud) {
+      const brand = hud.querySelector('.brand');
+      if (brand && brand.tagName !== 'A' && !brand.dataset.homeWired) {
+        brand.dataset.homeWired = '1';
+        brand.style.cursor = 'pointer';
+        brand.setAttribute('role', 'link');
+        brand.setAttribute('tabindex', '0');
+        brand.setAttribute('aria-label', 'OOPUO — home');
+        const brandHome = current === 'en' ? '/' : '/' + current + '/';
+        const goBrandHome = function () {
+          if (window.__oopuoRouter && typeof window.__oopuoRouter.navigate === 'function') window.__oopuoRouter.navigate(brandHome);
+          else location.href = brandHome;
+        };
+        brand.addEventListener('click', goBrandHome);
+        brand.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goBrandHome(); } });
+      }
+    }
     if (hud && !hud.querySelector('.locale')) {
       const nav = document.createElement('nav');
       nav.className = 'locale';
       nav.setAttribute('aria-label', 'Language');
-      LOCALES.forEach((loc, i) => {
-        if (i) { const s = document.createElement('span'); s.className = 'sep'; s.textContent = '·'; nav.appendChild(s); }
+
+      // Collapsed trigger — shows only the current locale + caret.
+      const curLoc = LOCALES.find((l) => l.code === current) || LOCALES[0];
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'locale-toggle';
+      toggle.setAttribute('aria-haspopup', 'true');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Change language');
+      toggle.innerHTML = '<span class="locale-cur">' + curLoc.label +
+        '</span><span class="locale-caret" aria-hidden="true">▾</span>';
+
+      // Expanded menu — all locales; hidden until the trigger is clicked.
+      const menu = document.createElement('div');
+      menu.className = 'locale-menu';
+      menu.setAttribute('role', 'menu');
+      LOCALES.forEach((loc) => {
         const a = document.createElement('a');
         // pt-br has only its home; EN/NL/FR keep the same path across locales
         a.href = (loc.code === 'pt-br') ? '/pt-br/' : (loc.prefix + bare);
         a.textContent = loc.label;
+        a.setAttribute('role', 'menuitem');
         a.setAttribute('hreflang', loc.code);
         a.setAttribute('data-no-router', '');                 // cross-locale switch must hard-load (D-018)
         if (loc.code === current) a.setAttribute('aria-current', 'true');
-        nav.appendChild(a);
+        menu.appendChild(a);
       });
+
+      nav.appendChild(toggle);
+      nav.appendChild(menu);
       hud.appendChild(nav);
+
+      const closeMenu = () => { nav.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); };
+      const openMenu = () => { nav.classList.add('open'); toggle.setAttribute('aria-expanded', 'true'); };
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        nav.classList.contains('open') ? closeMenu() : openMenu();
+      });
+      document.addEventListener('click', (e) => { if (!nav.contains(e.target)) closeMenu(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
     }
 
     // Geo-suggest: only on the EN root, only when the browser's preferred language points elsewhere.

@@ -147,6 +147,21 @@
   body.col1-open .room { opacity: 0 !important; pointer-events: none; }
   .room-inner { width: 100%; max-width: 1040px; position: relative; }
   .sub-room { z-index: 5; }
+
+  /* ── Edge-scroll sections (router pages only — legacy pt-br canvas keeps its instant snap) ──
+     Each section is a real scroll container. Short, centred sections get a symmetric "slack"
+     band (empty grid rows above + below the content) so you can scroll a bit freely; the engine
+     (assets/js/engine.js, edge-gated wheel/touch) only snaps to the next section once you reach
+     the scroll edge. Blog(5)/contact(6) carry real long content + their own scroll, so they're
+     excluded from the slack band and start at the top. Tune the give with --room-slack. */
+  :root { --room-slack: 38vh; }
+  .router-mode .room { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+  .router-mode .room::-webkit-scrollbar { display: none; }
+  .router-mode .room:not([data-room="5"]):not([data-room="6"]) {
+    grid-template-rows: var(--room-slack) auto var(--room-slack);
+    align-content: start;
+  }
+  .router-mode .room:not([data-room="5"]):not([data-room="6"]) > .room-inner { grid-row: 2; }
   .room::before, .sub-room::before {
     content: ""; position: absolute; inset: 0; pointer-events: none;
     background-image:
@@ -180,7 +195,7 @@
   .hud .ent { grid-row: 1; grid-column: 2; padding-right: 18px; border-right: 1px solid var(--line-strong); align-self: center; }
   .hud .tr { grid-row: 1; grid-column: 3; text-align: right; align-self: center; }
   .hud .br { grid-row: 3; grid-column: 3; justify-self: end; text-align: right; }
-  .hud .brand { color: var(--ink); font-family: var(--display); font-weight: 700; font-size: 36px; letter-spacing: -0.015em; text-transform: none; display: inline-flex; align-items: center; gap: 16px; line-height: 1; }
+  .hud .brand { color: var(--ink); text-decoration: none; font-family: var(--display); font-weight: 700; font-size: 36px; letter-spacing: -0.015em; text-transform: none; display: inline-flex; align-items: center; gap: 16px; line-height: 1; cursor: pointer; }
   .hud .brand-mark { display: inline-block; width: 124px; height: 66px; background-image: url('/oopuo-logo.svg'); background-repeat: no-repeat; background-size: contain; background-position: center; vertical-align: middle; filter: none; transition: filter 0.7s ease; }
   [data-theme="dark"] .hud .brand-mark { filter: invert(1); }
   .hud .ent a { color: var(--ink-mute); text-decoration: none; transition: color 0.15s ease; }
@@ -189,12 +204,36 @@
   .hud .counter .total { color: var(--ink-faint); }
   .hud .next em { font-style: normal; color: var(--ink); }
 
-  /* Locale switcher — injected by engine.js into the HUD, bottom-left (row 3 / col 1) */
-  .hud .locale { grid-row: 3; grid-column: 1; justify-self: start; align-self: end; display: flex; gap: 10px; align-items: center; }
-  .hud .locale a { color: var(--ink-faint); text-decoration: none; transition: color 0.15s ease; }
-  .hud .locale a:hover { color: var(--ink); }
-  .hud .locale a[aria-current] { color: var(--ink); font-weight: 600; }
-  .hud .locale .sep { color: var(--ink-faint); opacity: 0.5; }
+  /* Locale switcher — injected by engine.js into the HUD, bottom-left (row 3 / col 1).
+     Collapsed: shows only the current locale + caret; click to reveal the full menu,
+     which pops upward (the switcher lives at the bottom of the viewport). */
+  .hud .locale { grid-row: 3; grid-column: 1; justify-self: start; align-self: end; position: relative; }
+  .hud .locale .locale-toggle {
+    background: none; border: 0; cursor: pointer; padding: 0; margin: 0;
+    font-family: var(--mono); font-size: inherit; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-faint); display: inline-flex; align-items: center; gap: 6px;
+    transition: color 0.15s ease;
+  }
+  .hud .locale .locale-toggle:hover, .hud .locale.open .locale-toggle { color: var(--ink); }
+  .hud .locale .locale-cur { color: var(--ink); font-weight: 600; }
+  .hud .locale .locale-caret { font-size: 0.82em; line-height: 1; color: var(--ink-faint); transition: transform 0.25s ease; }
+  .hud .locale.open .locale-caret { transform: rotate(180deg); }
+  .hud .locale .locale-menu {
+    position: absolute; left: -10px; bottom: 100%; margin-bottom: 12px; min-width: 88px;
+    display: flex; flex-direction: column;
+    background: var(--bg-elev); border: 1px solid var(--line-strong);
+    padding: 5px 0; box-shadow: 0 14px 34px rgba(0,0,0,0.34);
+    opacity: 0; transform: translateY(6px); pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .hud .locale.open .locale-menu { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .hud .locale .locale-menu a {
+    padding: 7px 16px; text-decoration: none; color: var(--ink-mute);
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+  .hud .locale .locale-menu a:hover { color: var(--ink); background: var(--bg-surface); }
+  .hud .locale .locale-menu a[aria-current] { color: var(--teal); }
 
   /* Geo-suggest banner — dismissible, shown only on the EN root when the visitor's browser
      language points at another locale. Lives outside .hud so it can sit centered at the top. */
@@ -366,7 +405,7 @@
 
   /* Modules */
   .modules { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line-strong); border: 1px solid var(--line-strong); margin-top: 16px; max-width: 760px; }
-  .module { background: var(--bg-elev); padding: 24px 24px 26px; position: relative; cursor: pointer; transition: background 0.2s ease; }
+  .module { background: var(--bg-elev); padding: 24px 24px 26px; position: relative; cursor: pointer; transition: background 0.2s ease; text-decoration: none; }
   .module:hover { background: var(--bg); }
   .module-tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
   .module-title { font-family: var(--display); font-weight: 600; font-size: 1.15rem; margin: 0 0 8px 0; color: var(--ink); letter-spacing: -0.01em; }
@@ -440,6 +479,7 @@
     gap: 20px;
     max-width: 56ch;
     margin-bottom: 64px;
+    text-decoration: none;
   }
   .blog-eyebrow {
     font-family: var(--mono);
@@ -509,7 +549,7 @@
   .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 28px; }
   .blog-card {
     display: flex; flex-direction: column; gap: 16px;
-    cursor: pointer;
+    cursor: pointer; text-decoration: none;
     background: rgba(255, 255, 255, 0.70);
     -webkit-backdrop-filter: blur(22px) saturate(170%);
     backdrop-filter: blur(22px) saturate(170%);
@@ -799,6 +839,20 @@
   .example-title { font-family: var(--display); font-weight: 600; font-size: 1.05rem; color: var(--ink); margin-bottom: 6px; }
   .example-outcome { font-size: 0.88rem; color: var(--ink-mute); line-height: 1.55; margin: 0; }
   .example-outcome strong { color: var(--ink); font-weight: 500; }
+
+  /* Real-work gallery (M.01 Websites · Examples) — screenshot thumbnails of shipped sites.
+     Static images in /media/work (headless capture) so the gallery renders even if a site is
+     down. No drop-shadows (canon): hover lifts the card + adds a teal glow. Preview cards
+     (staging builds, no public link) are plain divs — no lift, signalling they aren't clickable. */
+  .work-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 10px; }
+  .work-card { display: block; background: var(--bg-elev); border: 1px solid var(--line-strong); overflow: hidden; color: inherit; text-decoration: none; transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease; }
+  a.work-card:hover { transform: translateY(-4px); border-color: var(--teal); box-shadow: 0 0 26px -4px var(--teal); }
+  .work-shot { display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--bg); border-bottom: 1px solid var(--line-strong); }
+  .work-shot img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+  .work-info { display: flex; flex-direction: column; gap: 5px; padding: 15px 18px 17px; }
+  .work-name { font-family: var(--display); font-weight: 600; font-size: 1.02rem; color: var(--ink); letter-spacing: -0.01em; }
+  .work-meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--teal); }
+  .work-card.is-preview { cursor: default; }
   .process-list { list-style: none; padding: 0; margin: 8px 0 0 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
   .process-list li { padding-left: 36px; position: relative; }
   .process-list li::before { content: attr(data-step); position: absolute; left: 0; top: 2px; font-family: var(--mono); font-size: 11px; color: var(--teal); letter-spacing: 0.16em; }
@@ -874,7 +928,7 @@
   @media (max-width: 900px) {
     :root { --gutter-left: 120px; --col0-left: 28px; --col0-left-shifted: 14px; --col1-left: 56px; }
     .nav-rail, .col1-rail { gap: 22px; }
-    .modules, .price-tiers, .examples-grid, .process-list, .stats, .principles { grid-template-columns: 1fr; }
+    .modules, .price-tiers, .examples-grid, .work-grid, .process-list, .stats, .principles { grid-template-columns: 1fr; }
     .post { grid-template-columns: 1fr; gap: 4px; }
   }
   @media (max-width: 600px) {
@@ -905,8 +959,18 @@
        NEXT label in the bottom corners; touch scrolling needs no prompt — hide it and
        slim the corners so they clear. */
     .scroll-hint { display: none; }
-    .hud .locale { gap: 8px; font-size: 9.5px; }
+    .hud .locale { font-size: 9.5px; }
     .hud .br { font-size: 9.5px; }
+  }
+  /* Tablet / small-laptop band: the brand sits at --gutter-left (180px, aligned to the
+     content column), so its right edge (~453px) overlaps the centered section-title badge
+     for every viewport below ~1080px — not just phones. Pull the brand to a corner gutter
+     and fluidly slim it so it stays on the top line and always clears the badge. (≤600
+     keeps the separate drop treatment for phones.) */
+  @media (min-width: 601px) and (max-width: 1080px) {
+    .hud { padding-left: 40px; }
+    .hud .brand { font-size: clamp(22px, 2.4vw, 32px); gap: 12px; }
+    .hud .brand-mark { width: clamp(84px, 9vw, 112px); height: clamp(46px, 4.9vw, 60px); }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
