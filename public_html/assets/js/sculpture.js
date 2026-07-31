@@ -39,24 +39,43 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
   // Bloom post-process: bright pixels bleed into surrounding pixels BEFORE AsciiEffect samples,
   // so distinct 3D objects merge into one continuous lit field. This is what makes the ASCII
   // grid read as a unified TUI instead of separate rectangular char clusters.
-  const composer = new EffectComposer(renderer);
-  composer.setSize(W, H);
-  composer.addPass(new RenderPass(scene, camera));
-  // strength, radius, threshold:
-  //   strength 1.4 — strong bleed but not blown out
-  //   radius 0.85 — wide bloom, helps objects merge
-  //   threshold 0.18 — only meaningfully lit pixels bloom (avoids ambient glow)
-  const bloomPass = new UnrealBloomPass(new THREE.Vector2(W, H), 1.4, 0.85, 0.18);
-  composer.addPass(bloomPass);
+  // Built LAZILY, after the first frame is on screen. Constructing UnrealBloomPass compiles
+  // roughly seven shader programs and allocates five mip-level render targets, and none of that
+  // can overlap the first paint — it was the bulk of the ~2s gap between the text appearing
+  // (FCP 200ms) and the sculpture appearing (2372ms), which read as a broken half-empty page.
+  //
+  // Frame 1 renders straight through the renderer, so the sculpture shows up as soon as Three.js
+  // has parsed. The bloom chain is then built during an idle slot and swapped in; the ASCII grid
+  // simply gets its glow a few frames later, which is invisible next to a 2s blank.
+  let composer = null;
+  const buildBloom = () => {
+    if (composer) return;
+    const c = new EffectComposer(renderer);
+    c.setSize(W, H);
+    c.addPass(new RenderPass(scene, camera));
+    // strength, radius, threshold:
+    //   strength 1.4 — strong bleed but not blown out
+    //   radius 0.85 — wide bloom, helps objects merge
+    //   threshold 0.18 — only meaningfully lit pixels bloom (avoids ambient glow)
+    c.addPass(new UnrealBloomPass(new THREE.Vector2(W, H), 1.4, 0.85, 0.18));
+    composer = c;
+  };
 
   // Hijack renderer.render → route through the composer when called from outside (AsciiEffect),
   // but use the ORIGINAL render when called from inside (composer's RenderPass needs the raw render).
   // Guarded with a re-entry flag to prevent infinite recursion.
   const origRender = renderer.render.bind(renderer);
   let viaComposer = false;
+  let framesDrawn = 0;
   renderer.render = function (s, c) {
     if (viaComposer) {
       origRender(s, c);   // RenderPass is calling us — do the real render
+    } else if (!composer) {
+      origRender(s, c);   // pre-bloom frames: straight through, so frame 1 is not gated on shaders
+      if (++framesDrawn === 1) {
+        const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 200));
+        idle(buildBloom);
+      }
     } else {
       viaComposer = true;
       composer.render();   // AsciiEffect is calling us — go through the bloom pipeline
@@ -79,8 +98,9 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
     camera.aspect = W / H;
     camera.updateProjectionMatrix();
     renderer.setSize(W, H);
-    composer.setSize(W, H);
-    bloomPass.setSize(W, H);
+    // The bloom chain is built lazily (see buildBloom), so it may not exist yet on an early
+    // resize. EffectComposer.setSize resizes its own passes, including the bloom pass.
+    if (composer) composer.setSize(W, H);
     effect.setSize(W, H);
   }
   window.addEventListener('resize', handleResize);

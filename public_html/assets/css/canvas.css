@@ -1020,12 +1020,20 @@
      One component, three levels: the Systems deck, the Lab deck, and the workflow
      deck inside a case page. Full-height panels; hovering one expands it and the
      others compress to spines. Clicking activates the panel's real URL. */
-  .room[data-room="2"] .room-inner { max-width: min(1440px, 92vw); }
+  /* The deck fills what is LEFT after the heading and intro, rather than adding a fixed
+     height below them — at min(74vh,900px) the panels ran past the fold and took their
+     bottom-anchored spine labels with them. svh, not vh, so mobile browser chrome counts. */
+  .room[data-room="2"] .room-inner {
+    max-width: min(1440px, 92vw);
+    display: flex; flex-direction: column;
+    height: calc(100svh - 200px);
+  }
+  .room[data-room="2"] h2 { font-size: clamp(1.9rem, 3.4vw, 2.9rem); margin-bottom: 10px; }
 
-  .deck-intro { margin: 0 0 22px; max-width: 620px; }
-  /* Height is set by the content, not the viewport: a fixed tall panel left a large void
-     between the copy and the bottom-anchored gain figure. */
-  .deck { display: flex; gap: 10px; height: min(46vh, 430px); }
+  .deck-intro { margin: 0 0 18px; max-width: 620px; flex: 0 0 auto; }
+  /* The deck owns the screen. Panels are the primary object in the section, not a
+     widget inside it — so it claims the viewport minus the intro and the HUD margins. */
+  .deck { display: flex; gap: 10px; flex: 1 1 auto; min-height: 0; }
 
   .deck-panel {
     flex: 1 1 0; min-width: 0; position: relative; display: block; overflow: hidden;
@@ -1077,10 +1085,12 @@
   /* Touch + narrow: hover does not exist, so panels stack and tap-expand in place.
      The first tap opens (engine.js intercepts it); a second tap follows the link. */
   @media (max-width: 900px) {
-    .room[data-room="2"] .room-inner { max-width: none; }
+    .room[data-room="2"] .room-inner { max-width: none; height: calc(100svh - 150px); }
+    /* Same behaviour, rotated: the deck still fills the screen and the panels share it,
+       so a closed panel is a third of the viewport rather than a 66px strip. */
     .deck { flex-direction: column; height: auto; gap: 8px; }
-    .deck-panel { flex: 0 0 auto; min-height: 66px; transition: min-height 0.4s cubic-bezier(0.22, 0.61, 0.36, 1), border-color 0.3s ease; }
-    .deck-panel.is-open { min-height: 300px; }
+    .deck-panel { flex: 1 1 0; min-height: 0; }
+    .deck-panel.is-open { flex-grow: 3.4; }
     .deck-spine { position: static; align-items: center; justify-content: flex-start; padding: 24px 20px; }
     .deck-spine span { writing-mode: horizontal-tb; transform: none; }
     .deck-body { position: absolute; padding: 24px 20px; }

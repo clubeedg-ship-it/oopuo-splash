@@ -50,6 +50,13 @@ PIXEL ↑ -->
 <meta name="twitter:image" content="https://oopuo.com/og-default.png">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
+<!-- Preload only the three faces the first screen actually uses: the 700 display weight for the
+     headline, 400 body for the lead, and 400 mono for the HUD. Without these the browser cannot
+     discover them until canvas.css has parsed, so the hero paints in a fallback and reflows.
+     The latin-ext subsets and every other weight stay lazy. -->
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrumentsans-700-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrumentsans-400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrainsmono-400-latin.woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/canvas.css">
 <noscript><style>.room{opacity:1!important;visibility:visible!important;position:relative!important;transform:none!important;height:auto!important;min-height:100vh}.hud,.scroll-hint,.nav-rail,.col1-rail,.sub-nav{display:none!important}</style></noscript>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"OOPUO","url":"https://oopuo.com/","logo":"https://oopuo.com/oopuo-logo.svg","email":"hello@oopuo.com","description":"OOPUO Intelligence — an Amsterdam lab building systems where the gain is high and the stakes are too high to outsource.","address":{"@type":"PostalAddress","addressLocality":"Amsterdam","addressCountry":"NL"},"areaServed":"EU"}</script>
