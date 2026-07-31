@@ -78,12 +78,38 @@ Then read §3.
 > Overwritten at session close. Mirrors current hot state.
 
 - branch: `main` · clean tree · **no build step** · site = `public_html/` (Hostinger-ready).
+- ⚠️ **A REPOSITIONING IS IN FLIGHT.** The spec at
+  `docs/superpowers/specs/2026-07-31-oopuo-intelligence-repositioning-design.md` supersedes the
+  services-brochure framing below for **EN**. The site becomes **OOPUO Intelligence — a personal
+  lab**, whose job is credibility that converts into contracts. Signature trait: *give him a
+  problem that is blocked (legally, structurally, by privacy) and he finds the configuration that
+  unblocks it.* New spine: Arrival → **Systems** (client proof) → **The Lab** (own ventures +
+  research) → How I work → Services → Contact. Read the spec before touching EN content or the
+  room structure. NL/FR/pt-br are untouched until EN is approved live.
 - **EN + NL + FR (Europe) are all fully SPLIT** (D-026 EN, D-027 NL/FR) into the same 13-page router tree on a 5-stop journey: `/` (rooms 1+2, in-page snap) → `/services/` (+4 details) → `/studio/` → `/blog/` (+3 posts) → `/contact/`, plus `/enterprise/` side page. Translated content per locale (NL "je", FR "vous"). Persistent sculpture/HUD survive soft-nav; each URL is a full static HTML file. **pt-br (Brazil SMB) still single-page** (`/pt-br/`) — kept Brazil-native (D-018); its deep content must be authored, not translated. All pass rules (no green; pt-br has no EU/enterprise content). Full hreflang matrix + regenerated `sitemap.xml` (40 URLs) + `robots.txt`. Locale switcher (→ equivalent page per locale) + root geo-suggest on every page.
 - Integrations (after Phase 0): **Meta Pixel = inert commented placeholder on all 4** (loads nothing/0 errors until the real ID is set + uncommented — operator preference [[inert placeholders]]); **EN HubSpot form live** (real `2fef7ceb…`, new-builder embed); **NL/FR = inert new-builder form placeholder** (`YOUR_NL/FR_HUBSPOT_FORM_ID`, guarded loader injects nothing until a real ID is set) **+ `hello@oopuo.com` mailto**; "Book a free call" → **mailto** on EN/NL/FR (404 Meetings slug parked in a code comment); **per-track OG images shipped** (`og-default.png` EU / `og-default-br.png` BR, 1200×630); WhatsApp real on pt-br.
 - **NEXT:** Phase 0 + Phase 1 + **Phase 2 split = DONE for EN + NL + FR** (D-026, D-027) + JSON-LD breadth done. All three Europe locales live on the router (home rooms 1+2 in-page snap + boundary soft-nav; side pages for enterprise/service-details/blog-posts; per-locale hash-redirect shim; locale switcher → equivalent page + geo-suggest; sitemap = 40 URLs + full hreflang). Verified on fresh Playwright, 0 console errors. **Remaining before Phase 3:** (1) **pt-br deep content** — split it like the others BUT author its blog/service/enterprise pages Brazil-native (R$/WhatsApp/parceria; D-018 forbids translating the EU material) — needs operator direction on the Brazil offer set; (2) **blog markdown pipeline** `tools/render_posts.py` (posts hand-authored HTML now — deferred, operator-convenience). Then **Phase 3** (compliance + conversion) when operator inputs land.
 - Operator inputs pending (§C.8): real Meta Pixel ID; real Meeting slug; **NL+FR HubSpot form IDs (new builder)**; legal entity details for privacy/mentions-légales pages. (Each is a quick swap into the in-place inert placeholders. None block Phase 2.)
 - Testing note: HubSpot form + Meta Pixel only verify on the **live https** domain (operator deploys to oopuo.com in seconds), not on localhost. JS changes can be browser-cached on localhost — verify in a fresh context (Playwright) not the warm preview tab.
-- last session: 2026-06-19 — **NL + FR full content parity (D-027)** + Phase 2 EN finish + JSON-LD. Earlier in the session: completed the EN split (D-026 — router-mode home, multi-room snap, side pages, locale chrome, hash shim) and added JSON-LD breadth (Organization + Service + BreadcrumbList, 11 blocks). Then, per operator directive "all languages should have all content," split **NL and FR** into the full 13-page router tree (two parallel subagents translated the EN page set: NL informal "je", FR formal "vous"; € + EU-AI-Act framing kept; inert `YOUR_NL/FR_HUBSPOT_FORM_ID` + mailto on contact). Added en/nl/fr hreflang to the 12 EN deep pages; regenerated `sitemap.xml` → 40 URLs with full cross-links; upgraded the engine locale switcher to target the **equivalent page** per locale; mobile CSS for the switcher/geo-suggest. Verified NL + FR journeys on fresh Playwright (in-page snap, soft-nav, warm blog, deep-load, cross-locale hard-load) — 0 errors. **pt-br left Brazil-native** (D-018 — its deep content must be authored, not translated). 26 new NL/FR pages.
+- last session: 2026-08-01 — **repositioning brainstorm + foundation work.** Spec written (see the
+  ⚠️ bullet above) and committed. Five commits: (1) `AGENTS.md` now tracked — `CLAUDE.md` had
+  become a bare `@AGENTS.md` pointer to an **untracked** file, so a fresh clone lost all agent
+  memory; `.screenshots/` + `/material/` ignored (18MB of root PNG debris archived, not deleted).
+  (2) The uncommitted edge-scroll rework reviewed and committed **with a real bug fixed**: the
+  passive wheel listener runs *after* the compositor applies the scroll, so `scrollTop` read "at
+  the edge" for a flick that had only just arrived — one hard flick scrolled a section to its end
+  AND crossed into the next, skipping all the content (600px delta skipped all 383px of room 1;
+  420px raced between runs). Gate now reads a **settled** position sampled on a scroll-idle
+  debounce. (3) Automation case study + work gallery committed along with `public_html/media/`,
+  which was **untracked while live pages depended on it**; images converted to WebP, **4.4MB →
+  272KB** (94%), PNG originals archived outside the upload set. (4) The spec. (5)
+  `willReadFrequently` on the AsciiEffect 2d context — console is now **completely silent**.
+  Verified throughout on fresh Playwright with the HTTP cache disabled. **Touch/swipe is NOT
+  verified** — synthetic touch events don't drive native scrolling; needs a real device on
+  oopuo.com. **Nine operator content inputs** are listed in spec §9; §9.9 (demonstrable private/
+  sovereign capability) gates that page, and §9.3 (Cutting Edge naming + the €66.900,90 floor
+  plan) is a **live exposure already on oopuo.com**, not a future one.
+- previous session: 2026-06-19 — **NL + FR full content parity (D-027)** + Phase 2 EN finish + JSON-LD. Earlier in the session: completed the EN split (D-026 — router-mode home, multi-room snap, side pages, locale chrome, hash shim) and added JSON-LD breadth (Organization + Service + BreadcrumbList, 11 blocks). Then, per operator directive "all languages should have all content," split **NL and FR** into the full 13-page router tree (two parallel subagents translated the EN page set: NL informal "je", FR formal "vous"; € + EU-AI-Act framing kept; inert `YOUR_NL/FR_HUBSPOT_FORM_ID` + mailto on contact). Added en/nl/fr hreflang to the 12 EN deep pages; regenerated `sitemap.xml` → 40 URLs with full cross-links; upgraded the engine locale switcher to target the **equivalent page** per locale; mobile CSS for the switcher/geo-suggest. Verified NL + FR journeys on fresh Playwright (in-page snap, soft-nav, warm blog, deep-load, cross-locale hard-load) — 0 errors. **pt-br left Brazil-native** (D-018 — its deep content must be authored, not translated). 26 new NL/FR pages.
 
 ## 9. Pointer table — `PROJECT.md` sections
 
