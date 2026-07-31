@@ -604,7 +604,7 @@
      Sits above .room (z:3) and .sub-room (z:5) but below HUD (z:30). Internal scroll. */
   .blog-reader {
     position: absolute; inset: 0;
-    padding: 120px 48px 32px var(--gutter-left);
+    padding: 88px 48px 32px var(--gutter-left);
     overflow-y: auto;
     overscroll-behavior: contain;
     opacity: 0; pointer-events: none;
@@ -624,7 +624,7 @@
   /* —— Enterprise overlay — mirrors the blog-reader chrome —— */
   .ent-page {
     position: absolute; inset: 0;
-    padding: 120px 48px 32px var(--gutter-left);
+    padding: 88px 48px 32px var(--gutter-left);
     overflow-y: auto; overscroll-behavior: contain;
     opacity: 0; pointer-events: none;
     transform: translateY(36px);
@@ -639,7 +639,7 @@
   body.ent-open .hud .br { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
   body.ent-open .scroll-hint { opacity: 0 !important; animation: none !important; }
 
-  .ent-inner { max-width: 760px; margin: 0 auto; padding: 0 0 120px 0; }
+  .ent-inner { max-width: 760px; margin: 0 auto; padding: 0 0 72px 0; }
   .ent-label {
     display: block; font-family: var(--mono);
     font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
@@ -655,7 +655,7 @@
     font-size: 1.2rem; line-height: 1.55; color: var(--ink-mute);
     margin: 0 0 30px 0; max-width: 600px;
   }
-  .ent-section { margin-top: 84px; }
+  .ent-section { margin-top: 48px; }
   .ent-section h2 {
     font-family: var(--display); font-weight: 600;
     font-size: clamp(1.6rem, 3vw, 2.2rem); line-height: 1.12;
@@ -1107,16 +1107,14 @@
   body[data-room="2"] .sculpture { opacity: 0.32; }
 
   /* ══ Case page (a Systems card, activated) ══════════════════════════════════════
-     The deck inside a case page cannot size itself from the section the way the home
-     deck does — .ent-page is one long scroll container, not a viewport-height room —
-     so this variant carries its own height. */
-  .deck-inline { height: min(62vh, 540px); margin-top: 18px; }
+     The workflows are a plain list, not a second accordion — nesting the same gesture
+     inside itself made the page fight the reader for content they came to read.
 
-  /* The gain, stated once at the top of the page. It is the reason the page exists,
+     The gain, stated once at the top of the page. It is the reason the page exists,
      so it is not buried in body copy. */
   .case-headline {
-    display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px;
-    margin: 26px 0 22px; padding: 18px 22px;
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px;
+    margin: 18px 0 16px; padding: 14px 18px;
     background: var(--bg-elev); border: 1px solid var(--line-strong); border-left: 2px solid var(--teal);
     font-family: var(--mono);
   }
@@ -1124,19 +1122,16 @@
   .case-headline-before s { text-decoration: line-through; }
   .case-headline-after { font-size: clamp(1.15rem, 2.2vw, 1.7rem); font-weight: 600; color: var(--teal); letter-spacing: -0.01em; }
 
-  .case-figure { margin: 22px 0 0; }
+  .case-figure { margin: 16px 0 0; }
   .case-figure img { width: 100%; height: auto; display: block; background: var(--bg-elev); border: 1px solid var(--line-strong); }
   .case-figure figcaption { margin-top: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-faint); }
 
-  @media (max-width: 900px) {
-    /* Matches the home deck: stacked, panels share the height, tap to expand. */
-    .deck-inline { height: min(70vh, 560px); }
-  }
 
-  /* Case pages dim the sculpture for the same reason room 2 does: an inline deck claims the
-     full width, so there is nowhere to move the artwork to. Scoped with :has() to pages that
-     actually carry a deck, so the twelve existing side pages are untouched. */
-  body:has(.deck-inline) .sculpture { opacity: 0.32; }
+
+  /* Case pages dim the sculpture for the same reason room 2 does: the content claims the full
+     width, so there is nowhere to move the artwork to. Scoped with :has() so the twelve
+     existing side pages are untouched. */
+  body:has(.wf-list) .sculpture { opacity: 0.32; }
 
   /* An action inside a panel — used where a workflow has somewhere to go. */
   .deck-link { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--teal); text-decoration: none; border-bottom: 1px solid transparent; align-self: flex-start; }
@@ -1144,3 +1139,25 @@
 
   /* Panels are focusable divs where they are not links, so they need the same focus ring. */
   .deck-panel[tabindex]:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+
+  /* Workflow list — one row per workflow: number, what it is, what it gained, status.
+     Scannable in a single pass, which an accordion is not. */
+  .wf-list { list-style: none; margin: 14px 0 0; padding: 0; border-top: 1px solid var(--line-strong); }
+  .wf {
+    display: grid; grid-template-columns: 40px 1fr auto; gap: 0 18px; align-items: start;
+    padding: 16px 0; border-bottom: 1px solid var(--line-strong);
+  }
+  .wf-num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; color: var(--teal); padding-top: 3px; }
+  .wf-name { font-family: var(--display); font-weight: 600; font-size: 1.05rem; letter-spacing: -0.01em; color: var(--ink); margin: 0 0 3px; }
+  .wf p { margin: 0; }
+  .wf p a { color: var(--teal); text-decoration: none; border-bottom: 1px solid transparent; }
+  .wf p a:hover { border-bottom-color: var(--teal); }
+  .wf-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; text-align: right; }
+  .wf-gain { font-family: var(--mono); font-size: 12px; white-space: nowrap; }
+  .wf-gain b { color: var(--teal); font-weight: 600; }
+  .wf-gain s { color: var(--ink-faint); }
+
+  @media (max-width: 700px) {
+    .wf { grid-template-columns: 30px 1fr; }
+    .wf-meta { grid-column: 2; flex-direction: row; align-items: center; gap: 14px; text-align: left; margin-top: 8px; }
+  }

@@ -97,61 +97,49 @@ PIXEL ↑ -->
         <p class="ent-body"><strong>What changed:</strong> the AI does the sourcing and the design. Four workflows, one flow — each one below.</p>
       </header>
 
-      <!-- The workflow deck. Same component as the Systems deck on the home page, one level
-           down: the card that was a panel there is the whole page here, and its workflows are
-           the panels. PLACEHOLDER CONTENT — the workflow list and per-workflow figures are
-           operator inputs (spec §9.1). Structure is final; the words are not. -->
       <section class="ent-section">
         <span class="ent-label">The workflows</span>
         <h2>Four workflows, one flow.</h2>
-
-        <div class="deck deck-inline" role="list">
-          <div class="deck-panel" role="listitem" tabindex="0">
-            <span class="deck-spine"><span>01 — Sourcing</span></span>
-            <span class="deck-body">
-              <span class="deck-kicker">01 · Sourcing</span>
-              <span class="deck-title">The AI does the sourcing.</span>
-              <p>Finding, comparing and specifying what a room needs, against what is actually available and what it costs.</p>
+        <ol class="wf-list">
+          <li class="wf">
+            <span class="wf-num">01</span>
+            <div class="wf-main">
+              <h3 class="wf-name">Sourcing</h3>
+              <p>Finding, comparing and specifying what a room needs, against what is actually available and what it costs. The AI does this now.</p>
+            </div>
+            <div class="wf-meta"><span class="deck-status" data-state="running">Running</span></div>
+          </li>
+          <li class="wf">
+            <span class="wf-num">02</span>
+            <div class="wf-main">
+              <h3 class="wf-name">Design &amp; 3D</h3>
+              <p>The 3D modelling that carried the design ran one to two weeks per design.</p>
+            </div>
+            <div class="wf-meta">
+              <span class="wf-gain"><s>1–2 weeks</s> <b>→ 2 days max</b></span>
               <span class="deck-status" data-state="running">Running</span>
-            </span>
-          </div>
-
-          <div class="deck-panel" role="listitem" tabindex="0">
-            <span class="deck-spine"><span>02 — Design &amp; 3D</span></span>
-            <span class="deck-body">
-              <span class="deck-kicker">02 · Design &amp; 3D</span>
-              <span class="deck-title">Two weeks, done in two days.</span>
-              <p>The 3D modelling that carried the design used to run one to two weeks per design.</p>
-              <span class="deck-gain">
-                <span><s>1–2 weeks</s></span>
-                <b>→ 2 days max</b>
-              </span>
+            </div>
+          </li>
+          <li class="wf">
+            <span class="wf-num">03</span>
+            <div class="wf-main">
+              <h3 class="wf-name">Renovation estimate</h3>
+              <p>A messy brainstorm becomes a colour-keyed, client-ready offer. <a href="#w-estimate">See it end to end →</a></p>
+            </div>
+            <div class="wf-meta">
+              <span class="wf-gain"><b>6 zones · 14 line items</b></span>
               <span class="deck-status" data-state="running">Running</span>
-            </span>
-          </div>
-
-          <div class="deck-panel" role="listitem" tabindex="0">
-            <span class="deck-spine"><span>03 — Estimates</span></span>
-            <span class="deck-body">
-              <span class="deck-kicker">03 · Renovation estimate</span>
-              <span class="deck-title">Brainstorm to client-ready offer.</span>
-              <p>A messy brainstorm becomes a colour-keyed, client-ready offer: 6 zones, 14 line items, a 5-step pipeline.</p>
-              <span class="deck-gain"><b>6 zones · 14 line items</b></span>
-              <a class="deck-link" href="#w-estimate">See it end to end →</a>
-              <span class="deck-status" data-state="running">Running</span>
-            </span>
-          </div>
-
-          <div class="deck-panel" role="listitem" tabindex="0">
-            <span class="deck-spine"><span>04 — Project management</span></span>
-            <span class="deck-body">
-              <span class="deck-kicker">04 · Project management</span>
-              <span class="deck-title">The job knows where it is.</span>
+            </div>
+          </li>
+          <li class="wf">
+            <span class="wf-num">04</span>
+            <div class="wf-main">
+              <h3 class="wf-name">Project management</h3>
               <p>Status stops being assembled by hand from four places at the end of the week.</p>
-              <span class="deck-status" data-state="running">Running</span>
-            </span>
-          </div>
-        </div>
+            </div>
+            <div class="wf-meta"><span class="deck-status" data-state="running">Running</span></div>
+          </li>
+        </ol>
       </section>
 
       <section class="ent-section" id="w-estimate">
