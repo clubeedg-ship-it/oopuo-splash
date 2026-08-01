@@ -1159,3 +1159,16 @@
     .wf { grid-template-columns: 30px 1fr; }
     .wf-meta { grid-column: 2; flex-direction: row; align-items: center; gap: 14px; text-align: left; margin-top: 8px; }
   }
+
+  /* ══ Centred content columns (services) ═════════════════════════════════════════
+     Rooms hang off a 180px left gutter with only 48px on the right, so every column
+     sat left of centre. The gutter exists to clear the nav rails, so it is MIRRORED
+     rather than removed: equal gutters both sides, column centred between them, rails
+     still clear. */
+  .room[data-room="3"] { padding-right: var(--gutter-left); place-items: center; }
+  .room[data-room="3"] .room-inner { max-width: 760px; }
+  .modules { margin-left: auto; margin-right: auto; }
+
+  /* Side pages (service details, case pages, enterprise, posts) — same mirroring, so the
+     760px reading column sits in the middle of the screen instead of off to one side. */
+  .ent-page { padding-right: var(--gutter-left); }
