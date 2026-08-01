@@ -1160,15 +1160,16 @@
     .wf-meta { grid-column: 2; flex-direction: row; align-items: center; gap: 14px; text-align: left; margin-top: 8px; }
   }
 
-  /* ══ Centred content columns (services) ═════════════════════════════════════════
-     Rooms hang off a 180px left gutter with only 48px on the right, so every column
-     sat left of centre. The gutter exists to clear the nav rails, so it is MIRRORED
-     rather than removed: equal gutters both sides, column centred between them, rails
-     still clear. */
-  .room[data-room="3"] { padding-right: var(--gutter-left); place-items: center; }
-  .room[data-room="3"] .room-inner { max-width: 760px; }
-  .modules { margin-left: auto; margin-right: auto; }
+  /* ══ Centred module grid (services) ═════════════════════════════════════════════
+     The CARDS are centred on screen; the heading above them stays on the left gutter
+     where the rest of the site's type sits.
 
-  /* Side pages (service details, case pages, enterprise, posts) — same mirroring, so the
-     760px reading column sits in the middle of the screen instead of off to one side. */
-  .ent-page { padding-right: var(--gutter-left); }
+     The room is `place-items: center start` inside a 180px left gutter, so `margin:
+     auto` would only centre the grid inside that offset column — still left of the
+     screen. The offset is cancelled explicitly instead: half the viewport, minus half
+     the grid, minus the gutter the column already starts at. max() keeps it from going
+     negative on narrow windows before the mobile rules take over. */
+  /* transform, not margin: a margin eats into the 1040px column, so at 1920 the grid was
+     squeezed to 640px instead of shifting. A transform moves it without touching layout. */
+  .modules { transform: translateX(max(0px, calc(50vw - 380px - var(--gutter-left)))); }
+  @media (max-width: 900px) { .modules { transform: none; } }
