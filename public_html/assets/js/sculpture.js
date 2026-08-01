@@ -638,16 +638,35 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
   window.__sculpt3D((window.OOPUO && window.OOPUO.sculpture) || 1);
   setTimeout(() => { dom.style.opacity = '1'; }, 250);
 
-  function animate() {
+  // Render cadence is CAPPED. One effect.render() is not cheap: WebGL + the bloom passes, then a
+  // getImageData readback, then AsciiEffect builds a ~44,000-character HTML string and assigns it
+  // to innerHTML — which the browser must parse, restyle, lay out and paint. That cannot finish in
+  // a 16ms budget, so asking for it every frame did not produce 60fps; it produced 7fps with long
+  // tasks of 90–340ms back to back, and the whole page felt heavy because the main thread never
+  // got a gap. Rendering ~30 times a second instead leaves real idle time between frames, which is
+  // what makes scrolling and hover feel responsive.
+  const RENDER_INTERVAL = 1000 / 30;
+  // Rotation is time-based so the sculpture turns at the same visual speed whatever the cadence.
+  // ROT_* are the original per-frame values expressed per millisecond at 60fps.
+  const ROT_Y = 0.0055 / (1000 / 60);
+  const ROT_X = 0.0017 / (1000 / 60);
+  let lastRenderAt = 0, lastFrameAt = 0;
+
+  function animate(now) {
     requestAnimationFrame(animate);
-    if (document.hidden) return;        // pause the per-frame ASCII DOM rewrite while the tab is hidden
+    if (document.hidden) { lastFrameAt = 0; return; }  // tab hidden → no ASCII DOM rewrite at all
+    if (!now) now = performance.now();
+    const dt = lastFrameAt ? Math.min(now - lastFrameAt, 100) : 0;   // clamp: a background tab
+    lastFrameAt = now;                                               // must not jump the rotation
+
     if (!reducedMotion) {
-      if (current) { current.rotation.y += 0.0055; current.rotation.x += 0.0017; }
-      if (incoming) { incoming.rotation.y += 0.0055; incoming.rotation.x += 0.0017; }
-      needsRender = true;               // continuous rotation → render every frame (unchanged behaviour)
+      if (current) { current.rotation.y += ROT_Y * dt; current.rotation.x += ROT_X * dt; }
+      if (incoming) { incoming.rotation.y += ROT_Y * dt; incoming.rotation.x += ROT_X * dt; }
+      needsRender = true;
     }
-    if (morphing) needsRender = true;   // morph animates the scene → render every frame
-    if (needsRender) {
+    if (morphing) needsRender = true;   // morph animates the scene → still capped, but always dirty
+    if (needsRender && now - lastRenderAt >= RENDER_INTERVAL) {
+      lastRenderAt = now;
       effect.render(scene, camera);
       if (reducedMotion && !morphing) needsRender = false; // static under reduced-motion → render once, then idle
     }
